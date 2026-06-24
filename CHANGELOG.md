@@ -5,6 +5,20 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 1: streaming core & Process Manager wiring
+- Streaming ORM models: `ffmpeg_profiles`, `destinations`, `stream_jobs`, `inputs`,
+  `outputs`, `process_status`; migration `0002_streaming`.
+- `stream_service`: assembles per-output FFmpeg argv from stored job/profile/destination
+  via the Command Builder (one supervised process per enabled output), resolving &
+  appending decrypted RTMP stream keys.
+- Redis control channel: backend publishes start/stop/restart; the **Process Manager**
+  now subscribes to `castcore:control`, spawns/stops FFmpeg via `subprocess_exec`
+  (shell=False) and publishes state to `castcore:status`.
+- Endpoints: FFmpeg-profile CRUD, destination CRUD (encrypted write-only stream keys),
+  stream-job CRUD with nested inputs/outputs, `/preview`, `/start`, `/stop`, `/restart`
+  (responses return masked command previews).
+- Tests for argv assembly + stream-key masking (no DB needed).
+
 ### Added — Phase 1: data foundation, auth & setup
 - SQLAlchemy 2.0 async ORM models: `users`, `roles`, `user_roles`, `sessions`,
   `api_tokens`, `settings`, `setup_state`, `audit_events`; `Base.metadata` wired into

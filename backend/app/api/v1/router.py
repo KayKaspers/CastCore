@@ -8,14 +8,25 @@ from __future__ import annotations
 
 from fastapi import APIRouter
 
-from app.api.v1.endpoints import auth, ffmpeg_preview, health, setup, users
+from app.api.v1.endpoints import (
+    auth,
+    destinations,
+    ffmpeg_preview,
+    ffmpeg_profiles,
+    health,
+    setup,
+    stream_jobs,
+    users,
+)
 
 api_router = APIRouter()
 api_router.include_router(health.router)
 api_router.include_router(auth.router)
 api_router.include_router(setup.router)
 api_router.include_router(users.router)
+api_router.include_router(ffmpeg_profiles.router)
+api_router.include_router(destinations.router)
+api_router.include_router(stream_jobs.router)
 api_router.include_router(ffmpeg_preview.router)
 
-# TODO(Phase 1): include settings, stream_jobs, ffmpeg_profiles,
-# storage_sources, platforms routers here.
+# TODO(Phase 1): include settings, storage_sources, platforms routers here.

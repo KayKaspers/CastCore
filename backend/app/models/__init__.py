@@ -7,6 +7,14 @@ Alembic sees them.
 from app.db.base import Base
 from app.models.audit import AuditEvent
 from app.models.settings import Setting, SetupState
+from app.models.streaming import (
+    Destination,
+    FFmpegProfile,
+    Input,
+    Output,
+    ProcessStatus,
+    StreamJob,
+)
 from app.models.user import ApiToken, Role, Session, User, user_roles
 
 __all__ = [
@@ -19,4 +27,10 @@ __all__ = [
     "Setting",
     "SetupState",
     "AuditEvent",
+    "FFmpegProfile",
+    "Destination",
+    "StreamJob",
+    "Input",
+    "Output",
+    "ProcessStatus",
 ]
