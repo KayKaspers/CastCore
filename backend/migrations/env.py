@@ -13,6 +13,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from app.core.config import get_settings
+from app.models import Base  # noqa: F401 — registers all models on Base.metadata
 
 config = context.config
 if config.config_file_name is not None:
@@ -24,8 +25,7 @@ config.set_main_option(
     get_settings().database_url.replace("+asyncpg", ""),
 )
 
-# TODO(Phase 1): from app.models import Base; target_metadata = Base.metadata
-target_metadata = None
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:

@@ -5,6 +5,19 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 1: data foundation, auth & setup
+- SQLAlchemy 2.0 async ORM models: `users`, `roles`, `user_roles`, `sessions`,
+  `api_tokens`, `settings`, `setup_state`, `audit_events`; `Base.metadata` wired into
+  Alembic; first migration `0001_initial` (creates schema + seeds admin/operator/viewer).
+- Async DB engine, session factory and `get_db` dependency.
+- Auth service: argon2 login, JWT access + persisted hashed refresh tokens with
+  **rotation** and revocation; `get_current_user` + `require_roles` RBAC dependencies.
+- Endpoints: `/auth/login`, `/auth/refresh`, `/auth/logout`, `/auth/me`;
+  `/setup/state|admin|syscheck|step/{step}|complete`; admin-only `/users` CRUD.
+- Setup wizard logic: ordered step state, first-run admin bootstrap (only while no user
+  exists), system check (FFmpeg/ffprobe presence, data dirs writable, free disk).
+- Tests for security primitives (hashing, Fernet, JWT, masking).
+
 ### Added — initial scaffold (Phase 1 start)
 - Project architecture & concept docs: `docs/ARCHITECTURE.md`, `DATA_MODEL.md`,
   `API.md`, `DEPLOYMENT.md`, `SECURITY.md`, `ROADMAP.md`.

@@ -9,6 +9,8 @@
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
+import secrets
 from typing import Any
 
 import jwt
@@ -77,3 +79,13 @@ def create_access_token(subject: str, *, extra: dict[str, Any] | None = None) ->
 def decode_token(token: str) -> dict[str, Any]:
     settings = get_settings()
     return jwt.decode(token, settings.secret_key, algorithms=["HS256"])
+
+
+def generate_refresh_token() -> str:
+    """Generate a high-entropy opaque refresh/API token (returned once to the client)."""
+    return secrets.token_urlsafe(48)
+
+
+def hash_token(token: str) -> str:
+    """One-way hash for storing refresh/API tokens at rest (lookup by hash)."""
+    return hashlib.sha256(token.encode()).hexdigest()
