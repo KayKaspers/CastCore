@@ -71,6 +71,7 @@ sudo ./scripts/uninstall.sh
 - [Data model](docs/DATA_MODEL.md) — entities & relationships
 - [API](docs/API.md) — REST + WebSocket surface
 - [Deployment](docs/DEPLOYMENT.md) — Docker-first & native install, backup/restore, upgrade
+- [Local dev & testing](docs/LOCAL_DEV.md) — run the full stack on Windows via Docker Desktop
 - [Security](docs/SECURITY.md) — auth, roles, secret handling, hardening
 - [Roadmap](docs/ROADMAP.md) — milestone plan (Phase 1–4)
 
