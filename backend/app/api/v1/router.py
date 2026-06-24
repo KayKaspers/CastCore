@@ -17,6 +17,7 @@ from app.api.v1.endpoints import (
     setup,
     stream_jobs,
     users,
+    ws,
 )
 
 api_router = APIRouter()
@@ -27,6 +28,7 @@ api_router.include_router(users.router)
 api_router.include_router(ffmpeg_profiles.router)
 api_router.include_router(destinations.router)
 api_router.include_router(stream_jobs.router)
+api_router.include_router(ws.router)
 api_router.include_router(ffmpeg_preview.router)
 
 # TODO(Phase 1): include settings, storage_sources, platforms routers here.

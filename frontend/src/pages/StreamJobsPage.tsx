@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import LogsPanel from "../components/LogsPanel";
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { api, ApiException } from "../lib/api";
 import type { CommandPreview, Destination, FFmpegProfile, StreamJob } from "../lib/types";
@@ -15,6 +16,7 @@ export default function StreamJobsPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<Record<string, string> | null>(null);
+  const [logsJob, setLogsJob] = useState<StreamJob | null>(null);
 
   const act = async (id: string, action: "start" | "stop" | "restart") => {
     setError(null);
@@ -60,6 +62,10 @@ export default function StreamJobsPage() {
         />
       )}
 
+      {logsJob && (
+        <LogsPanel jobId={logsJob.id} jobName={logsJob.name} onClose={() => setLogsJob(null)} />
+      )}
+
       {preview && (
         <Panel>
           <div className="flex items-center justify-between mb-2">
@@ -91,6 +97,7 @@ export default function StreamJobsPage() {
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2 justify-end">
                     <Button variant="ghost" onClick={() => showPreview(job.id)}>⌘</Button>
+                    <Button variant="ghost" onClick={() => setLogsJob(job)}>{t("nav.logs")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "start")}>{t("common.start")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "stop")}>{t("common.stop")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "restart")}>{t("common.restart")}</Button>

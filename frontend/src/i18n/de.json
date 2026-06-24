@@ -71,6 +71,15 @@
   "ffmpeg": {
     "commandPreview": "Command-Vorschau"
   },
+  "loghint": {
+    "generic": "Es wurde ein mögliches Problem erkannt – siehe Log.",
+    "source_missing": "Die Quelle/Datei wurde nicht gefunden. Prüfe Pfad oder Mount.",
+    "network_unreachable": "Netzwerkziel nicht erreichbar. Prüfe Adresse, Port und Verbindung.",
+    "auth_failed": "Authentifizierung fehlgeschlagen. Stream-Key oder Zugangsdaten prüfen.",
+    "rtmp_rejected": "Der RTMP-Server hat die Verbindung abgewiesen. Stream-Key vermutlich falsch.",
+    "disk_full": "Kein Speicherplatz mehr verfügbar.",
+    "bad_media": "Die Mediendaten konnten nicht gelesen werden (Codec/Container)."
+  },
   "error": {
     "auth": {
       "invalid_credentials": "Benutzername oder Passwort ist falsch.",

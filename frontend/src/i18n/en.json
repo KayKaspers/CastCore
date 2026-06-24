@@ -71,6 +71,15 @@
   "ffmpeg": {
     "commandPreview": "Command preview"
   },
+  "loghint": {
+    "generic": "A possible problem was detected – see the log.",
+    "source_missing": "The source/file was not found. Check the path or mount.",
+    "network_unreachable": "Network target unreachable. Check address, port and connection.",
+    "auth_failed": "Authentication failed. Check stream key or credentials.",
+    "rtmp_rejected": "The RTMP server rejected the connection. The stream key is likely wrong.",
+    "disk_full": "No disk space left.",
+    "bad_media": "The media could not be read (codec/container)."
+  },
   "error": {
     "auth": {
       "invalid_credentials": "Username or password is incorrect.",

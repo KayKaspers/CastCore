@@ -5,6 +5,17 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 1: live logs (WebSocket) + Stream Health Assistant
+- Process Manager pumps FFmpeg stderr/stdout line-by-line to per-job Redis channels
+  (`castcore:logs:<job_id>`), parses progress (fps/bitrate/speed/frame) to
+  `castcore:status`, and tags lines with a translatable failure **hint** code.
+- Backend WebSocket endpoints `/ws/logs/{job_id}` and `/ws/status` (token via query
+  param) relay Redis → client, with disconnect detection.
+- Frontend: live log panel per stream job (auto-scroll, error highlighting, live badge)
+  and a plain-language health hint banner (DE/EN `loghint.*`).
+- Verified end-to-end across containers: live FFmpeg output streamed to a WS client,
+  and a failing input correctly surfaced the `source_missing` hint.
+
 ### Added — Phase 1: frontend (Login, Setup, Dashboard, Streams)
 - API client with automatic JWT refresh and i18n error-code mapping; zustand auth store
   (token persistence, role checks); protected routing (react-router).
