@@ -9,6 +9,7 @@ from app.models.audit import AuditEvent
 from app.models.backup import Backup
 from app.models.media import MediaItem, MediaProbe
 from app.models.notification import Notification
+from app.models.recording import Recording
 from app.models.settings import Setting, SetupState
 from app.models.storage import SmbSource, StorageSource
 from app.models.streaming import (
@@ -43,4 +44,5 @@ __all__ = [
     "MediaItem",
     "MediaProbe",
     "Notification",
+    "Recording",
 ]

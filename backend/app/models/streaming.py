@@ -49,6 +49,8 @@ class StreamJob(Base, TimestampMixin):
         ForeignKey("ffmpeg_profiles.id", ondelete="SET NULL"), nullable=True
     )
     fallback_policy: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
+    recording_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    recording_retention_days: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     profile: Mapped[FFmpegProfile | None] = relationship(lazy="selectin")
     inputs: Mapped[list["Input"]] = relationship(

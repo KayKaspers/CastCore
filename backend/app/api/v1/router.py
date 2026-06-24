@@ -18,6 +18,7 @@ from app.api.v1.endpoints import (
     media,
     monitoring,
     notifications,
+    recordings,
     setup,
     storage_sources,
     stream_jobs,
@@ -38,6 +39,7 @@ api_router.include_router(stream_jobs.router)
 api_router.include_router(backups.router)
 api_router.include_router(notifications.router)
 api_router.include_router(monitoring.router)
+api_router.include_router(recordings.router)
 api_router.include_router(ws.router)
 api_router.include_router(ffmpeg_preview.router)
 

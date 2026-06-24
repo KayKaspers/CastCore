@@ -5,6 +5,20 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 2: recording & replay
+- `recordings` table + `stream_jobs.recording_enabled`/`recording_retention_days`
+  (migration `0007`).
+- When a recording-enabled job starts, the stream service spawns a synthetic mp4
+  recording output (timestamped filename in the recordings dir) alongside the live
+  outputs and tracks it; the status consumer finalizes the recording (size, duration,
+  state) when the process exits.
+- Endpoints `/recordings` (list, filter by job), download, delete; stream-job create
+  exposes `recording_enabled`, plus a `/stream-jobs/{id}/recording` toggle.
+- Frontend Recordings/Replay page (state, duration, size, download) and a recording
+  checkbox in the job create form.
+- Verified: a recording-enabled job produced a file that finalized to completed with
+  correct duration/size on stop.
+
 ### Added — Phase 2: monitoring
 - Process Manager samples per-FFmpeg-process CPU% and RSS via psutil (every 3s) and
   publishes them (plus pid) on the status channel; the consumer persists them to

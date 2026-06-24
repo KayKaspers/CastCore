@@ -43,6 +43,8 @@ async def create_job(payload: StreamJobIn, db: DbDep) -> StreamJob:
         enabled=payload.enabled,
         ffmpeg_profile_id=payload.ffmpeg_profile_id,
         fallback_policy=payload.fallback_policy,
+        recording_enabled=payload.recording_enabled,
+        recording_retention_days=payload.recording_retention_days,
         inputs=[
             Input(kind=i.kind, uri=i.uri, options=i.options, loop=i.loop, reconnect=i.reconnect, order=i.order)
             for i in payload.inputs
@@ -85,19 +87,28 @@ async def preflight_job(job_id: uuid.UUID, db: DbDep) -> PreflightReport:
 @router.post("/{job_id}/start", response_model=CommandPreviewOut)
 async def start_job(job_id: uuid.UUID, db: DbDep) -> CommandPreviewOut:
     job = await _get_job(db, job_id)
-    argvs = await stream_service.start_job(job)
+    argvs = await stream_service.start_job(db, job)
     return CommandPreviewOut(previews={oid: mask_command(argv) for oid, argv in argvs.items()})
 
 
 @router.post("/{job_id}/stop", status_code=202)
 async def stop_job(job_id: uuid.UUID, db: DbDep) -> dict:
     job = await _get_job(db, job_id)
-    await stream_service.stop_job(job)
+    await stream_service.stop_job(db, job)
     return {"status": "stopping"}
 
 
 @router.post("/{job_id}/restart", response_model=CommandPreviewOut)
 async def restart_job(job_id: uuid.UUID, db: DbDep) -> CommandPreviewOut:
     job = await _get_job(db, job_id)
-    argvs = await stream_service.restart_job(job)
+    argvs = await stream_service.restart_job(db, job)
     return CommandPreviewOut(previews={oid: mask_command(argv) for oid, argv in argvs.items()})
+
+
+@router.post("/{job_id}/recording", response_model=StreamJobOut)
+async def toggle_recording(job_id: uuid.UUID, db: DbDep, enabled: bool = True, retention_days: int = 0) -> StreamJob:
+    job = await _get_job(db, job_id)
+    job.recording_enabled = enabled
+    job.recording_retention_days = retention_days
+    await db.flush()
+    return job

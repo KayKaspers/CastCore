@@ -78,6 +78,8 @@ class StreamJobIn(BaseModel):
     enabled: bool = True
     ffmpeg_profile_id: uuid.UUID | None = None
     fallback_policy: dict = Field(default_factory=dict)
+    recording_enabled: bool = False
+    recording_retention_days: int = 0
     inputs: list[InputIn] = Field(default_factory=list)
     outputs: list[OutputIn] = Field(default_factory=list)
 
@@ -101,6 +103,7 @@ class StreamJobOut(BaseModel):
     autostart: bool
     enabled: bool
     ffmpeg_profile_id: uuid.UUID | None
+    recording_enabled: bool = False
     created_at: dt.datetime
 
 

@@ -7,9 +7,18 @@ multiple processes), which matches the Process Manager's supervision model.
 
 from __future__ import annotations
 
+import datetime as dt
+import re
+import uuid
+from pathlib import Path
+
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.core.config import get_settings
 from app.core.errors import CastCoreError, ErrorCode
 from app.core.security import decrypt_secret
+from app.models.recording import Recording
 from app.models.streaming import FFmpegProfile, Output, StreamJob
 from app.services import control
 from app.services.ffmpeg import (
@@ -104,23 +113,71 @@ def build_output_argvs(job: StreamJob) -> dict[str, list[str]]:
     return result
 
 
-async def start_job(job: StreamJob) -> dict[str, list[str]]:
+def build_recording_command(job: StreamJob, path: str) -> FFmpegCommand:
+    settings = get_settings()
+    ff_inputs = [
+        FFInput(uri=i.uri, options=dict(i.options or {}), loop=i.loop, reconnect=i.reconnect)
+        for i in job.inputs
+    ]
+    ff_output = FFOutput(
+        uri=path, fmt=OutputFormat.MP4,
+        video=_video_settings(job.profile), audio=_audio_settings(job.profile),
+    )
+    return FFmpegCommand(
+        inputs=ff_inputs, outputs=[ff_output],
+        filter_complex=(job.profile.filters or {}).get("complex") if job.profile else None,
+        expert_args=list(job.profile.expert_args or []) if job.profile else [],
+        ffmpeg_path=settings.ffmpeg_path,
+    )
+
+
+async def _start_recording(db: AsyncSession, job: StreamJob) -> None:
+    """Spawn a synthetic recording output (mp4) and track it in the recordings table."""
+    settings = get_settings()
+    if not job.inputs:
+        return
+    safe = re.sub(r"[^A-Za-z0-9_-]", "_", job.name).strip("_") or "stream"
+    ts = dt.datetime.now(dt.timezone.utc).strftime("%Y%m%d-%H%M%S")
+    filename = f"{safe}-{ts}.mp4"
+    path = str(Path(settings.recordings_dir) / filename)
+    rec_output_id = uuid.uuid4()
+    argv = build_recording_command(job, path).build()
+    await control.send_start(str(rec_output_id), argv, job_id=str(job.id))
+    retention = (
+        dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=job.recording_retention_days)
+        if job.recording_retention_days > 0 else None
+    )
+    db.add(Recording(
+        stream_job_id=job.id, output_id=rec_output_id, path=path, filename=filename,
+        state="recording", started_at=dt.datetime.now(dt.timezone.utc), retention_until=retention,
+    ))
+
+
+async def _stop_recordings(db: AsyncSession, job: StreamJob) -> None:
+    res = await db.execute(
+        select(Recording).where(Recording.stream_job_id == job.id, Recording.state == "recording")
+    )
+    for rec in res.scalars().all():
+        await control.send_stop(str(rec.output_id), job_id=str(job.id))
+
+
+async def start_job(db: AsyncSession, job: StreamJob) -> dict[str, list[str]]:
     argvs = build_output_argvs(job)
     for output_id, argv in argvs.items():
         await control.send_start(output_id, argv, job_id=str(job.id))
+    if job.recording_enabled:
+        await _start_recording(db, job)
     job.status = "starting"
     return argvs
 
 
-async def stop_job(job: StreamJob) -> None:
+async def stop_job(db: AsyncSession, job: StreamJob) -> None:
     for output in job.outputs:
         await control.send_stop(str(output.id), job_id=str(job.id))
+    await _stop_recordings(db, job)
     job.status = "stopped"
 
 
-async def restart_job(job: StreamJob) -> dict[str, list[str]]:
-    argvs = build_output_argvs(job)
-    for output_id, argv in argvs.items():
-        await control.send_restart(output_id, argv, job_id=str(job.id))
-    job.status = "starting"
-    return argvs
+async def restart_job(db: AsyncSession, job: StreamJob) -> dict[str, list[str]]:
+    await stop_job(db, job)
+    return await start_job(db, job)

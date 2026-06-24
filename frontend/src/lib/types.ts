@@ -165,6 +165,18 @@ export interface OutputMetrics {
   started_at: string | null;
 }
 
+export interface Recording {
+  id: string;
+  stream_job_id: string | null;
+  filename: string;
+  state: string;
+  size_bytes: number;
+  duration_s: number | null;
+  started_at: string | null;
+  ended_at: string | null;
+  retention_until: string | null;
+}
+
 export interface NotificationChannel {
   id: string;
   name: string;

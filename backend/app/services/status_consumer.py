@@ -10,12 +10,14 @@ from __future__ import annotations
 import asyncio
 import datetime as dt
 import json
+import os
 import uuid
 
 from sqlalchemy import select
 
 from app.core.redis import STATUS_CHANNEL, get_redis
 from app.db.session import SessionLocal
+from app.models.recording import Recording
 from app.models.streaming import Output, ProcessStatus, StreamJob
 from app.services import notification_service
 
@@ -35,6 +37,21 @@ async def _handle(message: dict) -> None:
     state = message.get("state", "")
 
     async with SessionLocal() as db:
+        # Recording outputs are synthetic (no Output row) — finalize them separately.
+        rec = (await db.execute(
+            select(Recording).where(Recording.output_id == output_id, Recording.state == "recording")
+        )).scalar_one_or_none()
+        if rec is not None:
+            if state in ("stopped", "failed"):
+                rec.state = "completed" if state == "stopped" else "failed"
+                rec.ended_at = dt.datetime.now(dt.timezone.utc)
+                try:
+                    rec.size_bytes = os.path.getsize(rec.path)
+                except OSError:
+                    pass
+                await db.commit()
+            return
+
         # Upsert per-output process status (+ live metrics if present).
         existing = (await db.execute(
             select(ProcessStatus).where(ProcessStatus.output_id == output_id)

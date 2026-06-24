@@ -164,6 +164,7 @@ function CreateJobForm({
   const [uri, setUri] = useState("");
   const [lavfi, setLavfi] = useState(false);
   const [format, setFormat] = useState("flv");
+  const [recording, setRecording] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: FormEvent) => {
@@ -173,6 +174,7 @@ function CreateJobForm({
       await api.post("/stream-jobs", {
         name,
         ffmpeg_profile_id: profileId || null,
+        recording_enabled: recording,
         inputs: [{ kind: lavfi ? "url" : "file", uri, options: lavfi ? { f: "lavfi" } : {} }],
         outputs: [{ destination_id: destId || null, format }],
       });
@@ -213,6 +215,10 @@ function CreateJobForm({
         <label className="flex items-end gap-2 text-sm text-mist">
           <input type="checkbox" checked={lavfi} onChange={(e) => setLavfi(e.target.checked)} />
           lavfi input (-f lavfi)
+        </label>
+        <label className="flex items-end gap-2 text-sm text-mist">
+          <input type="checkbox" checked={recording} onChange={(e) => setRecording(e.target.checked)} />
+          ⏺ {t("nav.recordings")}
         </label>
         <div className="col-span-2">
           <Button type="submit" disabled={busy}>{busy ? t("common.loading") : t("common.create")}</Button>
