@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
@@ -7,6 +7,7 @@ import { Button, Field, Input, Panel } from "../components/ui";
 import i18n from "../i18n";
 import { api, ApiException } from "../lib/api";
 import { useAuthStore } from "../lib/auth";
+import type { SetupStatus } from "../lib/types";
 
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -18,6 +19,17 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+
+  // On a fresh install (no admin yet) default to the first-run admin form.
+  useEffect(() => {
+    api
+      .get<SetupStatus>("/setup/state")
+      .then((s) => {
+        const adminPending = s.steps.find((x) => x.step === "admin")?.status === "pending";
+        if (!s.completed && adminPending) setFirstRun(true);
+      })
+      .catch(() => undefined);
+  }, []);
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
