@@ -165,6 +165,24 @@ export interface OutputMetrics {
   started_at: string | null;
 }
 
+export interface PlaylistItem {
+  id: string;
+  media_item_id: string;
+  filename: string;
+  duration_s: number | null;
+  order: number;
+  enabled: boolean;
+}
+
+export interface Playlist {
+  id: string;
+  name: string;
+  mode: string;
+  description: string | null;
+  item_count: number;
+  items?: PlaylistItem[];
+}
+
 export interface SchedulerEntry {
   id: string;
   name: string;

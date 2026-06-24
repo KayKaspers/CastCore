@@ -18,6 +18,7 @@ from app.api.v1.endpoints import (
     media,
     monitoring,
     notifications,
+    playlists,
     recordings,
     scheduler,
     setup,
@@ -42,6 +43,7 @@ api_router.include_router(notifications.router)
 api_router.include_router(monitoring.router)
 api_router.include_router(recordings.router)
 api_router.include_router(scheduler.router)
+api_router.include_router(playlists.router)
 api_router.include_router(ws.router)
 api_router.include_router(ffmpeg_preview.router)
 

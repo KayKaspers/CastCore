@@ -11,6 +11,7 @@ const NAV = [
   { to: "/streams", key: "streamJobs", end: false },
   { to: "/sources", key: "sources", end: false },
   { to: "/media", key: "mediaLibrary", end: false },
+  { to: "/playlists", key: "playlists", end: false },
   { to: "/monitoring", key: "monitoring", end: false },
   { to: "/recordings", key: "recordings", end: false },
   { to: "/scheduler", key: "scheduler", end: false },

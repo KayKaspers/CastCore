@@ -5,6 +5,14 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 2: playlists (completes Phase 2)
+- `playlists` + `playlist_items` (migration `0009`) with modes sequential/shuffle/loop.
+- `playlist_service.resolve` turns a playlist into an ordered list of absolute media
+  paths with per-item and total duration (the basis for Phase 3 channel playout).
+- Endpoints `/playlists` (CRUD, add/remove items, reorder, resolve); Playlists UI page
+  with media picker, up/down reordering, mode switch and total-duration readout.
+- Verified: items added, reordered, and resolved to abs paths + correct total duration.
+
 ### Added — Phase 2: scheduler
 - `scheduler_entries` (migration `0008`) + `scheduler_service` with a background loop
   (FastAPI lifespan, alongside the status consumer) evaluating due entries every 20s.
