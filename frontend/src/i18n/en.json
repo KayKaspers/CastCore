@@ -71,6 +71,17 @@
   "ffmpeg": {
     "commandPreview": "Command preview"
   },
+  "preflight": {
+    "inputs": "Input source defined",
+    "source_readable": "Source readable (ffprobe)",
+    "has_video": "Video stream present",
+    "has_audio": "Audio stream present",
+    "outputs": "Output enabled",
+    "destination": "Destination assigned",
+    "output_url": "Output URL set",
+    "stream_key": "Stream key present",
+    "disk_space": "Sufficient disk space"
+  },
   "loghint": {
     "generic": "A possible problem was detected – see the log.",
     "source_missing": "The source/file was not found. Check the path or mount.",

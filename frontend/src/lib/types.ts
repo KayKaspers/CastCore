@@ -61,3 +61,14 @@ export interface StreamJob {
 export interface CommandPreview {
   previews: Record<string, string>;
 }
+
+export interface PreflightCheck {
+  key: string;
+  level: "ok" | "warn" | "error";
+  detail: string | null;
+}
+
+export interface PreflightReport {
+  level: "green" | "yellow" | "red";
+  checks: PreflightCheck[];
+}

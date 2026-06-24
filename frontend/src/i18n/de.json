@@ -71,6 +71,17 @@
   "ffmpeg": {
     "commandPreview": "Command-Vorschau"
   },
+  "preflight": {
+    "inputs": "Eingabequelle definiert",
+    "source_readable": "Quelle lesbar (ffprobe)",
+    "has_video": "Videostream vorhanden",
+    "has_audio": "Audiostream vorhanden",
+    "outputs": "Ausgabeziel aktiv",
+    "destination": "Ziel zugewiesen",
+    "output_url": "Output-URL gesetzt",
+    "stream_key": "Stream-Key vorhanden",
+    "disk_space": "Speicherplatz ausreichend"
+  },
   "loghint": {
     "generic": "Es wurde ein mögliches Problem erkannt – siehe Log.",
     "source_missing": "Die Quelle/Datei wurde nicht gefunden. Prüfe Pfad oder Mount.",

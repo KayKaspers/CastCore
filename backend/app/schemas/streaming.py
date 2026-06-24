@@ -106,3 +106,14 @@ class StreamJobOut(BaseModel):
 
 class CommandPreviewOut(BaseModel):
     previews: dict[str, str]  # output_id -> masked command string
+
+
+class PreflightCheck(BaseModel):
+    key: str
+    level: str  # ok | warn | error
+    detail: str | None = None
+
+
+class PreflightReport(BaseModel):
+    level: str  # green | yellow | red
+    checks: list[PreflightCheck]

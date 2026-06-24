@@ -35,7 +35,12 @@ async def get_current_user(
     if payload.get("type") != "access":
         raise CastCoreError(ErrorCode.AUTH_FORBIDDEN, http_status=401)
 
-    user = await db.get(User, uuid.UUID(payload["sub"]))
+    try:
+        user_id = uuid.UUID(str(payload.get("sub")))
+    except (ValueError, TypeError) as exc:
+        raise CastCoreError(ErrorCode.AUTH_FORBIDDEN, http_status=401) from exc
+
+    user = await db.get(User, user_id)
     if user is None or not user.is_active:
         raise CastCoreError(ErrorCode.AUTH_FORBIDDEN, http_status=403)
     return user

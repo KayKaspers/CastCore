@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 1: preflight check
+- `preflight_service`: runs ffprobe against a job's input and checks input/streams
+  (has video / has audio), enabled outputs, destination URL & stream key, and recording
+  disk space; aggregates to 🟢/🟡/🔴.
+- Endpoint `POST /stream-jobs/{id}/preflight`; UI shows a per-check report with badges
+  before starting (DE/EN `preflight.*` labels).
+
+### Fixed
+- `get_current_user` now returns 401 (not 500) for a token whose `sub` is not a UUID.
+
 ### Added — Phase 1: live logs (WebSocket) + Stream Health Assistant
 - Process Manager pumps FFmpeg stderr/stdout line-by-line to per-job Redis channels
   (`castcore:logs:<job_id>`), parses progress (fps/bitrate/speed/frame) to

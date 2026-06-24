@@ -10,8 +10,8 @@ from sqlalchemy import select
 from app.api.deps import DbDep, require_roles
 from app.core.errors import CastCoreError, ErrorCode
 from app.models.streaming import Input, Output, StreamJob
-from app.schemas.streaming import CommandPreviewOut, StreamJobIn, StreamJobOut
-from app.services import stream_service
+from app.schemas.streaming import CommandPreviewOut, PreflightReport, StreamJobIn, StreamJobOut
+from app.services import preflight_service, stream_service
 from app.services.ffmpeg import mask_command
 
 router = APIRouter(
@@ -74,6 +74,12 @@ async def preview_job(job_id: uuid.UUID, db: DbDep) -> CommandPreviewOut:
     job = await _get_job(db, job_id)
     argvs = stream_service.build_output_argvs(job)
     return CommandPreviewOut(previews={oid: mask_command(argv) for oid, argv in argvs.items()})
+
+
+@router.post("/{job_id}/preflight", response_model=PreflightReport)
+async def preflight_job(job_id: uuid.UUID, db: DbDep) -> PreflightReport:
+    job = await _get_job(db, job_id)
+    return await preflight_service.run_preflight(job)
 
 
 @router.post("/{job_id}/start", response_model=CommandPreviewOut)

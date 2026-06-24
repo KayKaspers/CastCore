@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import LogsPanel from "../components/LogsPanel";
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { api, ApiException } from "../lib/api";
-import type { CommandPreview, Destination, FFmpegProfile, StreamJob } from "../lib/types";
+import type { CommandPreview, Destination, FFmpegProfile, PreflightReport, StreamJob } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
 export default function StreamJobsPage() {
@@ -17,6 +17,7 @@ export default function StreamJobsPage() {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<Record<string, string> | null>(null);
   const [logsJob, setLogsJob] = useState<StreamJob | null>(null);
+  const [preflight, setPreflight] = useState<PreflightReport | null>(null);
 
   const act = async (id: string, action: "start" | "stop" | "restart") => {
     setError(null);
@@ -34,6 +35,15 @@ export default function StreamJobsPage() {
     try {
       const res = await api.post<CommandPreview>(`/stream-jobs/${id}/preview`);
       setPreview(res.previews);
+    } catch (e) {
+      if (e instanceof ApiException) setError(e.localized);
+    }
+  };
+
+  const runPreflight = async (id: string) => {
+    setError(null);
+    try {
+      setPreflight(await api.post<PreflightReport>(`/stream-jobs/${id}/preflight`));
     } catch (e) {
       if (e instanceof ApiException) setError(e.localized);
     }
@@ -64,6 +74,28 @@ export default function StreamJobsPage() {
 
       {logsJob && (
         <LogsPanel jobId={logsJob.id} jobName={logsJob.name} onClose={() => setLogsJob(null)} />
+      )}
+
+      {preflight && (
+        <Panel>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-mist text-sm flex items-center gap-2">
+              {t("nav.preflight")} <Badge status={preflight.level} />
+            </h2>
+            <button className="text-xs text-slate hover:text-mist" onClick={() => setPreflight(null)}>✕</button>
+          </div>
+          <ul className="space-y-2 text-sm">
+            {preflight.checks.map((c, i) => (
+              <li key={i} className="flex items-center justify-between border-b border-slate/10 pb-2">
+                <span className="text-mist">{t(`preflight.${c.key}`, { defaultValue: c.key })}</span>
+                <span className="flex items-center gap-2">
+                  {c.detail && <span className="text-slate text-xs">{c.detail}</span>}
+                  <Badge status={c.level === "ok" ? "green" : c.level === "warn" ? "yellow" : "red"} />
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Panel>
       )}
 
       {preview && (
@@ -98,6 +130,7 @@ export default function StreamJobsPage() {
                   <div className="flex items-center gap-2 justify-end">
                     <Button variant="ghost" onClick={() => showPreview(job.id)}>⌘</Button>
                     <Button variant="ghost" onClick={() => setLogsJob(job)}>{t("nav.logs")}</Button>
+                    <Button variant="ghost" onClick={() => runPreflight(job.id)}>{t("nav.preflight")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "start")}>{t("common.start")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "stop")}>{t("common.stop")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "restart")}>{t("common.restart")}</Button>
