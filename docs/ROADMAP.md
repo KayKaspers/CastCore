@@ -3,17 +3,17 @@
 Four phases. Each builds on a working, deployable previous phase. ✅ = scaffolded in
 this repo, ▢ = planned.
 
-## Phase 1 — Solid base (MVP, deployable)
+## Phase 1 — Solid base (MVP, deployable) — ✅ COMPLETE
 - ✅ Docker-compose installation & project skeleton
 - ✅ DE/EN i18n foundation (frontend `de.json`/`en.json`, backend error codes)
-- ▢ Setup Wizard (language, admin user, deployment detect, FFmpeg/ffprobe check, dirs, storage)
-- ▢ Auth: login, JWT, roles (Admin/Operator/Viewer)
-- ▢ Stream jobs: create/edit/start/stop/restart, live logs (WS)
-- ▢ Local sources + SMB sources
-- ▢ FFmpeg profiles + **Command Builder** (safe argv, preview, tested)
-- ▢ Platform profiles: title/description/thumbnail
-- ▢ Dashboard
-- ▢ Backup/Restore (basic)
+- ✅ Setup Wizard (language, admin user, deployment detect, FFmpeg/ffprobe check, dirs, storage)
+- ✅ Auth: login, JWT refresh+rotation, roles (Admin/Operator/Viewer)
+- ✅ Stream jobs: create/start/stop/restart, live logs (WS)
+- ✅ Local sources + SMB sources (test/mount/browse, encrypted creds)
+- ✅ FFmpeg profiles + **Command Builder** (safe argv, masked preview, tested)
+- ✅ Destinations (encrypted stream keys) + preflight check
+- ✅ Dashboard
+- ✅ Backup/Restore (basic, logical gz-JSON)
 
 ## Phase 2 — Streaming suite
 - ▢ Media library + ffprobe analysis
