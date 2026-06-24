@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 1: frontend (Login, Setup, Dashboard, Streams)
+- API client with automatic JWT refresh and i18n error-code mapping; zustand auth store
+  (token persistence, role checks); protected routing (react-router).
+- Pages: **Login** (incl. first-run admin creation), **Setup Wizard** (step states,
+  system check), **Dashboard** (system health + live job count), **Stream Jobs**
+  (list, create form, start/stop/restart, masked command preview, delete), **Resources**
+  (FFmpeg-profile & destination management with encrypted stream keys).
+- Branded dark UI shell (sidebar nav, DE/EN switch, logout) on the CastCore tokens;
+  reusable UI primitives. Verified: frontend image builds (tsc clean) and serves via Caddy.
+
 ### Added — Phase 1: streaming core & Process Manager wiring
 - Streaming ORM models: `ffmpeg_profiles`, `destinations`, `stream_jobs`, `inputs`,
   `outputs`, `process_status`; migration `0002_streaming`.

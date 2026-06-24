@@ -48,6 +48,7 @@
   },
   "setup": {
     "title": "Setup Wizard",
+    "firstRun": "First-time setup – create admin",
     "step": {
       "language": "Choose language",
       "admin": "Create admin user",
@@ -86,7 +87,7 @@
       "no_output": "No output destination is defined."
     },
     "preflight": {
-      "source_unreachable": "The source \"{source}\" is unreachable.",
+      "source_unreachable": "The source \"{{source}}\" is unreachable.",
       "no_video": "The input contains no video stream.",
       "missing_stream_key": "The destination is missing its stream key."
     },

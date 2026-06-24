@@ -48,6 +48,7 @@
   },
   "setup": {
     "title": "Setup-Assistent",
+    "firstRun": "Ersteinrichtung – Admin anlegen",
     "step": {
       "language": "Sprache wählen",
       "admin": "Admin-Benutzer erstellen",
@@ -86,7 +87,7 @@
       "no_output": "Es ist kein Ausgabeziel definiert."
     },
     "preflight": {
-      "source_unreachable": "Die Quelle „{source}“ ist nicht erreichbar.",
+      "source_unreachable": "Die Quelle „{{source}}“ ist nicht erreichbar.",
       "no_video": "Die Eingabe enthält keinen Videostream.",
       "missing_stream_key": "Für das Ziel fehlt der Stream-Key."
     },
