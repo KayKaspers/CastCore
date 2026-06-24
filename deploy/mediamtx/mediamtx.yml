@@ -1,0 +1,19 @@
+# Optional MediaMTX media router for CastCore (compose profile: mediamtx).
+# Role split: MediaMTX routes/proxies protocols (RTSP/RTMP/SRT/WebRTC/HLS),
+# FFmpeg transcodes/packages, CastCore is the control plane.
+# Enable in .env: MEDIAMTX_ENABLED=true and run `docker compose --profile mediamtx up -d`.
+
+logLevel: info
+api: yes
+apiAddress: :9997
+
+# Ingest / delivery endpoints
+rtsp: yes
+rtmp: yes
+hls: yes
+srt: yes
+webrtc: yes
+
+# Paths are managed dynamically by CastCore via the MediaMTX API in Phase 4.
+paths:
+  all_others:

@@ -1,0 +1,46 @@
+# --- Secrets & env ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# --- Node / Frontend ---
+node_modules/
+frontend/dist/
+frontend/.vite/
+*.local
+
+# --- Data / runtime (do not commit operational data) ---
+data/
+media/
+recordings/
+logs/
+backups/
+mounts/
+thumbnails/
+*.sqlite3
+*.db
+
+# --- Docker ---
+docker-compose.override.yml
+
+# --- OS / Editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

@@ -1,0 +1,148 @@
+# ============================================================================
+# CastCore — Docker-first deployment
+#
+#   docker compose up -d                          # core suite
+#   docker compose --profile mediamtx up -d       # + MediaMTX media router
+#   docker compose --profile monitoring up -d     # + node/process exporters
+#
+# All persistent state lives under the named volumes below.
+# ============================================================================
+
+x-common-env: &common-env
+  CASTCORE_ENV: ${CASTCORE_ENV:-production}
+  DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-de}
+  TZ: ${TZ:-Europe/Berlin}
+  SECRET_KEY: ${SECRET_KEY}
+  ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+  ACCESS_TOKEN_TTL_MINUTES: ${ACCESS_TOKEN_TTL_MINUTES:-30}
+  REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS:-14}
+  POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+  POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+  POSTGRES_DB: ${POSTGRES_DB:-castcore}
+  POSTGRES_USER: ${POSTGRES_USER:-castcore}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  REDIS_HOST: ${REDIS_HOST:-redis}
+  REDIS_PORT: ${REDIS_PORT:-6379}
+  REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+  DATA_DIR: ${DATA_DIR:-/data}
+  MEDIA_DIR: ${MEDIA_DIR:-/data/media}
+  RECORDINGS_DIR: ${RECORDINGS_DIR:-/data/recordings}
+  LOG_DIR: ${LOG_DIR:-/data/logs}
+  BACKUP_DIR: ${BACKUP_DIR:-/data/backups}
+  MOUNT_DIR: ${MOUNT_DIR:-/data/mounts}
+  THUMBNAIL_DIR: ${THUMBNAIL_DIR:-/data/thumbnails}
+  FFMPEG_PATH: ${FFMPEG_PATH:-/usr/bin/ffmpeg}
+  FFPROBE_PATH: ${FFPROBE_PATH:-/usr/bin/ffprobe}
+
+x-data-volume: &data-volume
+  - castcore_data:/data
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-castcore}
+      POSTGRES_USER: ${POSTGRES_USER:-castcore}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - castcore_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-castcore} -d ${POSTGRES_DB:-castcore}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [castcore]
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--save", "60", "1", "--appendonly", "yes"]
+    volumes:
+      - castcore_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [castcore]
+
+  backend:
+    build: { context: ./backend }
+    restart: unless-stopped
+    environment: *common-env
+    volumes: *data-volume
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8000/api/v1/health').status==200 else 1)"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    networks: [castcore]
+
+  # Long-running supervisor for FFmpeg stream processes (NOT a task queue).
+  process-manager:
+    build: { context: ./process_manager }
+    restart: unless-stopped
+    environment: *common-env
+    volumes: *data-volume
+    # SYS_ADMIN + /dev/fuse only needed if you mount rclone/cifs inside the container.
+    # Prefer host-side mounts; see docs/DEPLOYMENT.md.
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    networks: [castcore]
+
+  # Short async jobs: media scan, ffprobe, thumbnails, backups.
+  worker:
+    build: { context: ./worker }
+    restart: unless-stopped
+    environment: *common-env
+    volumes: *data-volume
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    networks: [castcore]
+
+  frontend:
+    build: { context: ./frontend }
+    restart: unless-stopped
+    networks: [castcore]
+
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:-localhost}
+      ACME_EMAIL: ${ACME_EMAIL:-}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - castcore_caddy_data:/data
+      - castcore_caddy_config:/config
+    depends_on: [backend, frontend]
+    networks: [castcore]
+
+  # --- Optional: MediaMTX media router (profile: mediamtx) ---
+  mediamtx:
+    image: bluenviron/mediamtx:latest
+    restart: unless-stopped
+    profiles: ["mediamtx"]
+    volumes:
+      - ./deploy/mediamtx/mediamtx.yml:/mediamtx.yml:ro
+    networks: [castcore]
+
+volumes:
+  castcore_pg:
+  castcore_redis:
+  castcore_data:
+  castcore_caddy_data:
+  castcore_caddy_config:
+
+networks:
+  castcore:
+    driver: bridge

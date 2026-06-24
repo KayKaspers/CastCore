@@ -1,0 +1,23 @@
+[Unit]
+Description=CastCore Backend (API)
+After=network.target postgresql.service redis-server.service
+Wants=postgresql.service redis-server.service
+
+[Service]
+Type=simple
+User=castcore
+Group=castcore
+WorkingDirectory=/opt/castcore/backend
+EnvironmentFile=/etc/castcore/castcore.env
+ExecStart=/opt/castcore/venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+RestartSec=5
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/castcore /var/log/castcore
+
+[Install]
+WantedBy=multi-user.target

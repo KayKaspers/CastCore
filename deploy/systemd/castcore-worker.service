@@ -1,0 +1,20 @@
+[Unit]
+Description=CastCore Worker (arq: scans, ffprobe, thumbnails, backups)
+After=network.target redis-server.service postgresql.service
+Wants=redis-server.service postgresql.service
+
+[Service]
+Type=simple
+User=castcore
+Group=castcore
+WorkingDirectory=/opt/castcore/worker
+EnvironmentFile=/etc/castcore/castcore.env
+ExecStart=/opt/castcore/venv/bin/arq app.worker.WorkerSettings
+Restart=on-failure
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/castcore /var/log/castcore
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,23 @@
+@import "./brand-tokens.css"; /* CastCore CSS variables from the corporate design */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background-color: var(--cc-deep-navy);
+  color: var(--cc-mist);
+  font-family: var(--cc-font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.cc-panel {
+  background-color: var(--cc-panel-navy);
+  border: 1px solid rgba(100, 116, 139, 0.2);
+  border-radius: 0.75rem;
+}

@@ -1,0 +1,27 @@
+# CastCore reverse proxy (automatic HTTPS).
+# {$DOMAIN} and {$ACME_EMAIL} are provided by the caddy service environment.
+# For DOMAIN=localhost, Caddy serves a locally-trusted self-signed certificate.
+
+{
+	email {$ACME_EMAIL}
+}
+
+{$DOMAIN} {
+	encode zstd gzip
+
+	# API + WebSocket/SSE -> FastAPI backend
+	handle /api/* {
+		reverse_proxy backend:8000
+	}
+
+	# Everything else -> built SPA served by the frontend container
+	handle {
+		reverse_proxy frontend:80
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+}
