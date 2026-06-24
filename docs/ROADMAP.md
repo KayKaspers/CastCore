@@ -15,17 +15,18 @@ this repo, ▢ = planned.
 - ✅ Dashboard
 - ✅ Backup/Restore (basic, logical gz-JSON)
 
-## Phase 2 — Streaming suite
-- ▢ Media library + ffprobe analysis
-- ▢ Playlists
-- ▢ Scheduler
-- ▢ Preflight checks
+## Phase 2 — Streaming suite — ✅ mostly complete
+- ✅ Media library + ffprobe analysis
+- ✅ Playlists (sequential/shuffle/loop, resolve)
+- ✅ Scheduler (once/interval/daily; start/stop/backup/scan)
+- ✅ Preflight checks (delivered in Phase 1)
 - ▢ Dry-run / teststream
-- ▢ Recording
+- ✅ Recording + replay (per-job, retention field)
 - ▢ Internal HLS preview / webplayer
 - ▢ Platform metadata API + template resolution
-- ▢ Notifications (email/webhook/discord/telegram/gotify)
-- ▢ Richer monitoring views
+- ✅ Notifications (email/webhook/discord/telegram/gotify/slack)
+- ✅ Richer monitoring views (system + per-output live metrics)
+- ✅ Status reconciliation (PM→DB) + background loops (status consumer, scheduler)
 
 ## Phase 3 — Broadcast / channel features
 - ▢ 24/7 linear channels + channel scheduler
