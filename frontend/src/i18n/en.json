@@ -33,6 +33,7 @@
     "assets": "Thumbnails / Assets",
     "logs": "Live logs",
     "monitoring": "Monitoring",
+    "scheduler": "Scheduler",
     "preflight": "Preflight reports",
     "recordings": "Recordings / Replay",
     "settings": "Settings",

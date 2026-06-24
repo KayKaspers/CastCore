@@ -11,6 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app import __version__
 from app.api.v1.router import api_router
 from app.core.config import get_settings
+from app.services.scheduler_service import run_scheduler
 from app.services.status_consumer import run_status_consumer
 
 settings = get_settings()
@@ -18,18 +19,23 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
-    # Background consumer: PM status -> DB reconciliation + notifications.
+    # Background loops: PM status reconciliation/notifications + the scheduler.
     stop = asyncio.Event()
-    task = asyncio.create_task(run_status_consumer(stop))
+    tasks = [
+        asyncio.create_task(run_status_consumer(stop)),
+        asyncio.create_task(run_scheduler(stop)),
+    ]
     try:
         yield
     finally:
         stop.set()
-        task.cancel()
-        try:
-            await task
-        except asyncio.CancelledError:
-            pass
+        for task in tasks:
+            task.cancel()
+        for task in tasks:
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
 
 
 app = FastAPI(

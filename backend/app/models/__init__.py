@@ -10,6 +10,7 @@ from app.models.backup import Backup
 from app.models.media import MediaItem, MediaProbe
 from app.models.notification import Notification
 from app.models.recording import Recording
+from app.models.scheduler import SchedulerEntry
 from app.models.settings import Setting, SetupState
 from app.models.storage import SmbSource, StorageSource
 from app.models.streaming import (
@@ -45,4 +46,5 @@ __all__ = [
     "MediaProbe",
     "Notification",
     "Recording",
+    "SchedulerEntry",
 ]

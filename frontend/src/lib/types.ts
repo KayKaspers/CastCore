@@ -165,6 +165,21 @@ export interface OutputMetrics {
   started_at: string | null;
 }
 
+export interface SchedulerEntry {
+  id: string;
+  name: string;
+  action: string;
+  target_id: string | null;
+  schedule_type: string;
+  run_at: string | null;
+  interval_minutes: number;
+  daily_time: string | null;
+  enabled: boolean;
+  next_run_at: string | null;
+  last_run_at: string | null;
+  last_status: string | null;
+}
+
 export interface Recording {
   id: string;
   stream_job_id: string | null;

@@ -13,6 +13,7 @@ const NAV = [
   { to: "/media", key: "mediaLibrary", end: false },
   { to: "/monitoring", key: "monitoring", end: false },
   { to: "/recordings", key: "recordings", end: false },
+  { to: "/scheduler", key: "scheduler", end: false },
   { to: "/resources", key: "platforms", end: false },
   { to: "/notifications", key: "notifications", end: false },
   { to: "/backup", key: "backup", end: false },

@@ -5,6 +5,17 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 2: scheduler
+- `scheduler_entries` (migration `0008`) + `scheduler_service` with a background loop
+  (FastAPI lifespan, alongside the status consumer) evaluating due entries every 20s.
+- Schedule types: once / interval / daily (HH:MM UTC). Actions: stream_start,
+  stream_stop, backup, scan. Each run records `last_run_at`/`last_status` and advances
+  `next_run_at`.
+- Endpoints `/scheduler` (CRUD, `/run` for run-now); Scheduler UI page with action +
+  target pickers and schedule fields.
+- Verified: daily next-run computed correctly, run-now executed a backup, and a due
+  interval entry fired via tick() and rescheduled itself.
+
 ### Added — Phase 2: recording & replay
 - `recordings` table + `stream_jobs.recording_enabled`/`recording_retention_days`
   (migration `0007`).
