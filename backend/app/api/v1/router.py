@@ -15,6 +15,7 @@ from app.api.v1.endpoints import (
     ffmpeg_preview,
     ffmpeg_profiles,
     health,
+    media,
     setup,
     storage_sources,
     stream_jobs,
@@ -30,6 +31,7 @@ api_router.include_router(users.router)
 api_router.include_router(ffmpeg_profiles.router)
 api_router.include_router(destinations.router)
 api_router.include_router(storage_sources.router)
+api_router.include_router(media.router)
 api_router.include_router(stream_jobs.router)
 api_router.include_router(backups.router)
 api_router.include_router(ws.router)

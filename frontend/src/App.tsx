@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import BackupPage from "./pages/BackupPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
+import MediaLibraryPage from "./pages/MediaLibraryPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import SetupWizardPage from "./pages/SetupWizardPage";
 import SourcesPage from "./pages/SourcesPage";
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/" element={<DashboardPage />} />
         <Route path="/streams" element={<StreamJobsPage />} />
         <Route path="/sources" element={<SourcesPage />} />
+        <Route path="/media" element={<MediaLibraryPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/setup" element={<SetupWizardPage />} />

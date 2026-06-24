@@ -5,6 +5,18 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 2: media library (start)
+- Models `media_library_items` + `media_probe_data` (migration `0005`).
+- `media_service.scan_source`: walks a storage source, indexes files (kind by
+  extension, size, mtime), runs ffprobe on media and stores container/duration/codecs/
+  resolution/fps/bitrate, marks `streamable` and `problem_flags`; incremental (skips
+  unchanged files). Reusable by the worker later.
+- Endpoints `/media/scan/{source_id}`, `/media` (filter by source/kind/streamable/search),
+  `/media/{id}`, delete. Frontend Media Library page: pick source, scan, filter, table
+  with codec/resolution/duration + "copy path" into a stream job.
+- Verified: scanning the recordings folder indexed + probed 2 files as streamable h264
+  with correct metadata; source delete cascades media away.
+
 ### Added — Phase 1: backup & restore (completes Phase 1)
 - `backups` table (migration `0004`) and `backup_service`: self-contained logical dump
   of all application tables to gzipped JSON (no pg_dump version coupling); secrets stay

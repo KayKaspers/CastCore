@@ -112,6 +112,34 @@ export interface TestResult {
   detail: string | null;
 }
 
+export interface MediaProbe {
+  container: string | null;
+  duration_s: number | null;
+  video_codec: string | null;
+  audio_codec: string | null;
+  width: number | null;
+  height: number | null;
+  fps: number | null;
+}
+
+export interface MediaItem {
+  id: string;
+  storage_source_id: string;
+  rel_path: string;
+  filename: string;
+  kind: string;
+  size_bytes: number;
+  streamable: boolean;
+  problem_flags: Record<string, unknown>;
+  probe: MediaProbe | null;
+}
+
+export interface ScanResult {
+  files: number;
+  indexed: number;
+  probed: number;
+}
+
 export interface Backup {
   id: string;
   filename: string;
