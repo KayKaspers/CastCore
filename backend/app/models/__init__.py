@@ -7,6 +7,7 @@ Alembic sees them.
 from app.db.base import Base
 from app.models.audit import AuditEvent
 from app.models.settings import Setting, SetupState
+from app.models.storage import SmbSource, StorageSource
 from app.models.streaming import (
     Destination,
     FFmpegProfile,
@@ -33,4 +34,6 @@ __all__ = [
     "Input",
     "Output",
     "ProcessStatus",
+    "StorageSource",
+    "SmbSource",
 ]

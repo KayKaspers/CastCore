@@ -5,6 +5,18 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 1: storage sources (local + SMB)
+- Models `storage_sources` + `smb_sources` (migration `0003`); SMB passwords encrypted
+  at rest (Fernet), write-only over the API (`has_password` flag only).
+- `storage_service`: reachability test (local readable / SMB TCP 445), `mount.cifs`
+  mount via a 0600 credentials file (shell-free, password never on the command line),
+  unmount, and a path-traversal-confined media-aware directory browser.
+- Endpoints `/storage-sources` (local + SMB create, test, mount, unmount, browse).
+- Frontend Sources page: create local/SMB, test/mount/unmount, browse with media badges
+  and "copy path" to paste into a stream job.
+- Verified: local browse + traversal blocked (400); SMB test/mount fail gracefully in the
+  unprivileged container (documents host-mount preference); password never leaked.
+
 ### Added — Phase 1: preflight check
 - `preflight_service`: runs ffprobe against a job's input and checks input/streams
   (has video / has audio), enabled outputs, destination URL & stream key, and recording

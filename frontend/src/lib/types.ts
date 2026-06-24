@@ -72,3 +72,42 @@ export interface PreflightReport {
   level: "green" | "yellow" | "red";
   checks: PreflightCheck[];
 }
+
+export interface StorageSource {
+  id: string;
+  name: string;
+  source_class: string;
+  type: string;
+  path: string | null;
+  effective_path: string | null;
+  read_only: boolean;
+  automount: boolean;
+  status: string;
+  last_error: string | null;
+  smb: {
+    server: string;
+    share: string;
+    mount_path: string;
+    has_password: boolean;
+  } | null;
+}
+
+export interface BrowseEntry {
+  name: string;
+  rel_path: string;
+  abs_path: string;
+  is_dir: boolean;
+  size: number;
+  streamable: boolean;
+}
+
+export interface BrowseResult {
+  base: string;
+  subpath: string;
+  entries: BrowseEntry[];
+}
+
+export interface TestResult {
+  ok: boolean;
+  detail: string | null;
+}

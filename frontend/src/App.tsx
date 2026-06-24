@@ -6,6 +6,7 @@ import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import SetupWizardPage from "./pages/SetupWizardPage";
+import SourcesPage from "./pages/SourcesPage";
 import StreamJobsPage from "./pages/StreamJobsPage";
 
 export default function App() {
@@ -21,6 +22,7 @@ export default function App() {
       >
         <Route path="/" element={<DashboardPage />} />
         <Route path="/streams" element={<StreamJobsPage />} />
+        <Route path="/sources" element={<SourcesPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/setup" element={<SetupWizardPage />} />
       </Route>

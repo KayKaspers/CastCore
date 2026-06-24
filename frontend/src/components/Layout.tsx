@@ -9,6 +9,7 @@ import { useAuthStore } from "../lib/auth";
 const NAV = [
   { to: "/", key: "dashboard", end: true },
   { to: "/streams", key: "streamJobs", end: false },
+  { to: "/sources", key: "sources", end: false },
   { to: "/resources", key: "platforms", end: false },
   { to: "/setup", key: "settings", end: false },
 ];
