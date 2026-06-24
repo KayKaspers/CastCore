@@ -1,10 +1,7 @@
 # CastCore reverse proxy (automatic HTTPS).
-# {$DOMAIN} and {$ACME_EMAIL} are provided by the caddy service environment.
+# {$DOMAIN} is provided by the caddy service environment.
 # For DOMAIN=localhost, Caddy serves a locally-trusted self-signed certificate.
-
-{
-	email {$ACME_EMAIL}
-}
+# For a public domain, Caddy obtains a real certificate via ACME automatically.
 
 {$DOMAIN} {
 	encode zstd gzip

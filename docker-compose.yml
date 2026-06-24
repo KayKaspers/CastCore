@@ -9,6 +9,7 @@
 # ============================================================================
 
 x-common-env: &common-env
+  PYTHONUNBUFFERED: "1"
   CASTCORE_ENV: ${CASTCORE_ENV:-production}
   DEFAULT_LANGUAGE: ${DEFAULT_LANGUAGE:-de}
   TZ: ${TZ:-Europe/Berlin}

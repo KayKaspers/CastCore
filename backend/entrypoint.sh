@@ -20,6 +20,15 @@ else:
 print("[castcore] database is up")
 PY
 
+echo "[castcore] ensuring data directories…"
+mkdir -p \
+  "${DATA_DIR:-/data}/media" \
+  "${DATA_DIR:-/data}/recordings" \
+  "${DATA_DIR:-/data}/logs" \
+  "${DATA_DIR:-/data}/thumbnails" \
+  "${DATA_DIR:-/data}/mounts" \
+  "${DATA_DIR:-/data}/backups"
+
 echo "[castcore] running migrations (alembic upgrade head)…"
 alembic upgrade head
 

@@ -9,6 +9,8 @@ from __future__ import annotations
 
 import os
 
+from arq.connections import RedisSettings
+
 
 async def scan_source(ctx: dict, source_id: str) -> dict:
     """Index a storage source: walk files, record media_library_items (Phase 2)."""
@@ -36,12 +38,8 @@ class WorkerSettings:
     """arq entrypoint: `arq app.worker.WorkerSettings`."""
 
     functions = [scan_source, probe_media, generate_thumbnail, run_backup]
-    redis_settings = None  # populated from REDIS_* env at startup (Phase 1 wiring)
-
-    @staticmethod
-    def redis_dsn() -> str:
-        host = os.getenv("REDIS_HOST", "redis")
-        port = os.getenv("REDIS_PORT", "6379")
-        pw = os.getenv("REDIS_PASSWORD", "")
-        auth = f":{pw}@" if pw else ""
-        return f"redis://{auth}{host}:{port}/0"
+    redis_settings = RedisSettings(
+        host=os.getenv("REDIS_HOST", "redis"),
+        port=int(os.getenv("REDIS_PORT", "6379")),
+        password=os.getenv("REDIS_PASSWORD") or None,
+    )
