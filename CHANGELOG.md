@@ -5,6 +5,19 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 2: notifications + status reconciliation
+- Background **status consumer** in the backend (FastAPI lifespan) subscribes to
+  `castcore:status`, reconciles per-output `process_status` and `StreamJob.status` from
+  the Process Manager's actual state (closes the PM→DB→UI loop), and fires events on
+  transitions.
+- `notifications` model (migration `0006`) + `notification_service` with webhook /
+  Discord / Slack / Gotify / Telegram / email channels; connection params encrypted
+  (write-only). Events: stream_started/stopped/failed, source_offline, backup_done, test.
+- Admin endpoints (CRUD, `/events`, `/test`) and a Notifications UI page with
+  channel-specific fields and event selection.
+- Verified end-to-end: a real status transition reconciled job status in the DB and
+  delivered stream_started/stopped to a webhook; secret URL never leaked.
+
 ### Added — Phase 2: media library (start)
 - Models `media_library_items` + `media_probe_data` (migration `0005`).
 - `media_service.scan_source`: walks a storage source, indexes files (kind by

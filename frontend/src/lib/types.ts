@@ -140,6 +140,16 @@ export interface ScanResult {
   probed: number;
 }
 
+export interface NotificationChannel {
+  id: string;
+  name: string;
+  channel: string;
+  events: string[];
+  config: Record<string, unknown>;
+  enabled: boolean;
+  has_secret: boolean;
+}
+
 export interface Backup {
   id: string;
   filename: string;

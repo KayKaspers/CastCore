@@ -6,6 +6,7 @@ import BackupPage from "./pages/BackupPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import MediaLibraryPage from "./pages/MediaLibraryPage";
+import NotificationsPage from "./pages/NotificationsPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import SetupWizardPage from "./pages/SetupWizardPage";
 import SourcesPage from "./pages/SourcesPage";
@@ -27,6 +28,7 @@ export default function App() {
         <Route path="/sources" element={<SourcesPage />} />
         <Route path="/media" element={<MediaLibraryPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/setup" element={<SetupWizardPage />} />
       </Route>

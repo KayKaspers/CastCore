@@ -38,6 +38,7 @@
     "settings": "Einstellungen",
     "users": "Benutzerverwaltung",
     "backup": "Backup / Restore",
+    "notifications": "Benachrichtigungen",
     "updates": "Updates"
   },
   "auth": {
