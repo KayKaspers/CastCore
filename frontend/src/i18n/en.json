@@ -71,6 +71,13 @@
   "ffmpeg": {
     "commandPreview": "Command preview"
   },
+  "backup": {
+    "create": "Create backup",
+    "restore": "Restore",
+    "note": "Backups contain the database & configuration as gz-JSON. Secrets stay encrypted – keep the ENCRYPTION_KEY safe and separate.",
+    "restoreConfirm": "Restore backup \"{{name}}\"? All current data will be overwritten.",
+    "restoreDone": "Restore complete. Please sign in again if users changed."
+  },
   "preflight": {
     "inputs": "Input source defined",
     "source_readable": "Source readable (ffprobe)",

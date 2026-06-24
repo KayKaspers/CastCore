@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import BackupPage from "./pages/BackupPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import ResourcesPage from "./pages/ResourcesPage";
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/streams" element={<StreamJobsPage />} />
         <Route path="/sources" element={<SourcesPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/backup" element={<BackupPage />} />
         <Route path="/setup" element={<SetupWizardPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

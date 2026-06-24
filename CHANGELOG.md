@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 1: backup & restore (completes Phase 1)
+- `backups` table (migration `0004`) and `backup_service`: self-contained logical dump
+  of all application tables to gzipped JSON (no pg_dump version coupling); secrets stay
+  encrypted in the artifact. Restore wipes & repopulates in FK order within a
+  transaction; the `backups` table is excluded so history survives.
+- Admin endpoints: create, list, download, restore (requires `?confirm=true`), delete.
+- Frontend Backup/Restore page (create, download, confirm-guarded restore, delete).
+- Verified round-trip: backup → delete data → restore brings it back; unconfirmed
+  restore is rejected (400); users preserved.
+
 ### Added — Phase 1: storage sources (local + SMB)
 - Models `storage_sources` + `smb_sources` (migration `0003`); SMB passwords encrypted
   at rest (Fernet), write-only over the API (`has_password` flag only).

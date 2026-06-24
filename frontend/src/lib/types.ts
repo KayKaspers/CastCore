@@ -111,3 +111,12 @@ export interface TestResult {
   ok: boolean;
   detail: string | null;
 }
+
+export interface Backup {
+  id: string;
+  filename: string;
+  kind: string;
+  size_bytes: number;
+  status: string;
+  created_at: string;
+}

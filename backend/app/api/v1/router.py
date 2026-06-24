@@ -10,6 +10,7 @@ from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
     auth,
+    backups,
     destinations,
     ffmpeg_preview,
     ffmpeg_profiles,
@@ -30,6 +31,7 @@ api_router.include_router(ffmpeg_profiles.router)
 api_router.include_router(destinations.router)
 api_router.include_router(storage_sources.router)
 api_router.include_router(stream_jobs.router)
+api_router.include_router(backups.router)
 api_router.include_router(ws.router)
 api_router.include_router(ffmpeg_preview.router)
 
