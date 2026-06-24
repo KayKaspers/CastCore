@@ -1,0 +1,88 @@
+"""Monitoring endpoints: system metrics + live per-output process metrics.
+
+Readable by any authenticated user (including viewers).
+"""
+
+from __future__ import annotations
+
+import datetime as dt
+import uuid
+
+import psutil
+from fastapi import APIRouter, Depends
+from pydantic import BaseModel
+from sqlalchemy import select
+
+from app.api.deps import CurrentUser, DbDep, get_current_user
+from app.core.config import get_settings
+from app.models.streaming import Destination, Output, ProcessStatus, StreamJob
+
+router = APIRouter(
+    prefix="/monitoring",
+    tags=["monitoring"],
+    dependencies=[Depends(get_current_user)],
+)
+
+
+class SystemMetrics(BaseModel):
+    cpu_percent: float
+    mem_percent: float
+    mem_used_mb: float
+    mem_total_mb: float
+    disk_percent: float
+    disk_free_gb: float
+    ffmpeg_processes: int
+
+
+class OutputMetrics(BaseModel):
+    output_id: uuid.UUID
+    job_id: uuid.UUID
+    job_name: str
+    destination: str | None
+    state: str
+    fps: float | None
+    bitrate_kbps: float | None
+    speed: float | None
+    cpu_pct: float | None
+    rss_mb: float | None
+    reconnect_count: int
+    started_at: dt.datetime | None
+
+
+@router.get("/system", response_model=SystemMetrics)
+async def system_metrics(_user: CurrentUser) -> SystemMetrics:
+    settings = get_settings()
+    mem = psutil.virtual_memory()
+    disk = psutil.disk_usage(str(settings.data_dir))
+    ffmpeg = sum(1 for p in psutil.process_iter(["name"]) if (p.info.get("name") or "").startswith("ffmpeg"))
+    return SystemMetrics(
+        cpu_percent=psutil.cpu_percent(interval=0.0),
+        mem_percent=mem.percent,
+        mem_used_mb=round(mem.used / (1024**2), 1),
+        mem_total_mb=round(mem.total / (1024**2), 1),
+        disk_percent=disk.percent,
+        disk_free_gb=round(disk.free / (1024**3), 1),
+        ffmpeg_processes=ffmpeg,
+    )
+
+
+@router.get("/outputs", response_model=list[OutputMetrics])
+async def output_metrics(db: DbDep, _user: CurrentUser) -> list[OutputMetrics]:
+    stmt = (
+        select(ProcessStatus, Output, StreamJob, Destination)
+        .join(Output, ProcessStatus.output_id == Output.id)
+        .join(StreamJob, Output.job_id == StreamJob.id)
+        .outerjoin(Destination, Output.destination_id == Destination.id)
+        .order_by(StreamJob.name)
+    )
+    rows = (await db.execute(stmt)).all()
+    return [
+        OutputMetrics(
+            output_id=ps.output_id, job_id=job.id, job_name=job.name,
+            destination=dest.name if dest else None, state=ps.state,
+            fps=ps.fps, bitrate_kbps=ps.bitrate_kbps, speed=ps.speed,
+            cpu_pct=ps.cpu_pct, rss_mb=ps.rss_mb, reconnect_count=ps.reconnect_count,
+            started_at=ps.started_at,
+        )
+        for ps, _out, job, dest in rows
+    ]

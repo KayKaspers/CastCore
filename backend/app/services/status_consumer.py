@@ -46,10 +46,13 @@ async def _handle(message: dict) -> None:
             existing = ProcessStatus(output_id=output_id, state=state)
             db.add(existing)
         existing.state = state
-        for field in ("fps", "bitrate", "speed", "drop"):
-            if field in message:
-                setattr(existing, {"bitrate": "bitrate_kbps", "drop": "dropped_frames"}.get(field, field),
-                        message[field])
+        _FIELD = {
+            "fps": "fps", "bitrate": "bitrate_kbps", "speed": "speed",
+            "drop": "dropped_frames", "cpu": "cpu_pct", "rss": "rss_mb", "pid": "pid",
+        }
+        for key, col in _FIELD.items():
+            if key in message and message[key] is not None:
+                setattr(existing, col, message[key])
         if state == "running" and existing.started_at is None:
             existing.started_at = dt.datetime.now(dt.timezone.utc)
         elif state in ("stopped", "failed"):

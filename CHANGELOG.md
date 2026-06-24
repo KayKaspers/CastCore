@@ -5,6 +5,18 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 2: monitoring
+- Process Manager samples per-FFmpeg-process CPU% and RSS via psutil (every 3s) and
+  publishes them (plus pid) on the status channel; the consumer persists them to
+  `process_status` alongside the parsed fps/bitrate/speed.
+- Endpoints `/monitoring/system` (CPU/RAM/disk/ffmpeg count via psutil) and
+  `/monitoring/outputs` (live per-output metrics joined with job/destination), readable
+  by any authenticated user.
+- Auto-refreshing Monitoring dashboard (system gauges + per-output table; speed < 1×
+  highlighted).
+- Verified live: a real-time (`-re`) stream reported running fps≈29, speed≈0.95×,
+  CPU≈8%, RSS≈400 MB through the full PM→Redis→DB→API path.
+
 ### Added — Phase 2: notifications + status reconciliation
 - Background **status consumer** in the backend (FastAPI lifespan) subscribes to
   `castcore:status`, reconciles per-output `process_status` and `StreamJob.status` from

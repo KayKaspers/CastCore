@@ -140,6 +140,31 @@ export interface ScanResult {
   probed: number;
 }
 
+export interface SystemMetrics {
+  cpu_percent: number;
+  mem_percent: number;
+  mem_used_mb: number;
+  mem_total_mb: number;
+  disk_percent: number;
+  disk_free_gb: number;
+  ffmpeg_processes: number;
+}
+
+export interface OutputMetrics {
+  output_id: string;
+  job_id: string;
+  job_name: string;
+  destination: string | null;
+  state: string;
+  fps: number | null;
+  bitrate_kbps: number | null;
+  speed: number | null;
+  cpu_pct: number | null;
+  rss_mb: number | null;
+  reconnect_count: number;
+  started_at: string | null;
+}
+
 export interface NotificationChannel {
   id: string;
   name: string;

@@ -25,6 +25,7 @@ import signal
 import time
 from dataclasses import dataclass, field
 
+import psutil
 from redis.asyncio import Redis
 
 CONTROL_CHANNEL = "castcore:control"
@@ -142,6 +143,26 @@ class Supervisor:
         if buf.strip():
             await self._publish_log(job_id, output_id, buf.decode("utf-8", "replace").strip())
 
+    async def _sample_metrics(self, mp: ManagedProcess) -> None:
+        """Periodically publish per-process CPU% and RSS via psutil."""
+        if mp.proc is None:
+            return
+        try:
+            ps = psutil.Process(mp.proc.pid)
+            ps.cpu_percent(interval=None)  # prime the counter
+        except (psutil.Error, ValueError):
+            return
+        ncpu = psutil.cpu_count() or 1
+        while mp.proc is not None and mp.proc.returncode is None:
+            await asyncio.sleep(3)
+            try:
+                cpu = ps.cpu_percent(interval=None) / ncpu
+                rss = ps.memory_info().rss / (1024 * 1024)
+            except (psutil.Error, ValueError):
+                break
+            await self._publish_status(mp.output_id, mp.job_id, "running",
+                                       cpu=round(cpu, 1), rss=round(rss, 1))
+
     async def _watch_exit(self, mp: ManagedProcess) -> None:
         assert mp.proc is not None
         rc = await mp.proc.wait()
@@ -162,8 +183,9 @@ class Supervisor:
             asyncio.create_task(self._pump(mp.proc.stderr, output_id, job_id)),
             asyncio.create_task(self._pump(mp.proc.stdout, output_id, job_id)),
             asyncio.create_task(self._watch_exit(mp)),
+            asyncio.create_task(self._sample_metrics(mp)),
         ]
-        await self._publish_status(output_id, job_id, "running")
+        await self._publish_status(output_id, job_id, "running", pid=mp.proc.pid)
         await self._publish_log(job_id, output_id, "[castcore] stream started")
 
     async def handle_stop(self, output_id: str, job_id: str = "") -> None:
