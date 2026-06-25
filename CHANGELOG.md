@@ -5,6 +5,11 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Docs — admin deployment guide filled (DE+EN)
+- Wrote full content for `admin-guide/`: deployment, docker-compose, reverse-proxy, https,
+  storage-mounts, secrets, logs — grounded in the actual compose/Caddyfile/install scripts.
+  Placeholder pages reduced; check_docs stays green (DE/EN parity).
+
 ### Added — user management page (all 21 mandatory UI pages now present)
 - Admin **Users** page (`/users`): create users, toggle roles (admin/operator/viewer),
   enable/disable accounts, reset passwords, delete — with self-protection (can't disable

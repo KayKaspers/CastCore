@@ -3,34 +3,52 @@ title: "Logs"
 description: "Wo CastCore-Logs liegen und wie man sie liest."
 lang: de
 audience: "Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Logs
 
-> Wo CastCore-Logs liegen und wie man sie liest.
+> CastCore bietet mehrere Log-Ebenen: Dienst-Logs, Live-FFmpeg-Logs und das Audit-Log.
 
-**Zielgruppe:** Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Dienst-Logs (Docker)
 
-Wo CastCore-Logs liegen und wie man sie liest.
+```bash
+docker compose logs -f backend            # API + Hintergrund-Loops
+docker compose logs -f process-manager    # FFmpeg-Supervisor
+docker compose logs -f worker             # Async-Jobs
+docker compose logs -f caddy postgres redis
+```
 
-## Inhalt
+## Dienst-Logs (nativ)
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+```bash
+journalctl -u castcore-backend -f
+journalctl -u castcore-process-manager -f
+```
+Zusätzlich: `/var/log/castcore` (nativ) bzw. `/data/logs` (Daten-Volume).
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Live-FFmpeg-Logs
+
+Pro Stream-Job im UI über **Live-Logs** – inkl. Klartext-Hinweisen
+(Stream-Health-Assistant) und Verlinkung zur passenden
+[Fehlerhilfe](/docs/de/troubleshooting/ffmpeg-errors.md).
+
+## Audit-Log
+
+Sicherheitsrelevante Aktionen (Login, Start/Stop, Backup, Benutzer) findest du unter
+`/audit`. Siehe [Security](/docs/de/admin-guide/security.md).
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 🔐 In Logs landen **keine** Secrets; Stream-Keys sind maskiert.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Monitoring](/docs/de/user-guide/monitoring.md)
+- [Troubleshooting](/docs/de/troubleshooting/index.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

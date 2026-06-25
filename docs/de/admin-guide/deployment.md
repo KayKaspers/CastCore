@@ -3,34 +3,54 @@ title: "Deployment"
 description: "Überblick über die Deployment-Wege und Betriebsmodelle."
 lang: de
 audience: "Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Deployment
 
-> Überblick über die Deployment-Wege und Betriebsmodelle.
+> CastCore unterstützt zwei Wege: **Docker-first** (empfohlen) und **native Installation**.
+> Beide bringen alle nötigen Komponenten mit bzw. installieren sie.
 
-**Zielgruppe:** Administratoren
+**Zielgruppe:** Administratoren. Zielsysteme: Debian 12, Ubuntu Server LTS, LXC, VM,
+Bare Metal, Proxmox.
 
-## Überblick
+## Komponenten
 
-Überblick über die Deployment-Wege und Betriebsmodelle.
+| Dienst | Zweck |
+| --- | --- |
+| **frontend** | Ausgeliefertes React-SPA (Nginx). |
+| **backend** | FastAPI-API + Hintergrund-Loops (Status-Consumer, Scheduler). |
+| **process-manager** | Supervidiert die langlaufenden FFmpeg-Prozesse. |
+| **worker** | Kurze Async-Jobs (Scan, ffprobe, Thumbnails, Backups). |
+| **postgres** | Datenbank. |
+| **redis** | Cache, Queue, Steuerkanal (`castcore:control`/`:status`). |
+| **caddy** | Reverse Proxy + automatisches HTTPS. |
+| *(optional)* **mediamtx** | Interner Media-Router (Compose-Profil). |
 
-## Inhalt
+## Wege
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+- **[Docker Compose](/docs/de/admin-guide/docker-compose.md)** – ein Befehl, alle Dienste,
+  Migrationen automatisch. Siehe [Installation mit Docker](/docs/de/getting-started/installation-docker.md).
+- **Native** – `scripts/install.sh` (systemd-Dienste, lokale DB/Redis). Siehe
+  [Native Installation](/docs/de/getting-started/installation-native.md).
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Betriebsthemen
+
+- [Reverse Proxy](/docs/de/admin-guide/reverse-proxy.md) · [HTTPS](/docs/de/admin-guide/https.md)
+- [Storage-Mounts](/docs/de/admin-guide/storage-mounts.md) · [Secrets](/docs/de/admin-guide/secrets.md)
+- [Logs](/docs/de/admin-guide/logs.md) · [Backup & Restore](/docs/de/user-guide/backup-restore.md)
+- [Updates](/docs/de/user-guide/updates.md)
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 🔐 Vor dem Produktivbetrieb: eindeutige `SECRET_KEY`/`ENCRYPTION_KEY` setzen, HTTPS
+> aktivieren, Backups testen. Siehe [Security Best Practices](/docs/de/admin-guide/security.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Systemanforderungen](/docs/de/admin-guide/system-requirements.md)
+- [Architektur](/docs/de/developer-guide/architecture.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

@@ -3,34 +3,52 @@ title: "Secrets-Verwaltung"
 description: "Verschlüsselung (Fernet), ENCRYPTION_KEY, Schlüsselrotation."
 lang: de
 audience: "Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Secrets-Verwaltung
 
-> Verschlüsselung (Fernet), ENCRYPTION_KEY, Schlüsselrotation.
+> CastCore speichert sensible Daten (Stream-Keys, SMB-/OAuth-Zugangsdaten,
+> Benachrichtigungs-Secrets) **verschlüsselt**.
 
-**Zielgruppe:** Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Schlüssel
 
-Verschlüsselung (Fernet), ENCRYPTION_KEY, Schlüsselrotation.
+| Variable | Zweck |
+| --- | --- |
+| `SECRET_KEY` | Signiert JWT-Token. 64 Hex-Zeichen. |
+| `ENCRYPTION_KEY` | **Fernet-Schlüssel** zur Verschlüsselung gespeicherter Secrets. |
 
-## Inhalt
+Generieren:
+```bash
+openssl rand -hex 32                     # SECRET_KEY
+openssl rand -base64 32 | tr '+/' '-_'   # ENCRYPTION_KEY (gültiger Fernet-Key)
+```
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+## Eigenschaften
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+- Secrets werden **at-rest** mit Fernet verschlüsselt.
+- Über die API sind sie **write-only**: bei Eingabe akzeptiert, nach außen **maskiert**
+  (z. B. `••••1234`) bzw. nur als „vorhanden" angezeigt.
+- Secrets erscheinen **nie** im Log; Command-Vorschauen maskieren Stream-Keys in URLs.
 
-## Hinweise
+## Wichtig: ENCRYPTION_KEY sichern
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 🔐 **Ohne den `ENCRYPTION_KEY` sind verschlüsselte Daten unbrauchbar.** Bewahre ihn
+> sicher **und getrennt** von den Backups auf. Ein logisches Backup enthält die Secrets
+> nur **verschlüsselt** – die Wiederherstellung benötigt denselben Schlüssel.
+
+## Schlüsselrotation
+
+Ein Wechsel des `ENCRYPTION_KEY` macht bestehende verschlüsselte Werte unlesbar. Plane
+eine Rotation nur mit Re-Verschlüsselung der betroffenen Felder (zukünftiges Werkzeug).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Security Best Practices](/docs/de/admin-guide/security.md)
+- [Umgebungsvariablen](/docs/de/reference/environment-variables.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

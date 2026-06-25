@@ -3,34 +3,66 @@ title: "Docker-Compose-Betrieb"
 description: "Services, Volumes, Healthchecks und Profile der Compose-Datei."
 lang: de
 audience: "Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Docker-Compose-Betrieb
 
-> Services, Volumes, Healthchecks und Profile der Compose-Datei.
+> Alles Wichtige zum Betrieb des Stacks mit `docker-compose.yml`.
 
-**Zielgruppe:** Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Wichtige Befehle
 
-Services, Volumes, Healthchecks und Profile der Compose-Datei.
+```bash
+docker compose up -d --build     # bauen + starten
+docker compose ps                # Status / Health
+docker compose logs -f backend process-manager   # Logs folgen
+docker compose restart backend   # einzelnen Dienst neu starten
+docker compose down              # stoppen (Daten-Volumes bleiben)
+docker compose down -v           # stoppen + ALLE Daten-Volumes löschen
+```
 
-## Inhalt
+## Profile (optional)
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+```bash
+docker compose --profile mediamtx up -d     # MediaMTX Media-Router
+docker compose --profile monitoring up -d   # Monitoring-Exporter
+```
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Persistente Volumes
 
-## Hinweise
+| Volume | Inhalt |
+| --- | --- |
+| `castcore_pg` | PostgreSQL-Daten |
+| `castcore_redis` | Redis-Persistenz |
+| `castcore_data` | Medien, Recordings, Logs, Backups, Mounts, Thumbnails (`/data`) |
+| `castcore_caddy_data`/`_config` | Zertifikate / Caddy-Konfiguration |
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Healthchecks & Restart
+
+Jeder Dienst hat `restart: unless-stopped` und einen Healthcheck. `backend`,
+`process-manager` und `worker` warten, bis `postgres`/`redis` „healthy" sind. Das Backend
+führt beim Start automatisch `alembic upgrade head` aus.
+
+## Migrationen
+
+Automatisch beim Backend-Start. Manuell:
+```bash
+docker compose exec backend alembic upgrade head
+```
+
+## Backup eines laufenden Stacks
+
+Daten-Volume sichern oder ein logisches Backup über die UI/`/api/v1/backups` erstellen.
+Siehe [Backup & Restore](/docs/de/user-guide/backup-restore.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Installation mit Docker](/docs/de/getting-started/installation-docker.md)
+- [Umgebungsvariablen](/docs/de/reference/environment-variables.md)
+- [Docker-Probleme](/docs/de/troubleshooting/docker.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

@@ -3,34 +3,52 @@ title: "Secrets management"
 description: "Encryption (Fernet), ENCRYPTION_KEY, key rotation."
 lang: en
 audience: "Administrators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Secrets management
 
-> Encryption (Fernet), ENCRYPTION_KEY, key rotation.
+> CastCore stores sensitive data (stream keys, SMB/OAuth credentials, notification
+> secrets) **encrypted**.
 
-**Audience:** Administrators
+**Audience:** administrators.
 
-## Overview
+## Keys
 
-Encryption (Fernet), ENCRYPTION_KEY, key rotation.
+| Variable | Purpose |
+| --- | --- |
+| `SECRET_KEY` | Signs JWT tokens. 64 hex chars. |
+| `ENCRYPTION_KEY` | **Fernet key** to encrypt stored secrets. |
 
-## Contents
+Generate:
+```bash
+openssl rand -hex 32                     # SECRET_KEY
+openssl rand -base64 32 | tr '+/' '-_'   # ENCRYPTION_KEY (valid Fernet key)
+```
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+## Properties
 
-- TODO: add the step-by-step guide or in-depth explanation.
+- Secrets are encrypted **at rest** with Fernet.
+- Over the API they are **write-only**: accepted on input, **masked** on output
+  (e.g. `••••1234`) or shown only as "present".
+- Secrets **never** appear in logs; command previews mask stream keys in URLs.
 
-## Notes
+## Important: keep the ENCRYPTION_KEY safe
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+> 🔐 **Without the `ENCRYPTION_KEY`, encrypted data is unusable.** Keep it safe **and
+> separate** from the backups. A logical backup contains secrets only **encrypted** –
+> restoring requires the same key.
+
+## Key rotation
+
+Changing the `ENCRYPTION_KEY` makes existing encrypted values unreadable. Plan a rotation
+only together with re-encrypting the affected fields (future tooling).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Security best practices](/docs/en/admin-guide/security.md)
+- [Environment variables](/docs/en/reference/environment-variables.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

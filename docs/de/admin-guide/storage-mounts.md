@@ -3,34 +3,53 @@ title: "Storage-Mounts"
 description: "Host- vs. Container-Mounts und Datenverzeichnisse."
 lang: de
 audience: "Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Storage-Mounts
 
-> Host- vs. Container-Mounts und Datenverzeichnisse.
+> Wo CastCore Daten ablegt und wie Netzwerk-Storage (SMB/NFS) am besten eingebunden wird.
 
-**Zielgruppe:** Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Datenverzeichnisse
 
-Host- vs. Container-Mounts und Datenverzeichnisse.
+Alles liegt unter `DATA_DIR` (Standard `/data`, im Docker-Volume `castcore_data`):
 
-## Inhalt
+| Pfad | Inhalt |
+| --- | --- |
+| `/data/media` | Medienquellen |
+| `/data/recordings` | Aufnahmen |
+| `/data/logs` | Logs |
+| `/data/backups` | Backups |
+| `/data/mounts` | Mountpunkte für Netzwerkquellen |
+| `/data/thumbnails` | Assets/Thumbnails |
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+## Host-Mount vs. Container-Mount (wichtig)
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+> ⚠️ **Empfehlung: auf dem Host mounten.** Mounten **innerhalb** des Containers braucht
+> erweiterte Rechte (`CAP_SYS_ADMIN`, ggf. `/dev/fuse`), was die Isolation schwächt.
 
-## Hinweise
+**Empfohlener Weg:**
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+1. Netzwerkfreigabe auf dem **Host** mounten (z. B. via `/etc/fstab`).
+2. Den Host-Pfad in das Daten-Volume bind-mounten oder als **lokale Quelle** in CastCore
+   anlegen.
+
+So bleibt der Container unprivilegiert und das Mounten ist robust.
+
+## In-Container-Mount (nur wenn nötig)
+
+Soll CastCore selbst mounten (SMB/rclone), müssen dem Container die nötigen Capabilities
+gegeben werden. Das ist bewusst **nicht** Standard. Siehe
+[SMB / CIFS](/docs/de/admin-guide/smb-cifs.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [SMB / CIFS](/docs/de/admin-guide/smb-cifs.md) · [NFS](/docs/de/admin-guide/nfs.md)
+- [Quellen / Storage](/docs/de/user-guide/sources-storage.md)
+- [SMB-Probleme](/docs/de/troubleshooting/smb-problems.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_
