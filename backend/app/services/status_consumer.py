@@ -20,13 +20,43 @@ from app.db.session import SessionLocal
 from app.models.channel import Channel
 from app.models.recording import Recording
 from app.models.streaming import Output, ProcessStatus, StreamJob
-from app.services import notification_service
+from app.services import control, notification_service, stream_service
 
 # state -> event on transition
 _EVENT = {"running": "stream_started", "failed": "stream_failed", "stopped": "stream_stopped"}
 _JOB_STATUS = {"running": "running", "starting": "running", "failed": "failed", "stopped": "stopped"}
 
 _prev: dict[str, str] = {}
+# per-output auto-restart attempt counters (reset on a successful "running")
+_retries: dict[str, int] = {}
+
+
+async def _delayed_start(delay: int, output_id: str, argv: list[str], job_id: str) -> None:
+    await asyncio.sleep(delay)
+    await control.send_start(output_id, argv, job_id=job_id)
+
+
+async def _maybe_auto_restart(db, job: "StreamJob", output_id: uuid.UUID, status: ProcessStatus) -> None:
+    """On an unexpected failure, restart the output up to max_retry (fallback_policy)."""
+    policy = job.fallback_policy or {}
+    if not policy.get("auto_restart"):
+        return
+    max_retry = int(policy.get("max_retry", 3))
+    delay = int(policy.get("retry_delay_s", 5))
+    key = str(output_id)
+    attempt = _retries.get(key, 0) + 1
+    if attempt > max_retry:
+        return
+    output = await db.get(Output, output_id)
+    if output is None or not output.enabled:
+        return
+    try:
+        argv = stream_service.build_output_command(job, output).build()
+    except Exception:  # noqa: BLE001 - bad config: don't loop-restart
+        return
+    _retries[key] = attempt
+    status.reconnect_count = attempt
+    asyncio.create_task(_delayed_start(delay, key, argv, str(job.id)))
 
 
 async def _handle(message: dict) -> None:
@@ -85,11 +115,15 @@ async def _handle(message: dict) -> None:
         elif state in ("stopped", "failed"):
             existing.started_at = None
 
-        # Reconcile job status.
+        # Reconcile job status + self-healing.
+        if state == "running":
+            _retries.pop(str(output_id), None)  # successful run resets the retry counter
         if job_id is not None:
             job = await db.get(StreamJob, job_id)
             if job is not None and state in _JOB_STATUS:
                 job.status = _JOB_STATUS[state]
+            if job is not None and state == "failed":
+                await _maybe_auto_restart(db, job, output_id, existing)
 
         await db.commit()
 

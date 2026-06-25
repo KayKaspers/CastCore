@@ -47,6 +47,16 @@ Der Status wird **automatisch** aus dem echten Prozesszustand abgeglichen.
 2. **Preflight** ausführen – bei Grün/Gelb fortfahren.
 3. **Start** klicken, **Live-Logs** öffnen und Verlauf beobachten.
 
+## Selbstheilung (Auto-Restart)
+
+Aktivierst du beim Anlegen **Auto-Restart bei Absturz**, startet CastCore einen Output
+nach einem **unerwarteten Absturz** automatisch neu – bis zu **Max. Versuche** mal, mit
+kurzer Verzögerung. Ein **gewolltes Stoppen** löst keinen Neustart aus; ein erfolgreicher
+Lauf setzt den Zähler zurück.
+
+> 💡 Ideal für 24/7-Betrieb. Die Zahl der Reconnects pro Output siehst du im
+> [Monitoring](/docs/de/user-guide/monitoring.md).
+
 ## Hinweise
 
 > 💡 Bei Multi-Output wird **pro aktivem Output ein FFmpeg-Prozess** überwacht.

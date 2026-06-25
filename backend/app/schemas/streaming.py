@@ -104,6 +104,7 @@ class StreamJobOut(BaseModel):
     enabled: bool
     ffmpeg_profile_id: uuid.UUID | None
     recording_enabled: bool = False
+    fallback_policy: dict = Field(default_factory=dict)
     created_at: dt.datetime
 
 

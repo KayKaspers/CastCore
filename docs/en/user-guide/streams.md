@@ -47,6 +47,16 @@ Status is **reconciled automatically** from the real process state.
 2. Run **Preflight** – proceed if green/yellow.
 3. Click **Start**, open **Live logs** and watch progress.
 
+## Self-healing (auto-restart)
+
+If you enable **auto-restart on failure** when creating the job, CastCore automatically
+restarts an output after an **unexpected crash** – up to **max. retries** times, with a
+short delay. A **deliberate stop** does not trigger a restart; a successful run resets the
+counter.
+
+> 💡 Ideal for 24/7 operation. The reconnect count per output is shown in
+> [Monitoring](/docs/en/user-guide/monitoring.md).
+
 ## Notes
 
 > 💡 With multi-output, **one FFmpeg process per active output** is supervised.

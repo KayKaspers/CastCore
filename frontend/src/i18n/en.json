@@ -104,6 +104,10 @@
   "channels": {
     "preview": "Preview"
   },
+  "streamForm": {
+    "autoRestart": "Auto-restart on failure",
+    "maxRetry": "Max. retries"
+  },
   "backup": {
     "create": "Create backup",
     "restore": "Restore",

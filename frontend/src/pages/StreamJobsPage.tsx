@@ -208,6 +208,8 @@ function CreateJobForm({
   const [lavfi, setLavfi] = useState(false);
   const [format, setFormat] = useState("flv");
   const [recording, setRecording] = useState(false);
+  const [autoRestart, setAutoRestart] = useState(false);
+  const [maxRetry, setMaxRetry] = useState(3);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: FormEvent) => {
@@ -218,6 +220,7 @@ function CreateJobForm({
         name,
         ffmpeg_profile_id: profileId || null,
         recording_enabled: recording,
+        fallback_policy: autoRestart ? { auto_restart: true, max_retry: maxRetry, retry_delay_s: 5 } : {},
         inputs: [{ kind: lavfi ? "url" : "file", uri, options: lavfi ? { f: "lavfi" } : {} }],
         outputs: [{ destination_id: destId || null, format }],
       });
@@ -263,6 +266,15 @@ function CreateJobForm({
           <input type="checkbox" checked={recording} onChange={(e) => setRecording(e.target.checked)} />
           ⏺ {t("nav.recordings")}
         </label>
+        <label className="flex items-end gap-2 text-sm text-mist">
+          <input type="checkbox" checked={autoRestart} onChange={(e) => setAutoRestart(e.target.checked)} />
+          ♻ {t("streamForm.autoRestart")}
+        </label>
+        {autoRestart && (
+          <Field label={t("streamForm.maxRetry")}>
+            <Input type="number" min={1} value={maxRetry} onChange={(e) => setMaxRetry(Number(e.target.value))} />
+          </Field>
+        )}
         <div className="col-span-2">
           <Button type="submit" disabled={busy}>{busy ? t("common.loading") : t("common.create")}</Button>
         </div>

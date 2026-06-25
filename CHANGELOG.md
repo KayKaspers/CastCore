@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — stream self-healing (auto-restart on failure)
+- The status consumer now auto-restarts a failed output per the job's `fallback_policy`
+  (`auto_restart`, `max_retry`, `retry_delay_s`): on an unexpected failure it rebuilds the
+  output argv and re-issues a start after a delay, up to max retries; a successful run
+  resets the counter, a deliberate stop never restarts. The attempt count is written to
+  `process_status.reconnect_count` (visible in Monitoring).
+- Stream-job create form gains an **auto-restart** toggle + max retries; `fallback_policy`
+  exposed on the job. Docs: self-healing section in `streams.md` (DE+EN).
+- Verified: a simulated crash triggered an auto-restart and bumped the reconnect count.
+
 ### Added — audit log
 - `audit_service` records security-relevant actions to the existing `audit_events` table:
   **login**, **stream start/stop/restart**, **backup create/restore**, **user create/delete**
