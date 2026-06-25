@@ -34,6 +34,7 @@ class ChannelIn(BaseModel):
     description: str | None = None
     playlist_id: uuid.UUID | None = None
     ffmpeg_profile_id: uuid.UUID | None = None
+    fallback_uri: str | None = None
     hls_enabled: bool = True
     epg_enabled: bool = True
     enabled: bool = True
@@ -45,6 +46,7 @@ class ChannelOut(BaseModel):
     description: str | None
     playlist_id: uuid.UUID | None
     ffmpeg_profile_id: uuid.UUID | None
+    fallback_uri: str | None
     hls_enabled: bool
     epg_enabled: bool
     enabled: bool

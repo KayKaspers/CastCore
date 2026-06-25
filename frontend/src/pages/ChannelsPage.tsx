@@ -1,4 +1,4 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
@@ -12,6 +12,13 @@ export default function ChannelsPage() {
   const playlists = useAsync<Playlist[]>(() => api.get("/playlists"), []);
   const profiles = useAsync<FFmpegProfile[]>(() => api.get("/ffmpeg-profiles"), []);
   const [error, setError] = useState<string | null>(null);
+
+  // Live-refresh channel status (reconciled by the backend status consumer).
+  useEffect(() => {
+    const id = setInterval(() => channels.reload(), 3000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const onErr = (e: unknown) => { if (e instanceof ApiException) setError(e.localized); };
 
@@ -75,12 +82,16 @@ function NewChannel({ playlists, profiles, onDone, onError }: {
   const [name, setName] = useState("");
   const [playlistId, setPlaylistId] = useState("");
   const [profileId, setProfileId] = useState("");
+  const [fallback, setFallback] = useState("");
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      await api.post("/channels", { name, playlist_id: playlistId || null, ffmpeg_profile_id: profileId || null });
-      setName("");
+      await api.post("/channels", {
+        name, playlist_id: playlistId || null, ffmpeg_profile_id: profileId || null,
+        fallback_uri: fallback || null,
+      });
+      setName(""); setFallback("");
       onDone();
     } catch (e) { onError(e); }
   };
@@ -101,6 +112,9 @@ function NewChannel({ playlists, profiles, onDone, onError }: {
             <option value="">default (libx264)</option>
             {profiles.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </Select>
+        </Field>
+        <Field label="Fallback-Video (Pfad, optional)">
+          <Input value={fallback} onChange={(e) => setFallback(e.target.value)} placeholder="/data/media/fallback.mp4" />
         </Field>
         <div className="col-span-3"><Button type="submit">{t("common.create")}</Button></div>
       </form>

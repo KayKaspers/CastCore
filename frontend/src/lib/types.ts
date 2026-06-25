@@ -171,6 +171,7 @@ export interface Channel {
   description: string | null;
   playlist_id: string | null;
   ffmpeg_profile_id: string | null;
+  fallback_uri: string | null;
   hls_enabled: boolean;
   epg_enabled: boolean;
   enabled: boolean;

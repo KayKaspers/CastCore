@@ -8,6 +8,7 @@ to a constant HLS output, and optionally feeds EPG/M3U exports.
 from __future__ import annotations
 
 import datetime as dt
+import os
 import uuid
 from pathlib import Path
 from xml.sax.saxutils import escape
@@ -63,14 +64,21 @@ def _build_argv(channel: Channel, profile: FFmpegProfile | None, concat_file: Pa
 
 
 async def start_channel(db: AsyncSession, channel: Channel) -> list[str]:
-    if channel.playlist_id is None:
-        raise CastCoreError(ErrorCode.FFMPEG_NO_INPUT, params={"channel": "no playlist"})
-    playlist = await db.get(Playlist, channel.playlist_id)
-    if playlist is None:
-        raise CastCoreError(ErrorCode.FFMPEG_NO_INPUT, params={"channel": "playlist missing"})
-    entries, _total = await playlist_service.resolve(db, playlist)
+    entries: list[dict] = []
+    if channel.playlist_id is not None:
+        playlist = await db.get(Playlist, channel.playlist_id)
+        if playlist is not None:
+            entries, _total = await playlist_service.resolve(db, playlist)
+
+    # Drop media that no longer exists on disk so one missing file can't kill the channel.
+    entries = [e for e in entries if os.path.isfile(e["abs_path"])]
+
+    # Fallback: loop a configured fallback video when nothing playable remains.
     if not entries:
-        raise CastCoreError(ErrorCode.FFMPEG_NO_INPUT, params={"channel": "empty playlist"})
+        if channel.fallback_uri and os.path.isfile(channel.fallback_uri):
+            entries = [{"abs_path": channel.fallback_uri, "filename": "fallback", "duration_s": None}]
+        else:
+            raise CastCoreError(ErrorCode.FFMPEG_NO_INPUT, params={"channel": "no playable media"})
 
     base = channel_dir(channel.id)
     out_dir = hls_dir(channel.id)

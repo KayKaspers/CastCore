@@ -27,3 +27,4 @@ class Channel(Base, TimestampMixin):
     epg_enabled: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     status: Mapped[str] = mapped_column(String(16), default="stopped", nullable=False)
     output_id: Mapped[uuid.UUID | None] = mapped_column(nullable=True)  # current playout process id
+    fallback_uri: Mapped[str | None] = mapped_column(String(2048), nullable=True)  # video looped when playlist unavailable

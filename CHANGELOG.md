@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 3: channel health + fallback
+- The status consumer now reconciles **channel** status from the real Process Manager
+  state (running/stopped/failed), so channel crashes become visible (no longer optimistic).
+- Channel start drops media that no longer exists on disk (one missing file can't kill the
+  channel) and falls back to a configured loop video (`channels.fallback_uri`, migration
+  `0011`) when no playlist media is playable; a clean error if neither is available.
+- Channels UI auto-refreshes status (3s) and exposes a fallback-video field.
+- Verified: channel status reconciled on start/stop; empty playlist + fallback starts;
+  no media + no fallback returns 400.
+
 ### Added — Phase 3: linear channels (start)
 - `channels` model (migration `0010`) + `channel_service`: 24/7 playout that loops a
   playlist via the FFmpeg concat demuxer into a rolling HLS output (supervised by the

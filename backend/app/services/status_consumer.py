@@ -17,6 +17,7 @@ from sqlalchemy import select
 
 from app.core.redis import STATUS_CHANNEL, get_redis
 from app.db.session import SessionLocal
+from app.models.channel import Channel
 from app.models.recording import Recording
 from app.models.streaming import Output, ProcessStatus, StreamJob
 from app.services import notification_service
@@ -37,6 +38,15 @@ async def _handle(message: dict) -> None:
     state = message.get("state", "")
 
     async with SessionLocal() as db:
+        # Channel playout outputs are synthetic — reconcile channel status directly.
+        channel = (await db.execute(
+            select(Channel).where(Channel.output_id == output_id)
+        )).scalar_one_or_none()
+        if channel is not None:
+            channel.status = _JOB_STATUS.get(state, channel.status)
+            await db.commit()
+            return
+
         # Recording outputs are synthetic (no Output row) — finalize them separately.
         rec = (await db.execute(
             select(Recording).where(Recording.output_id == output_id, Recording.state == "recording")
