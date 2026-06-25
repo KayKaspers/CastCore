@@ -3,34 +3,47 @@ title: "SMB / CIFS"
 description: "Mount SMB shares securely (credentials, mounts)."
 lang: en
 audience: "Administrators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # SMB / CIFS
 
-> Mount SMB shares securely (credentials, mounts).
+> Use SMB/CIFS shares as a source – securely and accountably.
 
-**Audience:** Administrators
+**Audience:** administrators.
 
-## Overview
+## Create in CastCore
 
-Mount SMB shares securely (credentials, mounts).
+**Sources** area → SMB source: display name, server/IP, share, optional domain/workgroup,
+user, password, SMB version, read-only. **Test connection** checks reachability (TCP 445).
 
-## Contents
+> 🔐 The password is stored **encrypted** and only written to a `0600` credentials file –
+> never on the command line, never in logs.
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+## Host mount (recommended)
 
-- TODO: add the step-by-step guide or in-depth explanation.
+Mounting inside the container needs elevated privileges. Better to mount on the **host**:
 
-## Notes
+```bash
+# /etc/fstab (generic example)
+//server/share  /mnt/castcore-share  cifs  credentials=/etc/castcore/smb.cred,ro,iocharset=utf8,vers=3.0  0  0
+```
+Then use the host path as a **local source** in CastCore. See
+[Storage mounts](/docs/en/admin-guide/storage-mounts.md).
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+## Container mount (only if needed)
+
+Requires `cap_add: [SYS_ADMIN]` on the container (deliberately not the default). Otherwise
+the mount fails with "Unable to apply new capability set".
+
+## If something fails
+
+[SMB problems](/docs/en/troubleshooting/smb-problems.md)
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [NFS](/docs/en/admin-guide/nfs.md) · [Sources / storage](/docs/en/user-guide/sources-storage.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

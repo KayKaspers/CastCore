@@ -2,35 +2,44 @@
 title: "Backup & Restore"
 description: "Datenbank und Konfiguration sichern und wiederherstellen."
 lang: de
-audience: "Anwender / Operatoren"
-status: draft
+audience: "Administratoren"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Backup & Restore
 
-> Datenbank und Konfiguration sichern und wiederherstellen.
+> CastCore erstellt **logische Backups** (gz-JSON) aller Anwendungstabellen. Nur Admin.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Administratoren. UI-Bereich: **Backup / Restore** (`/backup`).
 
-## Überblick
+## Backup erstellen
 
-Datenbank und Konfiguration sichern und wiederherstellen.
+**Backup erstellen** → ein gz-JSON-Artefakt im Backup-Verzeichnis. Es enthält Datenbank
+und Konfiguration; **Secrets bleiben verschlüsselt**.
 
-## Inhalt
+## Herunterladen / Löschen
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Über **↓** lädst du ein Backup herunter, über **✕** löschst du es.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Wiederherstellen
 
-## Hinweise
+**Wiederherstellen** überschreibt **alle** aktuellen Daten (mit Bestätigung).
+Ausgenommen sind die **Backup-Historie** und das **[Audit-Log](/docs/de/admin-guide/security.md)**.
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> ⚠️ Vor einem Update/Restore lohnt immer ein frisches Backup.
+
+> 🔐 **Ohne den passenden `ENCRYPTION_KEY` sind die enthaltenen Secrets unbrauchbar.**
+> Bewahre den Schlüssel sicher und getrennt auf ([Secrets](/docs/de/admin-guide/secrets.md)).
+
+## Geplante Backups
+
+Über den [Scheduler](/docs/de/user-guide/settings.md) lassen sich Backups zeitgesteuert
+erstellen (`backup`-Aktion). Erfolgreiche Backups lösen das Event `backup_done` aus.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Updates](/docs/de/user-guide/updates.md) · [API: Backup/Restore](/docs/de/api/backup-restore.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

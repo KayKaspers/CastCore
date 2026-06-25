@@ -3,34 +3,56 @@ title: "Quellen / Storage"
 description: "Lokale und Netzwerk-Quellen (SMB) anlegen, testen, mounten, durchsuchen."
 lang: de
 audience: "Anwender / Operatoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Quellen / Storage
 
-> Lokale und Netzwerk-Quellen (SMB) anlegen, testen, mounten, durchsuchen.
+> Quellen liefern die Medien für Streams und Channels: lokale Ordner und SMB-Freigaben.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Operatoren. UI-Bereich: **Quellen / Storage** (`/sources`).
 
-## Überblick
+## Lokale Quelle anlegen
 
-Lokale und Netzwerk-Quellen (SMB) anlegen, testen, mounten, durchsuchen.
+Name + Pfad (z. B. `/data/media`). Beim Anlegen wird die Erreichbarkeit geprüft
+(Status **online/error**).
 
-## Inhalt
+## SMB-Quelle anlegen
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Name, Server/IP, Freigabe, optional Domain/Benutzer/Passwort. **Verbindung testen** prüft
+TCP 445. Details/Mount-Thematik: [SMB / CIFS](/docs/de/admin-guide/smb-cifs.md).
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Aktionen
+
+| Aktion | Wirkung |
+| --- | --- |
+| **Test** | Erreichbarkeit prüfen (Status aktualisieren) |
+| **mount / unmount** | SMB ein-/aushängen (Rechte nötig, siehe unten) |
+| **Durchsuchen** | Verzeichnis browsen; **„copy path"** kopiert den absoluten Pfad |
+| **✕** | Quelle löschen |
+
+## Von der Quelle zum Stream
+
+1. **Durchsuchen** → bei einer Datei **„copy path"**.
+2. Pfad im [Stream-Editor](/docs/de/user-guide/stream-editor.md) als Input-URI einfügen,
+   oder die Quelle in der [Medienbibliothek](/docs/de/user-guide/media-library.md) scannen.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 🔐 SMB-Passwörter werden verschlüsselt gespeichert; das Browsen ist
+> **traversal-geschützt** (auf den Quellpfad beschränkt).
+
+> ⚠️ Container-Mounts brauchen erweiterte Rechte – bevorzugt
+> [auf dem Host mounten](/docs/de/admin-guide/storage-mounts.md).
+
+## Bei Problemen
+
+[SMB-Probleme](/docs/de/troubleshooting/smb-problems.md)
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Medienbibliothek](/docs/de/user-guide/media-library.md) · [Storage-Mounts](/docs/de/admin-guide/storage-mounts.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

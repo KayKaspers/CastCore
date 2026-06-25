@@ -4,7 +4,7 @@
     "pages": 74,
     "de": 74,
     "en": 74,
-    "placeholders": 34,
+    "placeholders": 0,
     "stale": 0,
     "errors": 0,
     "warnings": 0
@@ -13,12 +13,12 @@
     "admin-guide/cloud-sources.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "admin-guide/deployment.md": {
       "de": true,
@@ -63,12 +63,12 @@
     "admin-guide/nfs.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "admin-guide/reverse-proxy.md": {
       "de": true,
@@ -103,12 +103,12 @@
     "admin-guide/smb-cifs.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "admin-guide/storage-mounts.md": {
       "de": true,
@@ -123,22 +123,22 @@
     "admin-guide/system-requirements.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "admin-guide/troubleshooting.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "api/auth.md": {
       "de": true,
@@ -223,12 +223,12 @@
     "developer-guide/api.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "developer-guide/architecture.md": {
       "de": true,
@@ -303,12 +303,12 @@
     "developer-guide/media-library.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "developer-guide/migrations.md": {
       "de": true,
@@ -323,12 +323,12 @@
     "developer-guide/platform-integrations.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "developer-guide/process-manager.md": {
       "de": true,
@@ -353,12 +353,12 @@
     "developer-guide/storage-integrations.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "developer-guide/testing.md": {
       "de": true,
@@ -373,12 +373,12 @@
     "developer-guide/websocket-sse.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "getting-started/first-setup.md": {
       "de": true,
@@ -403,12 +403,12 @@
     "getting-started/installation-native.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "getting-started/overview.md": {
       "de": true,
@@ -443,12 +443,12 @@
     "reference/configuration.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "reference/environment-variables.md": {
       "de": true,
@@ -483,12 +483,12 @@
     "reference/permissions.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "reference/placeholders.md": {
       "de": true,
@@ -593,12 +593,12 @@
     "user-guide/backup-restore.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "user-guide/channels.md": {
       "de": true,
@@ -613,12 +613,12 @@
     "user-guide/dashboard.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "user-guide/media-library.md": {
       "de": true,
@@ -663,12 +663,12 @@
     "user-guide/playlists.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "user-guide/preflight-checks.md": {
       "de": true,
@@ -703,12 +703,12 @@
     "user-guide/sources-storage.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "user-guide/stream-editor.md": {
       "de": true,

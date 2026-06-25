@@ -3,34 +3,37 @@ title: "Dashboard"
 description: "Das Dashboard liest Systemzustand und aktive Streams auf einen Blick."
 lang: de
 audience: "Anwender / Operatoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Dashboard
 
-> Das Dashboard liest Systemzustand und aktive Streams auf einen Blick.
+> Die Startseite nach dem Login: Systemzustand und Streaming-Überblick auf einen Blick.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Operatoren. UI-Bereich: **Dashboard** (`/`).
 
-## Überblick
+## Was du siehst
 
-Das Dashboard liest Systemzustand und aktive Streams auf einen Blick.
+| Kachel | Bedeutung |
+| --- | --- |
+| **Stream-Jobs** | Anzahl angelegter Jobs |
+| **Live** | aktuell laufende/startende Streams |
+| **FFmpeg** | ist FFmpeg im System verfügbar? |
+| **Version** | laufende CastCore-Version |
 
-## Inhalt
+Darunter der **Status** (Environment, FFmpeg/ffprobe verfügbar) – ein schneller
+Health-Check der Instanz.
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+## Navigation
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
-
-## Hinweise
-
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+Über die Seitenleiste erreichst du alle Bereiche (Stream-Jobs, Channels, Quellen,
+Medienbibliothek, Monitoring, …) sowie die **Hilfe** (`/docs`).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Stream-Jobs](/docs/de/user-guide/streams.md) · [Monitoring](/docs/de/user-guide/monitoring.md)
+- [Updates](/docs/de/user-guide/updates.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

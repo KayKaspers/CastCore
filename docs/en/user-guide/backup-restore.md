@@ -2,35 +2,44 @@
 title: "Backup & restore"
 description: "Back up and restore the database and configuration."
 lang: en
-audience: "Users / Operators"
-status: draft
+audience: "Administrators"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Backup & restore
 
-> Back up and restore the database and configuration.
+> CastCore creates **logical backups** (gz-JSON) of all application tables. Admin only.
 
-**Audience:** Users / Operators
+**Audience:** administrators. UI area: **Backup / restore** (`/backup`).
 
-## Overview
+## Create a backup
 
-Back up and restore the database and configuration.
+**Create backup** → a gz-JSON artifact in the backup directory. It contains the database
+and configuration; **secrets stay encrypted**.
 
-## Contents
+## Download / delete
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+Use **↓** to download a backup, **✕** to delete it.
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Restore
 
-## Notes
+**Restore** overwrites **all** current data (with confirmation). Excluded are the **backup
+history** and the **[audit log](/docs/en/admin-guide/security.md)**.
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+> ⚠️ Before an update/restore, a fresh backup is always worth it.
+
+> 🔐 **Without the matching `ENCRYPTION_KEY`, the contained secrets are unusable.** Keep
+> the key safe and separate ([Secrets](/docs/en/admin-guide/secrets.md)).
+
+## Scheduled backups
+
+Via the [scheduler](/docs/en/user-guide/settings.md) you can create backups on a schedule
+(`backup` action). Successful backups raise the `backup_done` event.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Updates](/docs/en/user-guide/updates.md) · [API: backup/restore](/docs/en/api/backup-restore.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

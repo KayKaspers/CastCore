@@ -3,34 +3,44 @@ title: "Playlists"
 description: "Geordnete/zufällige Medienlisten als Grundlage für Channels."
 lang: de
 audience: "Anwender / Operatoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Playlists
 
-> Geordnete/zufällige Medienlisten als Grundlage für Channels.
+> Eine Playlist ist eine geordnete oder zufällige Liste von Medien aus der
+> [Medienbibliothek](/docs/de/user-guide/media-library.md) – die Grundlage für
+> [Channels](/docs/de/user-guide/channels.md).
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Operatoren. UI-Bereich: **Playlists** (`/playlists`).
 
-## Überblick
+## Anlegen & befüllen
 
-Geordnete/zufällige Medienlisten als Grundlage für Channels.
+1. Playlist mit **Name** und **Modus** (`sequential`/`shuffle`/`loop`) anlegen.
+2. Rechts Medien aus der Bibliothek hinzufügen (nur streamfähige).
+3. Reihenfolge per **▲/▼** ändern, Einträge entfernen.
 
-## Inhalt
+## Modi
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+| Modus | Verhalten |
+| --- | --- |
+| **sequential** | feste Reihenfolge |
+| **shuffle** | zufällige Reihenfolge bei Auflösung |
+| **loop** | Endloswiederholung (für 24/7-Channels) |
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Dauer
 
-## Hinweise
+Über **Dauer** berechnet CastCore die Gesamtlänge (aus den ffprobe-Dauern der Items).
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Weiter zum Channel
+
+Eine Playlist wird in einem [Channel](/docs/de/user-guide/channels.md) als
+kontinuierliches Playout abgespielt.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Medienbibliothek](/docs/de/user-guide/media-library.md) · [Channels](/docs/de/user-guide/channels.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

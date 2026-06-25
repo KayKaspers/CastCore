@@ -2,35 +2,43 @@
 title: "Konfiguration"
 description: "Alle Konfigurationsoptionen im Überblick."
 lang: de
-audience: "Alle Rollen"
-status: draft
+audience: "Administratoren"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Konfiguration
 
-> Alle Konfigurationsoptionen im Überblick.
+> Überblick, **wo** CastCore konfiguriert wird.
 
-**Zielgruppe:** Alle Rollen
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Ebenen
 
-Alle Konfigurationsoptionen im Überblick.
+| Ebene | Was | Wo |
+| --- | --- | --- |
+| **Umgebung** | Secrets, DB/Redis, Pfade, Domain, FFmpeg-Pfade | `.env` (Docker) bzw. `/etc/castcore/castcore.env` (nativ) |
+| **Instanz** | Instanzname, Standardsprache | UI → Einstellungen (Admin) |
+| **Pro Benutzer** | Sprache | UI → Einstellungen |
+| **Fachlich** | Profile, Ziele, Quellen, Channels, Benachrichtigungen, Scheduler | UI / API |
 
-## Inhalt
+## Umgebungsvariablen
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Vollständige Referenz: [Umgebungsvariablen](/docs/de/reference/environment-variables.md).
+Wichtig: `SECRET_KEY`, `ENCRYPTION_KEY`, `POSTGRES_*`, `REDIS_*`, `DOMAIN`, `DATA_DIR`,
+`FFMPEG_PATH`/`FFPROBE_PATH`.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Instanz- & Benutzereinstellungen
+
+Siehe [Einstellungen](/docs/de/user-guide/settings.md).
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 🔐 Secrets gehören in die Umgebung, **nicht** ins Repo. Die `.env` ist git-ignoriert.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Umgebungsvariablen](/docs/de/reference/environment-variables.md) · [Secrets](/docs/de/admin-guide/secrets.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

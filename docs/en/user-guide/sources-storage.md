@@ -3,34 +3,56 @@ title: "Sources / storage"
 description: "Create, test, mount and browse local and network (SMB) sources."
 lang: en
 audience: "Users / Operators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Sources / storage
 
-> Create, test, mount and browse local and network (SMB) sources.
+> Sources provide the media for streams and channels: local folders and SMB shares.
 
-**Audience:** Users / Operators
+**Audience:** users / operators. UI area: **Sources / storage** (`/sources`).
 
-## Overview
+## Create a local source
 
-Create, test, mount and browse local and network (SMB) sources.
+Name + path (e.g. `/data/media`). On create, reachability is checked (status
+**online/error**).
 
-## Contents
+## Create an SMB source
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+Name, server/IP, share, optional domain/user/password. **Test connection** checks TCP 445.
+Details/mount topic: [SMB / CIFS](/docs/en/admin-guide/smb-cifs.md).
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Actions
+
+| Action | Effect |
+| --- | --- |
+| **Test** | Check reachability (refresh status) |
+| **mount / unmount** | Mount/unmount SMB (needs privileges, see below) |
+| **Browse** | Browse a directory; **"copy path"** copies the absolute path |
+| **✕** | Delete the source |
+
+## From source to stream
+
+1. **Browse** → on a file click **"copy path"**.
+2. Paste the path in the [stream editor](/docs/en/user-guide/stream-editor.md) as the input
+   URI, or scan the source in the [media library](/docs/en/user-guide/media-library.md).
 
 ## Notes
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+> 🔐 SMB passwords are stored encrypted; browsing is **traversal-protected** (confined to
+> the source path).
+
+> ⚠️ Container mounts need elevated privileges – prefer
+> [mounting on the host](/docs/en/admin-guide/storage-mounts.md).
+
+## If something fails
+
+[SMB problems](/docs/en/troubleshooting/smb-problems.md)
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Media library](/docs/en/user-guide/media-library.md) · [Storage mounts](/docs/en/admin-guide/storage-mounts.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

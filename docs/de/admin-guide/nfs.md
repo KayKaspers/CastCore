@@ -3,34 +3,40 @@ title: "NFS"
 description: "NFS-Exporte als Quelle einbinden."
 lang: de
 audience: "Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # NFS
 
-> NFS-Exporte als Quelle einbinden.
+> NFS-Freigaben als Medienquelle nutzen.
 
-**Zielgruppe:** Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Empfohlener Weg: Host-Mount
 
-NFS-Exporte als Quelle einbinden.
+NFS am besten auf dem **Host** mounten und den Pfad als **lokale Quelle** in CastCore
+einbinden – wie bei [SMB](/docs/de/admin-guide/smb-cifs.md) bleibt der Container
+unprivilegiert.
 
-## Inhalt
+```bash
+# /etc/fstab (Beispiel, generisch)
+server:/export/media  /mnt/castcore-nfs  nfs  ro,soft,timeo=30  0  0
+```
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
-
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+Danach unter **Quellen** eine lokale Quelle mit dem Mount-Pfad anlegen.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 💡 Für stabile Streams: `soft` + `timeo` setzen, damit Hänger bei Netzwerkproblemen
+> begrenzt bleiben. Read-only (`ro`) genügt für Quellen.
+
+> ℹ️ Eine native NFS-Verwaltung **in der UI** ist vorbereitet, aber noch nicht
+> implementiert – aktuell über den Host mounten.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Storage-Mounts](/docs/de/admin-guide/storage-mounts.md) · [SMB / CIFS](/docs/de/admin-guide/smb-cifs.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

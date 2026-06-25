@@ -3,34 +3,38 @@ title: "Permissions"
 description: "Which action requires which role."
 lang: en
 audience: "All roles"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Permissions
 
-> Which action requires which role.
+> Overview of which role may use which areas. **Admin** may always do everything.
 
-**Audience:** All roles
+**Audience:** all roles. See also [Roles](/docs/en/reference/roles.md).
 
-## Overview
+## Matrix (excerpt)
 
-Which action requires which role.
+| Area | Viewer | Operator | Admin |
+| --- | :---: | :---: | :---: |
+| Dashboard / monitoring / logs (read) | ✅ | ✅ | ✅ |
+| Stream jobs / channels / sources / profiles / destinations | – | ✅ | ✅ |
+| Media library / playlists / recordings | – | ✅ | ✅ |
+| Platform metadata / assets | – | ✅ | ✅ |
+| User management | – | – | ✅ |
+| Settings (instance) | – | – | ✅ |
+| Notifications | – | – | ✅ |
+| Backup / restore | – | – | ✅ |
+| Audit log / updates | – | – | ✅ |
 
-## Contents
+## Enforcement
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
-
-- TODO: add the step-by-step guide or in-depth explanation.
-
-## Notes
-
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+The check runs **server-side** per route. A missing entitlement → HTTP `403`
+(`auth.forbidden`).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Roles](/docs/en/reference/roles.md) · [Users & roles](/docs/en/user-guide/users-roles.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

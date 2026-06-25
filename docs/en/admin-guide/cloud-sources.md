@@ -3,34 +3,42 @@ title: "Cloud sources"
 description: "Prepare S3/WebDAV/rclone remotes as sources."
 lang: en
 audience: "Administrators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Cloud sources
 
-> Prepare S3/WebDAV/rclone remotes as sources.
+> Cloud storage (S3, WebDAV, Nextcloud, B2, R2, Google Drive, Dropbox, OneDrive) as a
+> source.
 
-**Audience:** Administrators
+**Audience:** administrators.
 
-## Overview
+> ℹ️ **Status:** cloud integration is modularly **prepared** but not yet implemented in the
+> UI. Until then, mount cloud remotes via **rclone mount** on the host and use them as a
+> [local source](/docs/en/user-guide/sources-storage.md).
 
-Prepare S3/WebDAV/rclone remotes as sources.
+## Interim: rclone mount (host)
 
-## Contents
+```bash
+rclone mount myremote:bucket /mnt/castcore-cloud \
+  --vfs-cache-mode full --read-only --daemon
+```
+Then add `/mnt/castcore-cloud` as a **local source** in CastCore.
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+## Planned integration
 
-- TODO: add the step-by-step guide or in-depth explanation.
+Test connection · store OAuth/API credentials **encrypted** · browse the remote · cache
+directory · sync or mount mode · resilience for unstable links/large files.
 
 ## Notes
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+> 💡 Cloud connections can be unstable – `--vfs-cache-mode full` and generous buffers help
+> with large media files.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Storage mounts](/docs/en/admin-guide/storage-mounts.md) · [Sources / storage](/docs/en/user-guide/sources-storage.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable (feature in preparation)_

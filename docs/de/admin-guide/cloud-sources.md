@@ -3,34 +3,43 @@ title: "Cloud-Quellen"
 description: "S3/WebDAV/rclone-Remotes als Quelle vorbereiten."
 lang: de
 audience: "Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Cloud-Quellen
 
-> S3/WebDAV/rclone-Remotes als Quelle vorbereiten.
+> Cloud-Speicher (S3, WebDAV, Nextcloud, B2, R2, Google Drive, Dropbox, OneDrive) als
+> Quelle.
 
-**Zielgruppe:** Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+> ℹ️ **Status:** Die Cloud-Anbindung ist modular **vorbereitet**, aber noch nicht in der
+> UI implementiert. Bis dahin lassen sich Cloud-Remotes über **rclone mount** auf dem Host
+> einbinden und als [lokale Quelle](/docs/de/user-guide/sources-storage.md) nutzen.
 
-S3/WebDAV/rclone-Remotes als Quelle vorbereiten.
+## Übergangslösung: rclone-Mount (Host)
 
-## Inhalt
+```bash
+rclone mount myremote:bucket /mnt/castcore-cloud \
+  --vfs-cache-mode full --read-only --daemon
+```
+Anschließend `/mnt/castcore-cloud` als **lokale Quelle** in CastCore anlegen.
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+## Geplante Anbindung
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+Verbindung testen · OAuth/API-Zugangsdaten **verschlüsselt** speichern · Remote
+durchsuchen · Cache-Verzeichnis · Sync- oder Mount-Modus · Robustheit bei instabilen
+Verbindungen/großen Dateien.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 💡 Cloud-Verbindungen sind potenziell instabil – `--vfs-cache-mode full` und großzügige
+> Puffer helfen bei großen Mediendateien.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Storage-Mounts](/docs/de/admin-guide/storage-mounts.md) · [Quellen / Storage](/docs/de/user-guide/sources-storage.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil (Feature in Vorbereitung)_

@@ -2,35 +2,61 @@
 title: "Native Linux installation"
 description: "Set up CastCore without Docker using the install scripts."
 lang: en
-audience: "Beginners"
-status: draft
+audience: "Administrators"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Native Linux installation
 
-> Set up CastCore without Docker using the install scripts.
+> Alternative to Docker: install directly on the system via `scripts/install.sh`.
 
-**Audience:** Beginners
+**Audience:** administrators.
+**Requirements:** Debian 12 / Ubuntu LTS, root. See
+[System requirements](/docs/en/admin-guide/system-requirements.md).
 
-## Overview
+## Install
 
-Set up CastCore without Docker using the install scripts.
+```bash
+git clone https://github.com/KayKaspers/CastCore.git
+cd CastCore
+sudo ./scripts/install.sh
+```
 
-## Contents
+`install.sh` does: OS check · packages (Python 3.12, PostgreSQL, Redis, FFmpeg,
+cifs-utils, rclone) · system user `castcore` · directories (`/opt/castcore`,
+`/var/lib/castcore`, `/var/log/castcore`) · Python venv · DB/Redis · **generate secrets**
+(`/etc/castcore/castcore.env`) · migrations · **systemd services** · optional reverse proxy.
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+## Services
 
-- TODO: add the step-by-step guide or in-depth explanation.
+`castcore-backend`, `castcore-process-manager`, `castcore-worker`, `castcore-scheduler`.
 
-## Notes
+```bash
+systemctl status castcore-backend
+journalctl -u castcore-backend -f
+```
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+## Update / uninstall
+
+```bash
+sudo ./scripts/update.sh       # backup + sync + migrations + restart
+sudo ./scripts/uninstall.sh    # remove services (data kept; --purge deletes everything)
+```
+
+## Afterwards
+
+Set up reverse proxy/HTTPS ([HTTPS](/docs/en/admin-guide/https.md)), then open the
+[setup wizard](/docs/en/getting-started/first-setup.md).
+
+## If something fails
+
+[Native installation (troubleshooting)](/docs/en/troubleshooting/native-installation.md)
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Install with Docker](/docs/en/getting-started/installation-docker.md)
+- [Environment variables](/docs/en/reference/environment-variables.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

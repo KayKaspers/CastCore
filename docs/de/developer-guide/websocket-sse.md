@@ -3,34 +3,46 @@ title: "WebSockets / SSE"
 description: "Live-Logs und Status über WebSockets."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # WebSockets / SSE
 
-> Live-Logs und Status über WebSockets.
+> Live-Logs und Statusupdates laufen über WebSockets.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Kanäle
 
-Live-Logs und Status über WebSockets.
+| Endpoint | Inhalt |
+| --- | --- |
+| `WS /api/v1/ws/logs/{job_id}` | FFmpeg-Logzeilen `{output_id, line, level, hint, ts}` |
+| `WS /api/v1/ws/status` | Statuswechsel + Metriken pro Output |
 
-## Inhalt
+## Datenfluss
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Der **Process Manager** published nach Redis (`castcore:logs:<job>` / `:status`); das
+Backend abonniert per Redis-Pub/Sub und reicht die Nachrichten an die WebSocket-Clients
+weiter.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Authentifizierung
 
-## Hinweise
+Browser können auf WebSockets **keine Header** setzen → der Access-Token wird als
+Query-Parameter `?token=` übergeben und beim Connect validiert.
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Implementierung
+
+- Backend: `app/api/v1/endpoints/ws.py` (Relay + Disconnect-Erkennung).
+- Frontend: `lib/useLogStream.ts` (Hook) + `components/LogsPanel.tsx`.
+
+## Reverse Proxy
+
+Der Proxy muss Upgrade/Connection-Header durchreichen (Caddy automatisch).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Process Manager](/docs/de/developer-guide/process-manager.md) · [API: Monitoring](/docs/de/api/monitoring.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

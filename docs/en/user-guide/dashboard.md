@@ -3,34 +3,37 @@ title: "Dashboard"
 description: "The dashboard shows system health and active streams at a glance."
 lang: en
 audience: "Users / Operators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Dashboard
 
-> The dashboard shows system health and active streams at a glance.
+> The landing page after login: system health and a streaming overview at a glance.
 
-**Audience:** Users / Operators
+**Audience:** users / operators. UI area: **Dashboard** (`/`).
 
-## Overview
+## What you see
 
-The dashboard shows system health and active streams at a glance.
+| Tile | Meaning |
+| --- | --- |
+| **Stream jobs** | number of jobs created |
+| **Live** | streams currently running/starting |
+| **FFmpeg** | is FFmpeg available on the system? |
+| **Version** | running CastCore version |
 
-## Contents
+Below it, the **status** (environment, FFmpeg/ffprobe available) – a quick health check of
+the instance.
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+## Navigation
 
-- TODO: add the step-by-step guide or in-depth explanation.
-
-## Notes
-
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+The sidebar reaches all areas (stream jobs, channels, sources, media library, monitoring,
+…) and the **Help** (`/docs`).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Stream jobs](/docs/en/user-guide/streams.md) · [Monitoring](/docs/en/user-guide/monitoring.md)
+- [Updates](/docs/en/user-guide/updates.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

@@ -3,34 +3,43 @@ title: "Storage-Integrationen"
 description: "Quellen-/Mount-Schicht und Erweiterung."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Storage-Integrationen
 
-> Quellen-/Mount-Schicht und Erweiterung.
+> Aufbau der Quellen-/Mount-Schicht und wie man neue Quellentypen ergänzt.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Modell
 
-Quellen-/Mount-Schicht und Erweiterung.
+- `storage_sources` ist die **polymorphe Wurzel** (`class`/`type`, Status, Pfad).
+- Typ-Detail in eigenen Tabellen, z. B. `smb_sources` (Server/Share/Creds/Mount-Pfad).
+- Logik in `app/services/storage_service.py`.
 
-## Inhalt
+## Sicherheit
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+- Secrets (SMB-Passwort) **verschlüsselt**; Mount-Credentials in `0600`-Dateien.
+- Externe Befehle (`mount.cifs`, `umount`) als **Argumentliste** (kein Shell).
+- `browse` ist **traversal-geschützt** (auf den effektiven Pfad beschränkt).
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Einen Quellentyp ergänzen
 
-## Hinweise
+1. Detail-Tabelle + Migration anlegen, am `storage_sources`-Typ andocken.
+2. In `storage_service` `effective_path`, `test_source`, ggf. `mount`/`unmount` erweitern.
+3. Endpoints/Schemas und UI ([Quellen](/docs/de/user-guide/sources-storage.md)) ergänzen.
+4. Doku (DE+EN) + Manifest aktualisieren.
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Hinweis
+
+Container-Mounts brauchen erweiterte Rechte – bevorzugt
+[Host-Mounts](/docs/de/admin-guide/storage-mounts.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [API: Quellen](/docs/de/api/sources.md) · [Storage-Mounts](/docs/de/admin-guide/storage-mounts.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

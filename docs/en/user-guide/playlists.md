@@ -3,34 +3,44 @@ title: "Playlists"
 description: "Ordered/shuffled media lists as the basis for channels."
 lang: en
 audience: "Users / Operators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Playlists
 
-> Ordered/shuffled media lists as the basis for channels.
+> A playlist is an ordered or shuffled list of media from the
+> [media library](/docs/en/user-guide/media-library.md) – the basis for
+> [channels](/docs/en/user-guide/channels.md).
 
-**Audience:** Users / Operators
+**Audience:** users / operators. UI area: **Playlists** (`/playlists`).
 
-## Overview
+## Create & populate
 
-Ordered/shuffled media lists as the basis for channels.
+1. Create a playlist with a **name** and **mode** (`sequential`/`shuffle`/`loop`).
+2. On the right, add media from the library (streamable only).
+3. Reorder via **▲/▼**, remove entries.
 
-## Contents
+## Modes
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+| Mode | Behaviour |
+| --- | --- |
+| **sequential** | fixed order |
+| **shuffle** | random order on resolution |
+| **loop** | endless repeat (for 24/7 channels) |
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Duration
 
-## Notes
+Use **Duration** and CastCore computes the total length (from the items' ffprobe
+durations).
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+## On to the channel
+
+A playlist is played as continuous playout in a [channel](/docs/en/user-guide/channels.md).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Media library](/docs/en/user-guide/media-library.md) · [Channels](/docs/en/user-guide/channels.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

@@ -3,34 +3,40 @@ title: "Platform integrations"
 description: "Platform/metadata layer and how to extend it."
 lang: en
 audience: "Developers"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Platform integrations
 
-> Platform/metadata layer and how to extend it.
+> How platforms/metadata are implemented and how to extend them.
 
-**Audience:** Developers
+**Audience:** developers.
 
-## Overview
+## Separating transport and metadata
 
-Platform/metadata layer and how to extend it.
+- **Transport:** `destinations` (URL + stream key) → FFmpeg output.
+- **Metadata:** `platform_metadata` per stream job & platform (title/description/tags/
+  thumbnail). Resolved via `metadata_service` with
+  [placeholders](/docs/en/reference/placeholders.md).
 
-## Contents
+## Adding a platform
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+1. Allow the platform value (e.g. `kick`) in metadata (frontend selection + validation if
+   needed).
+2. Optionally add platform-specific hints/warnings in
+   `metadata_service.resolve_metadata` (e.g. "category recommended").
+3. Update the docs in [Platforms](/docs/en/user-guide/platforms.md) and
+   [API: platforms](/docs/en/api/platforms.md).
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Planned (Phase 4)
 
-## Notes
-
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+OAuth integration (connect accounts, store refresh tokens **encrypted**) and API-driven
+setting of title/thumbnail.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [API: platforms & metadata](/docs/en/api/platforms.md) · [Placeholders](/docs/en/reference/placeholders.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

@@ -3,34 +3,45 @@ title: "Systemanforderungen"
 description: "Hardware-, OS- und Netzwerk-Voraussetzungen für CastCore."
 lang: de
 audience: "Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Systemanforderungen
 
-> Hardware-, OS- und Netzwerk-Voraussetzungen für CastCore.
+> Was der Zielserver mitbringen sollte.
 
-**Zielgruppe:** Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Betriebssystem
 
-Hardware-, OS- und Netzwerk-Voraussetzungen für CastCore.
+Debian 12 oder Ubuntu Server LTS (auch LXC, VM, Bare Metal, Proxmox). Für Docker:
+aktivierte Virtualisierung.
 
-## Inhalt
+## Hardware (Richtwerte)
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+| Last | CPU | RAM | Hinweis |
+| --- | --- | --- | --- |
+| 1 Stream (copy) | 2 Kerne | 2 GB | minimal |
+| 1–2 Re-Encodes 1080p | 4 Kerne | 4 GB | x264 `veryfast` |
+| Mehrere Streams / Channels | 8+ Kerne | 8+ GB | oder GPU-Encoder |
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+**GPU** (optional): NVIDIA (NVENC), Intel (QSV) oder VAAPI für effizientes Encoding –
+Treiber/Geräte müssen ins System bzw. den Container durchgereicht werden.
 
-## Hinweise
+## Speicher & Netzwerk
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+- Genug Platz für Medien/Recordings unter `DATA_DIR`.
+- Stabile **Upload-Bandbreite** für die Zielbitrate(n); Multi-Output addiert sich.
+
+## Software
+
+Docker + Docker Compose (Docker-Weg) **oder** die vom Installer verwalteten Pakete
+(nativer Weg). FFmpeg/ffprobe bringt CastCore mit bzw. installiert sie.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Deployment](/docs/de/admin-guide/deployment.md) · [Performance](/docs/de/troubleshooting/performance.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

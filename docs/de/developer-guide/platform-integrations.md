@@ -3,34 +3,40 @@ title: "Plattform-Integrationen"
 description: "Plattform-/Metadaten-Schicht und Erweiterung."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Plattform-Integrationen
 
-> Plattform-/Metadaten-Schicht und Erweiterung.
+> Wie Plattformen/Metadaten umgesetzt sind und wie man sie erweitert.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Trennung von Transport und Metadaten
 
-Plattform-/Metadaten-Schicht und Erweiterung.
+- **Transport:** `destinations` (URL + Stream-Key) → FFmpeg-Output.
+- **Metadaten:** `platform_metadata` pro Stream-Job & Plattform (Titel/Beschreibung/Tags/
+  Thumbnail). Aufgelöst über `metadata_service` mit
+  [Platzhaltern](/docs/de/reference/placeholders.md).
 
-## Inhalt
+## Eine Plattform ergänzen
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+1. Plattform-Wert (z. B. `kick`) in den Metadaten zulassen (Frontend-Auswahl + ggf.
+   Validierung).
+2. Optional plattformspezifische Hinweise/Warnungen in `metadata_service.resolve_metadata`
+   (z. B. „category empfohlen").
+3. Doku in [Plattformen](/docs/de/user-guide/platforms.md) und
+   [API: Plattformen](/docs/de/api/platforms.md) ergänzen.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Geplant (Phase 4)
 
-## Hinweise
-
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+OAuth-Anbindung (Account verbinden, Refresh-Tokens **verschlüsselt** speichern) und
+API-gestütztes Setzen von Titel/Thumbnail.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [API: Plattformen & Metadaten](/docs/de/api/platforms.md) · [Platzhalter](/docs/de/reference/placeholders.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

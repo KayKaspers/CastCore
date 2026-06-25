@@ -3,34 +3,45 @@ title: "API (Entwickler)"
 description: "REST/WS-API-Aufbau, OpenAPI, typed client."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API (Entwickler)
 
-> REST/WS-API-Aufbau, OpenAPI, typed client.
+> Wie die API intern aufgebaut ist. Endpunkt-Referenz: [API-Überblick](/docs/de/api/overview.md).
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Aufbau
 
-REST/WS-API-Aufbau, OpenAPI, typed client.
+- Versioniert unter `/api/v1` (`app/api/v1/router.py` bündelt die Endpoint-Router).
+- Ein Router pro Modul in `app/api/v1/endpoints/`.
+- Schemas (Pydantic v2) in `app/schemas/`, Logik in `app/services/`.
 
-## Inhalt
+## Auth & Rollen
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+- Dependency `get_current_user` (Bearer-JWT) und Factory `require_roles("operator")`.
+- Rollen werden **serverseitig** pro Route erzwungen.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Fehler
 
-## Hinweise
+`CastCoreError(code, params=…, http_status=…)` erzeugt
+`{detail:{error:{code, params, level}}}` mit **übersetzbarem Code** (kein fester Text).
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## OpenAPI
+
+FastAPI generiert `/api/openapi.json` und Swagger UI unter `/api/docs`. Daraus lässt sich
+ein **typed Client** fürs Frontend generieren.
+
+## Live
+
+WebSockets unter `/api/v1/ws/...` (Token via Query) – siehe
+[WebSockets / SSE](/docs/de/developer-guide/websocket-sse.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Backend](/docs/de/developer-guide/backend.md) · [API-Überblick](/docs/de/api/overview.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_
