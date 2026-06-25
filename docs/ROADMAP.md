@@ -20,10 +20,10 @@ this repo, ▢ = planned.
 - ✅ Playlists (sequential/shuffle/loop, resolve)
 - ✅ Scheduler (once/interval/daily; start/stop/backup/scan)
 - ✅ Preflight checks (delivered in Phase 1)
-- ▢ Dry-run / teststream
+- ✅ Dry-run / teststream (short test encode + speed/fps report)
 - ✅ Recording + replay (per-job, retention field)
 - ▢ Internal HLS preview / webplayer
-- ▢ Platform metadata API + template resolution
+- ✅ Platform metadata API + template resolution (+ secure thumbnail/asset management)
 - ✅ Notifications (email/webhook/discord/telegram/gotify/slack)
 - ✅ Richer monitoring views (system + per-output live metrics)
 - ✅ Status reconciliation (PM→DB) + background loops (status consumer, scheduler)
