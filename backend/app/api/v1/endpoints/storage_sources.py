@@ -22,7 +22,7 @@ from app.schemas.storage import (
     StorageSourceOut,
     TestResult,
 )
-from app.services import storage_service
+from app.services import notification_service, storage_service
 
 router = APIRouter(
     prefix="/storage-sources",
@@ -113,6 +113,8 @@ async def test_source(source_id: uuid.UUID, db: DbDep) -> TestResult:
     ok, detail = await storage_service.test_source(s)
     s.status = "online" if ok else "error"
     s.last_error = detail
+    if not ok:
+        await notification_service.dispatch(db, "source_offline", {"name": s.name, "detail": detail or ""})
     return TestResult(ok=ok, detail=detail)
 
 

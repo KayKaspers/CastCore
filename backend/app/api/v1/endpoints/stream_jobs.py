@@ -11,7 +11,7 @@ from app.api.deps import DbDep, require_roles
 from app.core.errors import CastCoreError, ErrorCode
 from app.models.streaming import Input, Output, StreamJob
 from app.schemas.streaming import CommandPreviewOut, PreflightReport, StreamJobIn, StreamJobOut
-from app.services import preflight_service, stream_service
+from app.services import notification_service, preflight_service, stream_service
 from app.services.ffmpeg import mask_command
 
 router = APIRouter(
@@ -81,7 +81,10 @@ async def preview_job(job_id: uuid.UUID, db: DbDep) -> CommandPreviewOut:
 @router.post("/{job_id}/preflight", response_model=PreflightReport)
 async def preflight_job(job_id: uuid.UUID, db: DbDep) -> PreflightReport:
     job = await _get_job(db, job_id)
-    return await preflight_service.run_preflight(job)
+    report = await preflight_service.run_preflight(job)
+    if report.level == "red":
+        await notification_service.dispatch(db, "preflight_failed", {"job_name": job.name})
+    return report
 
 
 @router.post("/{job_id}/start", response_model=CommandPreviewOut)

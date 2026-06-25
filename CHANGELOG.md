@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — notification triggers wired (backup / preflight / source)
+- The `backup_done`, `preflight_failed` and `source_offline` events now actually fire:
+  `backup_done` after every backup (manual or scheduled), `preflight_failed` when a
+  preflight is red, `source_offline` when a source test fails. `preflight_failed` is now
+  in the subscribable event list with a friendly title.
+- Docs: `user-guide/settings.md` filled (DE+EN) documenting notification channels, all
+  events and the scheduler.
+- Verified: a webhook subscribed to all three received "backup created", "source offline"
+  and "preflight failed" notifications end-to-end.
+
 ### Added — thumbnail / asset management (secure uploads)
 - `assets` model (migration `0013`) + `platform_metadata.thumbnail_asset_id`.
 - `asset_service` with **secure image upload**: magic-byte type validation (PNG/JPEG/

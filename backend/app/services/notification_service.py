@@ -20,7 +20,7 @@ from app.models.notification import Notification
 
 EVENTS = [
     "stream_started", "stream_stopped", "stream_failed",
-    "source_offline", "backup_done", "test",
+    "source_offline", "preflight_failed", "backup_done", "test",
 ]
 
 _TIMEOUT = 8.0
@@ -89,6 +89,7 @@ def _format(event: str, ctx: dict) -> tuple[str, str]:
         "stream_stopped": f"⏹ Stream gestoppt: {name}",
         "stream_failed": f"⚠ Stream fehlgeschlagen: {name}",
         "source_offline": f"⚠ Quelle offline: {name}",
+        "preflight_failed": f"⚠ Preflight fehlgeschlagen: {name}",
         "backup_done": "✔ Backup erstellt",
         "test": "CastCore Test-Benachrichtigung",
     }

@@ -1,36 +1,68 @@
 ---
 title: "Settings"
-description: "General and per-user settings."
+description: "General settings, notifications and the scheduler."
 lang: en
-audience: "Users / Operators"
-status: draft
+audience: "Users / Administrators"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Settings
 
-> General and per-user settings.
+> Under settings you manage, among other things, **notifications** and the **scheduler**.
+> System-level values are set via environment variables
+> ([Environment variables](/docs/en/reference/environment-variables.md)).
 
-**Audience:** Users / Operators
+**Audience:** users / administrators.
 
-## Overview
+## Notifications
 
-General and per-user settings.
+UI area: **Notifications** (`/notifications`). Create channels and subscribe to events.
+Connection details are stored **encrypted** (write-only).
 
-## Contents
+### Channels
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+| Channel | Required fields |
+| --- | --- |
+| **Webhook** | `url` |
+| **Discord** | `url` (webhook URL) |
+| **Slack** | `url` (incoming webhook) |
+| **Gotify** | `url`, `token` |
+| **Telegram** | `bot_token`, `chat_id` |
+| **Email** | `host`, `port`, `from`, `to`, optional `username`/`password` |
 
-- TODO: add the step-by-step guide or in-depth explanation.
+### Events
+
+| Event | When |
+| --- | --- |
+| `stream_started` / `stream_stopped` / `stream_failed` | A stream status change (via the status consumer). |
+| `source_offline` | A source **test** fails. |
+| `preflight_failed` | A preflight check is **red**. |
+| `backup_done` | A backup was created (manual or scheduled). |
+| `test` | Triggered manually via **Test**. |
+
+> 💡 Use **Test** to verify a channel immediately, without waiting for a real event.
+
+## Scheduler
+
+UI area: **Scheduler** (`/scheduler`). Time-based / recurring actions:
+
+- **Types:** once, interval (minutes), daily (HH:MM **UTC**).
+- **Actions:** `stream_start`, `stream_stop`, `backup`, `scan`.
+- Per entry: next run, last status, **run** (run now).
+
+A background loop in the backend runs due entries about every 20 seconds.
 
 ## Notes
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+> 🔐 Notification secrets and SMTP passwords are stored encrypted and shown externally
+> only as "present". See [Secrets](/docs/en/admin-guide/secrets.md).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Users & roles](/docs/en/user-guide/users-roles.md)
+- [Backup & restore](/docs/en/user-guide/backup-restore.md)
+- [Environment variables](/docs/en/reference/environment-variables.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

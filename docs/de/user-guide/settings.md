@@ -1,36 +1,68 @@
 ---
 title: "Einstellungen"
-description: "Allgemeine und benutzerbezogene Einstellungen."
+description: "Allgemeine Einstellungen, Benachrichtigungen und Scheduler."
 lang: de
-audience: "Anwender / Operatoren"
-status: draft
+audience: "Anwender / Administratoren"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Einstellungen
 
-> Allgemeine und benutzerbezogene Einstellungen.
+> Unter Einstellungen verwaltest du u. a. **Benachrichtigungen** und den **Scheduler**.
+> Systemnahe Werte werden über Umgebungsvariablen gesetzt
+> ([Umgebungsvariablen](/docs/de/reference/environment-variables.md)).
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Administratoren.
 
-## Überblick
+## Benachrichtigungen
 
-Allgemeine und benutzerbezogene Einstellungen.
+UI-Bereich: **Benachrichtigungen** (`/notifications`). Lege Kanäle an und abonniere
+Events. Verbindungsdaten werden **verschlüsselt** gespeichert (write-only).
 
-## Inhalt
+### Kanäle
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+| Kanal | Benötigte Felder |
+| --- | --- |
+| **Webhook** | `url` |
+| **Discord** | `url` (Webhook-URL) |
+| **Slack** | `url` (Incoming-Webhook) |
+| **Gotify** | `url`, `token` |
+| **Telegram** | `bot_token`, `chat_id` |
+| **E-Mail** | `host`, `port`, `from`, `to`, optional `username`/`password` |
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+### Events
+
+| Event | Wann |
+| --- | --- |
+| `stream_started` / `stream_stopped` / `stream_failed` | Statuswechsel eines Streams (über den Status-Consumer). |
+| `source_offline` | Ein Quellen-**Test** schlägt fehl. |
+| `preflight_failed` | Ein Preflight-Check ergibt **Rot**. |
+| `backup_done` | Ein Backup wurde erstellt (manuell oder geplant). |
+| `test` | Über **Test** manuell ausgelöst. |
+
+> 💡 Mit **Test** prüfst du einen Kanal sofort, ohne auf ein echtes Event zu warten.
+
+## Scheduler
+
+UI-Bereich: **Scheduler** (`/scheduler`). Zeitgesteuerte/wiederkehrende Aktionen:
+
+- **Typen:** einmalig, Intervall (Minuten), täglich (HH:MM **UTC**).
+- **Aktionen:** `stream_start`, `stream_stop`, `backup`, `scan`.
+- Pro Eintrag: nächster Lauf, letzter Status, **run** (Sofort-Ausführung).
+
+Ein Hintergrund-Loop im Backend führt fällige Einträge alle ~20 Sekunden aus.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 🔐 Benachrichtigungs-Secrets und SMTP-Passwörter werden verschlüsselt abgelegt und nach
+> außen nur als „vorhanden" angezeigt. Siehe [Secrets](/docs/de/admin-guide/secrets.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Benutzer & Rollen](/docs/de/user-guide/users-roles.md)
+- [Backup & Restore](/docs/de/user-guide/backup-restore.md)
+- [Umgebungsvariablen](/docs/de/reference/environment-variables.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

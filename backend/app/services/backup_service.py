@@ -23,6 +23,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import get_settings
 from app.models import Base
 from app.models.backup import Backup
+from app.services import notification_service
 
 FORMAT_VERSION = 1
 _EXCLUDE = {"backups", "alembic_version"}
@@ -91,6 +92,7 @@ async def create_backup(db: AsyncSession, *, kind: str = "manual") -> Backup:
     )
     db.add(backup)
     await db.flush()
+    await notification_service.dispatch(db, "backup_done", {"name": filename})
     return backup
 
 
