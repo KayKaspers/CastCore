@@ -3,34 +3,43 @@ title: "Datenbank"
 description: "PostgreSQL-Schema und SQLAlchemy-Modelle."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Datenbank
 
-> PostgreSQL-Schema und SQLAlchemy-Modelle.
+> PostgreSQL 16, Zugriff über SQLAlchemy 2 (async, asyncpg). Migrationen via Alembic.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler. Vollständiges Modell:
+[`docs/DATA_MODEL.md`](https://github.com/KayKaspers/CastCore/blob/main/docs/DATA_MODEL.md).
 
-## Überblick
+## Konventionen
 
-PostgreSQL-Schema und SQLAlchemy-Modelle.
+- Alle Tabellen: `id` (UUID), `created_at`, `updated_at` (Timestamp-Mixin).
+- Modelle in `app/models/`, in `app/models/__init__.py` registriert (für Alembic).
+- Verschlüsselte Spalten (Stream-Keys, SMB-Passwörter) speichern **Ciphertext**.
 
-## Inhalt
+## Wichtige Tabellen (Auszug)
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+- Security: `users`, `roles`, `user_roles`, `sessions`, `api_tokens`, `audit_events`.
+- Streaming: `stream_jobs`, `ffmpeg_profiles`, `inputs`, `outputs`, `destinations`,
+  `process_status`.
+- Medien/Channels: `storage_sources`, `smb_sources`, `media_library_items`,
+  `media_probe_data`, `playlists`, `playlist_items`, `channels`.
+- Plattform/Assets: `platform_metadata`, `assets`.
+- Betrieb: `settings`, `setup_state`, `scheduler_entries`, `notifications`,
+  `recordings`, `backups`.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Relationen-Hinweise
 
-## Hinweise
-
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+Ein **stream_job** hat viele `inputs`/`outputs`; jeder `output` → `destination`.
+`process_status` ist pro Output. `storage_sources` ist die polymorphe Wurzel
+(SMB-Detail in `smb_sources`).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Migrationen](/docs/de/developer-guide/migrations.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

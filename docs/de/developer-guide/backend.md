@@ -3,34 +3,47 @@ title: "Backend"
 description: "FastAPI-Backend: Aufbau, Services, Dependencies."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Backend
 
-> FastAPI-Backend: Aufbau, Services, Dependencies.
+> FastAPI + SQLAlchemy 2 (async) + Pydantic v2.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Aufbau
 
-FastAPI-Backend: Aufbau, Services, Dependencies.
+- **`app/main.py`** – App + Lifespan (startet Status-Consumer & Scheduler-Loop).
+- **`app/api/v1/router.py`** – aggregiert alle Endpoint-Router unter `/api/v1`.
+- **`app/api/deps.py`** – `get_db`, `get_current_user`, `require_roles(...)`.
+- **`app/core/`** – `config` (Env), `security` (argon2/JWT/Fernet/Masking),
+  `redis`, `errors` (übersetzbare Codes).
+- **`app/services/`** – Geschäftslogik (z. B. `stream_service`, `channel_service`,
+  `ffmpeg/command_builder`, `metadata_service`, `notification_service`).
 
-## Inhalt
+## Muster
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+- Endpunkte sind dünn; Logik liegt in `services/`.
+- DB-Session per Dependency (`DbDep`), Commit am Request-Ende.
+- Rollenprüfung über `dependencies=[Depends(require_roles("operator"))]`.
+- Fehler über `CastCoreError(code, …)` → einheitliches `{detail:{error:{code,…}}}`.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Hintergrund-Loops
 
-## Hinweise
+In der **Lifespan** laufen zwei Tasks: `status_consumer` (PM→DB-Abgleich + Events +
+Selbstheilung) und `scheduler` (fällige Einträge alle ~20 s).
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Lokal entwickeln
+
+Siehe [Lokales Testen](https://github.com/KayKaspers/CastCore/blob/main/docs/LOCAL_DEV.md).
+Tests/Linting: [Tests](/docs/de/developer-guide/testing.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Datenbank](/docs/de/developer-guide/database.md) · [API](/docs/de/api/overview.md)
+- [Process Manager](/docs/de/developer-guide/process-manager.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

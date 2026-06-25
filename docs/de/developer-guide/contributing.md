@@ -3,34 +3,42 @@ title: "Mitwirken (Entwickler)"
 description: "Workflow, Branches, Commits, Definition of Done."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
-# Mitwirken (Entwickler)
+# Mitwirken
 
-> Workflow, Branches, Commits, Definition of Done.
+> Kurzfassung; die maßgebliche Datei ist
+> [`CONTRIBUTING.md`](https://github.com/KayKaspers/CastCore/blob/main/CONTRIBUTING.md).
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Goldene Regel
 
-Workflow, Branches, Commits, Definition of Done.
+> **Keine Feature-Änderung ohne Dokumentations-Update.** Details:
+> [Dokumentationsregeln](/docs/de/developer-guide/documentation-rules.md).
 
-## Inhalt
+## Workflow
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+1. Branch von `main`, fokussierte Commits, aussagekräftige Messages.
+2. Code + Tests anpassen; UI-Texte DE/EN übersetzen.
+3. Betroffene Doku (DE **und** EN) aktualisieren, `docs-manifest.json` pflegen.
+4. `python scripts/check_docs.py` grün; `npm run build` und `pytest` grün.
+5. PR mit der **Change-Checkliste** aus `CONTRIBUTING.md`.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Definition of Done
 
-## Hinweise
+Feature funktioniert · getestet · UI übersetzt · API-/User-/Admin-/Developer-Doku
+aktuell (DE+EN) · Manifest & Status aktualisiert · Changelog ergänzt (falls relevant).
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Sicherheit & Beispiele
+
+Keine echten Secrets/Tokens in Code, Doku oder Beispielen – generisch halten.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Tests](/docs/de/developer-guide/testing.md) · [Dokumentationsregeln](/docs/de/developer-guide/documentation-rules.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

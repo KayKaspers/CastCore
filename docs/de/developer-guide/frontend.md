@@ -3,34 +3,46 @@ title: "Frontend"
 description: "React/Vite-Frontend: Aufbau, State, i18n."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Frontend
 
-> React/Vite-Frontend: Aufbau, State, i18n.
+> React 18 + TypeScript + Vite + Tailwind, i18next, zustand.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Aufbau
 
-React/Vite-Frontend: Aufbau, State, i18n.
+- **`src/pages/`** – eine Seite pro Route (siehe `App.tsx`).
+- **`src/components/`** – wiederverwendbare UI (`ui.tsx`, `Layout`, `HelpLink`,
+  `HlsPlayer`, `AuthImg`, Panels).
+- **`src/lib/`** – `api.ts` (fetch + JWT-Refresh + i18n-Fehlercodes), `auth.ts`
+  (zustand-Store), `useAsync.ts`, `types.ts`, `helpLinks.ts`.
+- **`src/i18n/`** – `de.json`/`en.json` + Setup.
 
-## Inhalt
+## Muster
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+- **Kein** Text hartkodiert → `t("…")`. DE/EN immer beide pflegen.
+- API über `api.get/post/patch/put/del`; Fehler sind `ApiException` mit `.localized`.
+- Auth-/Sprachzustand in zustand; Token in localStorage, automatischer Refresh in `api.ts`.
+- Branding über Tailwind-Tokens (Deep Navy/Core Green/…).
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## In-App-Hilfe
 
-## Hinweise
+`HelpLink page="…md"` verlinkt in den `/docs`-Viewer; die Route→Docs-Zuordnung steht in
+`lib/helpLinks.ts`.
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Build
+
+`npm run build` (= `tsc -b && vite build`) – `tsc` validiert Typen (strikt,
+`noUnusedLocals`).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Projektstruktur](/docs/de/developer-guide/project-structure.md)
+- [Mitwirken](/docs/de/developer-guide/contributing.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

@@ -3,34 +3,42 @@ title: "Contributing (developer)"
 description: "Workflow, branches, commits, definition of done."
 lang: en
 audience: "Developers"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
-# Contributing (developer)
+# Contributing
 
-> Workflow, branches, commits, definition of done.
+> Short version; the authoritative file is
+> [`CONTRIBUTING.md`](https://github.com/KayKaspers/CastCore/blob/main/CONTRIBUTING.md).
 
-**Audience:** Developers
+**Audience:** developers.
 
-## Overview
+## Golden rule
 
-Workflow, branches, commits, definition of done.
+> **No feature change without a documentation update.** Details:
+> [Documentation rules](/docs/en/developer-guide/documentation-rules.md).
 
-## Contents
+## Workflow
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+1. Branch off `main`, focused commits, descriptive messages.
+2. Update code + tests; translate UI strings DE/EN.
+3. Update affected docs (DE **and** EN), maintain `docs-manifest.json`.
+4. `python scripts/check_docs.py` green; `npm run build` and `pytest` green.
+5. PR with the **change checklist** from `CONTRIBUTING.md`.
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Definition of done
 
-## Notes
+Feature works · tested · UI translated · API/user/admin/developer docs current (DE+EN) ·
+manifest & status updated · changelog updated (if relevant).
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+## Security & examples
+
+No real secrets/tokens in code, docs or examples – keep them generic.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Testing](/docs/en/developer-guide/testing.md) · [Documentation rules](/docs/en/developer-guide/documentation-rules.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

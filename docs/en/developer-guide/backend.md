@@ -3,34 +3,47 @@ title: "Backend"
 description: "FastAPI backend: structure, services, dependencies."
 lang: en
 audience: "Developers"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Backend
 
-> FastAPI backend: structure, services, dependencies.
+> FastAPI + SQLAlchemy 2 (async) + Pydantic v2.
 
-**Audience:** Developers
+**Audience:** developers.
 
-## Overview
+## Structure
 
-FastAPI backend: structure, services, dependencies.
+- **`app/main.py`** – app + lifespan (starts the status consumer & scheduler loop).
+- **`app/api/v1/router.py`** – aggregates all endpoint routers under `/api/v1`.
+- **`app/api/deps.py`** – `get_db`, `get_current_user`, `require_roles(...)`.
+- **`app/core/`** – `config` (env), `security` (argon2/JWT/Fernet/masking), `redis`,
+  `errors` (translatable codes).
+- **`app/services/`** – business logic (e.g. `stream_service`, `channel_service`,
+  `ffmpeg/command_builder`, `metadata_service`, `notification_service`).
 
-## Contents
+## Patterns
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+- Endpoints are thin; logic lives in `services/`.
+- DB session via dependency (`DbDep`), commit at request end.
+- Role checks via `dependencies=[Depends(require_roles("operator"))]`.
+- Errors via `CastCoreError(code, …)` → uniform `{detail:{error:{code,…}}}`.
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Background loops
 
-## Notes
+The **lifespan** runs two tasks: `status_consumer` (PM→DB reconcile + events +
+self-healing) and `scheduler` (due entries every ~20 s).
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+## Local dev
+
+See [Local dev](https://github.com/KayKaspers/CastCore/blob/main/docs/LOCAL_DEV.md).
+Tests/linting: [Testing](/docs/en/developer-guide/testing.md).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Database](/docs/en/developer-guide/database.md) · [API](/docs/en/api/overview.md)
+- [Process manager](/docs/en/developer-guide/process-manager.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

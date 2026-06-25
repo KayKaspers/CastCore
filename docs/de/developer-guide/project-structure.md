@@ -3,34 +3,48 @@ title: "Projektstruktur"
 description: "Verzeichnislayout des Monorepos."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Projektstruktur
 
-> Verzeichnislayout des Monorepos.
+> Layout des Monorepos.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+```text
+CastCore/
+├── backend/            FastAPI-App
+│   ├── app/
+│   │   ├── api/v1/endpoints/   API-Router je Modul
+│   │   ├── core/               config, security, redis, errors
+│   │   ├── db/                  Base, Session
+│   │   ├── models/             SQLAlchemy-Modelle
+│   │   ├── schemas/            Pydantic-Schemas
+│   │   └── services/           Geschäftslogik (ffmpeg, stream, channel, …)
+│   ├── migrations/             Alembic
+│   └── tests/
+├── process_manager/    FFmpeg-Supervisor (asyncio)
+├── worker/             arq-Worker
+├── frontend/           React/Vite
+│   └── src/{pages,components,lib,i18n,styles}
+├── deploy/             caddy, nginx, systemd, mediamtx
+├── scripts/            install/update/uninstall, check_docs.py
+├── docs/               Doku (de/en) + Manifest/Status/Nav
+└── docker-compose.yml
+```
 
-Verzeichnislayout des Monorepos.
+## Konventionen
 
-## Inhalt
-
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
-
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
-
-## Hinweise
-
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+- Backend: ein Service pro Modul unter `services/`, API-Router unter `api/v1/endpoints/`.
+- Frontend: eine Seite pro Route unter `pages/`, geteilte Logik in `lib/`.
+- Doku: jede Seite in **beiden** Sprachen (`docs/de`, `docs/en`).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Backend](/docs/de/developer-guide/backend.md) · [Frontend](/docs/de/developer-guide/frontend.md)
+- [Mitwirken](/docs/de/developer-guide/contributing.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

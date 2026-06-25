@@ -3,34 +3,43 @@ title: "Process manager"
 description: "Supervision of long-running FFmpeg processes."
 lang: en
 audience: "Developers"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Process manager
 
-> Supervision of long-running FFmpeg processes.
+> A dedicated service (`process_manager/`) that starts, supervises and stops the
+> long-running FFmpeg stream processes.
 
-**Audience:** Developers
+**Audience:** developers.
 
-## Overview
+## How it works
 
-Supervision of long-running FFmpeg processes.
+1. Subscribes to the Redis channel **`castcore:control`** and receives
+   `{action: start|stop|restart, output_id, job_id, argv}`.
+2. Spawns FFmpeg via `asyncio.create_subprocess_exec(*argv)` (**shell-free**) – one
+   process per active output.
+3. Pumps stderr/stdout **line by line** to **`castcore:logs:<job_id>`**, parses progress
+   (fps/bitrate/speed) and samples CPU/RSS via psutil → **`castcore:status`**.
+4. Recognises failure patterns and attaches a translatable **hint** code (health assistant).
 
-## Contents
+## Interplay with the backend
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+The backend **status consumer** reads `castcore:status`, writes `process_status`,
+reconciles job/channel status, fires notifications and drives
+[self-healing](/docs/en/user-guide/streams.md).
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Channels & recordings
 
-## Notes
-
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+Channels use the FFmpeg concat demuxer (loop → HLS); recordings are synthetic mp4 outputs.
+Both are supervised through the same control channel.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [FFmpeg command builder](/docs/en/developer-guide/ffmpeg-command-builder.md)
+- [WebSockets / SSE](/docs/en/developer-guide/websocket-sse.md)
+- [Architecture](/docs/en/developer-guide/architecture.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

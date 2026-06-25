@@ -3,34 +3,46 @@ title: "Tests, Linting, Typprüfung"
 description: "pytest, ruff, mypy, tsc – lokal und in CI."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Tests, Linting, Typprüfung
 
-> pytest, ruff, mypy, tsc – lokal und in CI.
+> Qualitätssicherung für Backend, Frontend und Doku.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Backend-Tests (pytest)
 
-pytest, ruff, mypy, tsc – lokal und in CI.
+Unit-Tests (z. B. Command Builder, Security, stream_service) brauchen keine DB/Redis:
 
-## Inhalt
+```bash
+docker compose run --rm --no-deps backend sh -c "pip install -q '.[dev]' && pytest -q"
+```
+Oder mit lokalem Python 3.12: `cd backend && python -m pip install -e ".[dev]" && pytest`.
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+## Linting & Typen
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+- Backend: **ruff** (Lint), **mypy** (Typen) – `ruff check .`, `mypy app`.
+- Frontend: `npm run build` führt **`tsc -b`** (strikt) vor dem Vite-Build aus.
 
-## Hinweise
+## Doku-Check
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+```bash
+python scripts/check_docs.py        # Struktur, DE/EN-Parität, Manifest, leere Seiten
+```
+Erzeugt `docs-status.json` + `nav.json`; läuft in CI
+(`.github/workflows/docs-check.yml`).
+
+## Lokaler Stack
+
+Siehe [Lokales Testen](https://github.com/KayKaspers/CastCore/blob/main/docs/LOCAL_DEV.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Mitwirken](/docs/de/developer-guide/contributing.md)
+- [Dokumentationsregeln](/docs/de/developer-guide/documentation-rules.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

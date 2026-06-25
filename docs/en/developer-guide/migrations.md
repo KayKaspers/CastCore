@@ -3,34 +3,47 @@ title: "Migrations"
 description: "Create and apply Alembic migrations."
 lang: en
 audience: "Developers"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Migrations
 
-> Create and apply Alembic migrations.
+> Schema changes go through **Alembic** (`backend/migrations/`).
 
-**Audience:** Developers
+**Audience:** developers.
 
-## Overview
+## Applying
 
-Create and apply Alembic migrations.
+In Docker, **automatic** on backend start. Manually:
 
-## Contents
+```bash
+docker compose exec backend alembic upgrade head
+```
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+## Creating a new migration
 
-- TODO: add the step-by-step guide or in-depth explanation.
+1. Change a model in `app/models/` and register it in `app/models/__init__.py`.
+2. Generate (autogenerate) or hand-write:
+   ```bash
+   docker compose exec backend alembic revision -m "description" --autogenerate
+   ```
+3. Review/adjust the file in `backend/migrations/versions/` (UUID columns, defaults,
+   indexes) and chain `down_revision` correctly.
 
-## Notes
+## Conventions
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+- File/revision numbered sequentially (e.g. `0014_…`).
+- `sa.Uuid()` for UUID PKs/FKs, `sa.JSON()` for JSON columns.
+- Set server defaults for bool/JSON (`server_default`) so existing rows fit.
+
+## Checking status
+
+Current vs. latest revision: **Updates** page (`/api/v1/update/state`).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Database](/docs/en/developer-guide/database.md) · [Updates](/docs/en/user-guide/updates.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

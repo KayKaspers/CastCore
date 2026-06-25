@@ -3,34 +3,43 @@ title: "Process Manager"
 description: "Supervidierung langlaufender FFmpeg-Prozesse."
 lang: de
 audience: "Entwickler"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Process Manager
 
-> Supervidierung langlaufender FFmpeg-Prozesse.
+> Eigener Dienst (`process_manager/`), der die langlaufenden FFmpeg-Streamprozesse
+> startet, überwacht und stoppt.
 
-**Zielgruppe:** Entwickler
+**Zielgruppe:** Entwickler.
 
-## Überblick
+## Funktionsweise
 
-Supervidierung langlaufender FFmpeg-Prozesse.
+1. Abonniert den Redis-Kanal **`castcore:control`** und empfängt
+   `{action: start|stop|restart, output_id, job_id, argv}`.
+2. Spawnt FFmpeg per `asyncio.create_subprocess_exec(*argv)` (**shell-frei**) –
+   ein Prozess pro aktivem Output.
+3. Pumpt stderr/stdout **zeilenweise** nach **`castcore:logs:<job_id>`**, parst
+   Progress (fps/bitrate/speed) und sampelt CPU/RSS via psutil → **`castcore:status`**.
+4. Erkennt Failure-Muster und hängt einen übersetzbaren **Hint**-Code an (Health-Assistant).
 
-## Inhalt
+## Zusammenspiel mit dem Backend
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Der **Status-Consumer** im Backend liest `castcore:status`, schreibt `process_status`,
+gleicht Job-/Channel-Status ab, feuert Benachrichtigungen und steuert die
+[Selbstheilung](/docs/de/user-guide/streams.md).
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Channels & Recordings
 
-## Hinweise
-
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+Channels nutzen den FFmpeg concat-Demuxer (Loop → HLS); Recordings sind synthetische
+mp4-Outputs. Beide werden über denselben Steuerkanal supervidiert.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [FFmpeg Command Builder](/docs/de/developer-guide/ffmpeg-command-builder.md)
+- [WebSockets / SSE](/docs/de/developer-guide/websocket-sse.md)
+- [Architektur](/docs/de/developer-guide/architecture.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_
