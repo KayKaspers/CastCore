@@ -21,3 +21,22 @@ body {
   border: 1px solid rgba(100, 116, 139, 0.2);
   border-radius: 0.75rem;
 }
+
+/* Rendered Markdown (in-app docs viewer) */
+.cc-prose { color: var(--cc-mist); line-height: 1.7; }
+.cc-prose h1 { font-size: 1.7rem; font-weight: 600; margin: 0 0 0.75rem; color: #fff; }
+.cc-prose h2 { font-size: 1.25rem; font-weight: 600; margin: 1.75rem 0 0.6rem; color: var(--cc-mist); border-bottom: 1px solid rgba(100,116,139,0.2); padding-bottom: 0.3rem; }
+.cc-prose h3 { font-size: 1.05rem; font-weight: 600; margin: 1.25rem 0 0.4rem; color: var(--cc-mist); }
+.cc-prose p, .cc-prose li { color: rgba(226,232,240,0.85); }
+.cc-prose a { color: var(--cc-signal-cyan); text-decoration: none; }
+.cc-prose a:hover { text-decoration: underline; }
+.cc-prose ul, .cc-prose ol { padding-left: 1.4rem; margin: 0.6rem 0; }
+.cc-prose li { margin: 0.25rem 0; }
+.cc-prose code { background: var(--cc-deep-navy); padding: 0.1rem 0.35rem; border-radius: 0.3rem; font-size: 0.85em; color: var(--cc-core-green); }
+.cc-prose pre { background: var(--cc-deep-navy); border: 1px solid rgba(100,116,139,0.2); border-radius: 0.5rem; padding: 0.9rem; overflow-x: auto; margin: 0.8rem 0; }
+.cc-prose pre code { background: none; padding: 0; color: var(--cc-mist); }
+.cc-prose blockquote { border-left: 3px solid var(--cc-core-green); background: rgba(34,197,94,0.06); padding: 0.6rem 0.9rem; margin: 0.8rem 0; border-radius: 0 0.4rem 0.4rem 0; }
+.cc-prose table { width: 100%; border-collapse: collapse; margin: 0.8rem 0; font-size: 0.9rem; }
+.cc-prose th, .cc-prose td { border: 1px solid rgba(100,116,139,0.25); padding: 0.45rem 0.6rem; text-align: left; }
+.cc-prose th { background: var(--cc-panel-navy); color: var(--cc-mist); }
+.cc-prose hr { border: none; border-top: 1px solid rgba(100,116,139,0.2); margin: 1.5rem 0; }

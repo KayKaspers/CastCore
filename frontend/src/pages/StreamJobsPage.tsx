@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import HelpLink from "../components/HelpLink";
 import LogsPanel from "../components/LogsPanel";
 import MetadataPanel from "../components/MetadataPanel";
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
@@ -59,7 +60,9 @@ export default function StreamJobsPage() {
   return (
     <div className="space-y-6">
       <header className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-mist">{t("nav.streamJobs")}</h1>
+        <h1 className="text-2xl font-semibold text-mist flex items-center gap-2">
+          {t("nav.streamJobs")} <HelpLink page="user-guide/streams.md" />
+        </h1>
         <Button onClick={() => setShowCreate((v) => !v)}>{t("common.create")}</Button>
       </header>
 

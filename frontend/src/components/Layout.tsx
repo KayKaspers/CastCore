@@ -20,6 +20,7 @@ const NAV = [
   { to: "/notifications", key: "notifications", end: false },
   { to: "/backup", key: "backup", end: false },
   { to: "/setup", key: "settings", end: false },
+  { to: "/docs", key: "help", end: false },
 ];
 
 export default function Layout() {

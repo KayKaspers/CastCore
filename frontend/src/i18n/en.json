@@ -40,7 +40,16 @@
     "users": "User management",
     "backup": "Backup / Restore",
     "notifications": "Notifications",
-    "updates": "Updates"
+    "updates": "Updates",
+    "help": "Help"
+  },
+  "help": {
+    "moreInfo": "Learn more"
+  },
+  "docs": {
+    "backToApp": "Back to app",
+    "search": "Search documentation…",
+    "editHint": "Edit this page:"
   },
   "auth": {
     "login": "Sign in",

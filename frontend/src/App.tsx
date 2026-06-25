@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import BackupPage from "./pages/BackupPage";
 import ChannelsPage from "./pages/ChannelsPage";
 import DashboardPage from "./pages/DashboardPage";
+import DocsPage from "./pages/DocsPage";
 import LoginPage from "./pages/LoginPage";
 import MediaLibraryPage from "./pages/MediaLibraryPage";
 import MonitoringPage from "./pages/MonitoringPage";
@@ -40,6 +41,7 @@ export default function App() {
         <Route path="/resources" element={<ResourcesPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/backup" element={<BackupPage />} />
+        <Route path="/docs" element={<DocsPage />} />
         <Route path="/setup" element={<SetupWizardPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 
 import { useLogStream } from "../lib/useLogStream";
+import HelpLink from "./HelpLink";
 import { Badge, Panel } from "./ui";
 
 export default function LogsPanel({
@@ -40,8 +41,12 @@ export default function LogsPanel({
       </div>
 
       {hint && (
-        <div className="mb-3 rounded-md border border-warning/40 bg-warning/10 px-3 py-2 text-sm text-warning">
-          {t(`loghint.${hint}`, { defaultValue: t("loghint.generic") })}
+        <div className="mb-3 rounded-md border border-warning/40 bg-warning/10 px-3 py-2 text-sm text-warning flex items-center justify-between gap-3">
+          <span>{t(`loghint.${hint}`, { defaultValue: t("loghint.generic") })}</span>
+          <HelpLink
+            page={hint === "source_missing" ? "troubleshooting/smb-problems.md" : "troubleshooting/ffmpeg-errors.md"}
+            label={t("help.moreInfo")}
+          />
         </div>
       )}
 

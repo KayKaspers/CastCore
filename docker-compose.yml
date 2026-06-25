@@ -110,6 +110,10 @@ services:
   frontend:
     build: { context: ./frontend }
     restart: unless-stopped
+    # Mount the Markdown docs read-only so the in-app /docs viewer can fetch them.
+    # Served under /docs-content (NOT /docs, which is the SPA route).
+    volumes:
+      - ./docs:/usr/share/nginx/html/docs-content:ro
     networks: [castcore]
 
   caddy:

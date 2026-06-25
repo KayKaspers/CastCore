@@ -1,0 +1,694 @@
+{
+  "de": [
+    {
+      "section": "Start",
+      "key": "_root",
+      "pages": [
+        {
+          "path": "index.md",
+          "title": "CastCore Dokumentation"
+        }
+      ]
+    },
+    {
+      "section": "Erste Schritte",
+      "key": "getting-started",
+      "pages": [
+        {
+          "path": "getting-started/first-setup.md",
+          "title": "Setup-Assistent (Ersteinrichtung)"
+        },
+        {
+          "path": "getting-started/installation-docker.md",
+          "title": "Installation mit Docker Compose"
+        },
+        {
+          "path": "getting-started/installation-native.md",
+          "title": "Native Linux-Installation"
+        },
+        {
+          "path": "getting-started/overview.md",
+          "title": "Was ist CastCore?"
+        },
+        {
+          "path": "getting-started/quickstart.md",
+          "title": "Schnellstart: Erster Stream"
+        }
+      ]
+    },
+    {
+      "section": "Benutzerhandbuch",
+      "key": "user-guide",
+      "pages": [
+        {
+          "path": "user-guide/backup-restore.md",
+          "title": "Backup & Restore"
+        },
+        {
+          "path": "user-guide/channels.md",
+          "title": "Channels (lineares Playout)"
+        },
+        {
+          "path": "user-guide/dashboard.md",
+          "title": "Dashboard"
+        },
+        {
+          "path": "user-guide/media-library.md",
+          "title": "Medienbibliothek"
+        },
+        {
+          "path": "user-guide/metadata-thumbnails.md",
+          "title": "Metadaten & Thumbnails"
+        },
+        {
+          "path": "user-guide/monitoring.md",
+          "title": "Monitoring"
+        },
+        {
+          "path": "user-guide/platforms.md",
+          "title": "Plattformen"
+        },
+        {
+          "path": "user-guide/playlists.md",
+          "title": "Playlists"
+        },
+        {
+          "path": "user-guide/preflight-checks.md",
+          "title": "Preflight-Checks"
+        },
+        {
+          "path": "user-guide/recordings-replay.md",
+          "title": "Recordings & Replay"
+        },
+        {
+          "path": "user-guide/settings.md",
+          "title": "Einstellungen"
+        },
+        {
+          "path": "user-guide/sources-storage.md",
+          "title": "Quellen / Storage"
+        },
+        {
+          "path": "user-guide/stream-editor.md",
+          "title": "Stream-Editor"
+        },
+        {
+          "path": "user-guide/streams.md",
+          "title": "Stream-Jobs"
+        },
+        {
+          "path": "user-guide/updates.md",
+          "title": "Updates"
+        },
+        {
+          "path": "user-guide/users-roles.md",
+          "title": "Benutzer & Rollen"
+        }
+      ]
+    },
+    {
+      "section": "Admin-Handbuch",
+      "key": "admin-guide",
+      "pages": [
+        {
+          "path": "admin-guide/cloud-sources.md",
+          "title": "Cloud-Quellen"
+        },
+        {
+          "path": "admin-guide/deployment.md",
+          "title": "Deployment"
+        },
+        {
+          "path": "admin-guide/docker-compose.md",
+          "title": "Docker-Compose-Betrieb"
+        },
+        {
+          "path": "admin-guide/https.md",
+          "title": "HTTPS / TLS"
+        },
+        {
+          "path": "admin-guide/logs.md",
+          "title": "Logs"
+        },
+        {
+          "path": "admin-guide/nfs.md",
+          "title": "NFS"
+        },
+        {
+          "path": "admin-guide/reverse-proxy.md",
+          "title": "Reverse Proxy"
+        },
+        {
+          "path": "admin-guide/secrets.md",
+          "title": "Secrets-Verwaltung"
+        },
+        {
+          "path": "admin-guide/security.md",
+          "title": "Security Best Practices"
+        },
+        {
+          "path": "admin-guide/smb-cifs.md",
+          "title": "SMB / CIFS"
+        },
+        {
+          "path": "admin-guide/storage-mounts.md",
+          "title": "Storage-Mounts"
+        },
+        {
+          "path": "admin-guide/system-requirements.md",
+          "title": "Systemanforderungen"
+        },
+        {
+          "path": "admin-guide/troubleshooting.md",
+          "title": "Troubleshooting (Admin)"
+        }
+      ]
+    },
+    {
+      "section": "Entwicklerhandbuch",
+      "key": "developer-guide",
+      "pages": [
+        {
+          "path": "developer-guide/api.md",
+          "title": "API (Entwickler)"
+        },
+        {
+          "path": "developer-guide/architecture.md",
+          "title": "Architektur"
+        },
+        {
+          "path": "developer-guide/backend.md",
+          "title": "Backend"
+        },
+        {
+          "path": "developer-guide/contributing.md",
+          "title": "Mitwirken (Entwickler)"
+        },
+        {
+          "path": "developer-guide/database.md",
+          "title": "Datenbank"
+        },
+        {
+          "path": "developer-guide/documentation-rules.md",
+          "title": "Dokumentationsregeln"
+        },
+        {
+          "path": "developer-guide/ffmpeg-command-builder.md",
+          "title": "FFmpeg Command Builder"
+        },
+        {
+          "path": "developer-guide/frontend.md",
+          "title": "Frontend"
+        },
+        {
+          "path": "developer-guide/media-library.md",
+          "title": "Medienbibliothek (Entwickler)"
+        },
+        {
+          "path": "developer-guide/migrations.md",
+          "title": "Migrationen"
+        },
+        {
+          "path": "developer-guide/platform-integrations.md",
+          "title": "Plattform-Integrationen"
+        },
+        {
+          "path": "developer-guide/process-manager.md",
+          "title": "Process Manager"
+        },
+        {
+          "path": "developer-guide/project-structure.md",
+          "title": "Projektstruktur"
+        },
+        {
+          "path": "developer-guide/storage-integrations.md",
+          "title": "Storage-Integrationen"
+        },
+        {
+          "path": "developer-guide/testing.md",
+          "title": "Tests, Linting, Typprüfung"
+        },
+        {
+          "path": "developer-guide/websocket-sse.md",
+          "title": "WebSockets / SSE"
+        }
+      ]
+    },
+    {
+      "section": "API-Referenz",
+      "key": "api",
+      "pages": [
+        {
+          "path": "api/auth.md",
+          "title": "API: Auth"
+        },
+        {
+          "path": "api/backup-restore.md",
+          "title": "API: Backup/Restore"
+        },
+        {
+          "path": "api/media-library.md",
+          "title": "API: Medienbibliothek"
+        },
+        {
+          "path": "api/monitoring.md",
+          "title": "API: Monitoring"
+        },
+        {
+          "path": "api/overview.md",
+          "title": "API-Überblick"
+        },
+        {
+          "path": "api/platforms.md",
+          "title": "API: Plattformen & Metadaten"
+        },
+        {
+          "path": "api/sources.md",
+          "title": "API: Quellen"
+        },
+        {
+          "path": "api/streams.md",
+          "title": "API: Streams"
+        }
+      ]
+    },
+    {
+      "section": "Referenz",
+      "key": "reference",
+      "pages": [
+        {
+          "path": "reference/configuration.md",
+          "title": "Konfiguration"
+        },
+        {
+          "path": "reference/environment-variables.md",
+          "title": "Umgebungsvariablen"
+        },
+        {
+          "path": "reference/ffmpeg-profiles.md",
+          "title": "FFmpeg-Profile"
+        },
+        {
+          "path": "reference/glossary.md",
+          "title": "Glossar"
+        },
+        {
+          "path": "reference/permissions.md",
+          "title": "Berechtigungen"
+        },
+        {
+          "path": "reference/placeholders.md",
+          "title": "Platzhalter (Templates)"
+        },
+        {
+          "path": "reference/roles.md",
+          "title": "Rollen"
+        }
+      ]
+    },
+    {
+      "section": "Troubleshooting",
+      "key": "troubleshooting",
+      "pages": [
+        {
+          "path": "troubleshooting/docker.md",
+          "title": "Docker-Probleme"
+        },
+        {
+          "path": "troubleshooting/ffmpeg-errors.md",
+          "title": "FFmpeg-Fehler"
+        },
+        {
+          "path": "troubleshooting/index.md",
+          "title": "Troubleshooting"
+        },
+        {
+          "path": "troubleshooting/native-installation.md",
+          "title": "Native Installation"
+        },
+        {
+          "path": "troubleshooting/performance.md",
+          "title": "Performance"
+        },
+        {
+          "path": "troubleshooting/platform-errors.md",
+          "title": "Plattform-Fehler"
+        },
+        {
+          "path": "troubleshooting/smb-problems.md",
+          "title": "SMB-Probleme"
+        },
+        {
+          "path": "troubleshooting/stream-not-starting.md",
+          "title": "Stream startet nicht"
+        }
+      ]
+    }
+  ],
+  "en": [
+    {
+      "section": "Home",
+      "key": "_root",
+      "pages": [
+        {
+          "path": "index.md",
+          "title": "CastCore Documentation"
+        }
+      ]
+    },
+    {
+      "section": "Getting started",
+      "key": "getting-started",
+      "pages": [
+        {
+          "path": "getting-started/first-setup.md",
+          "title": "Setup wizard (first run)"
+        },
+        {
+          "path": "getting-started/installation-docker.md",
+          "title": "Install with Docker Compose"
+        },
+        {
+          "path": "getting-started/installation-native.md",
+          "title": "Native Linux installation"
+        },
+        {
+          "path": "getting-started/overview.md",
+          "title": "What is CastCore?"
+        },
+        {
+          "path": "getting-started/quickstart.md",
+          "title": "Quickstart: your first stream"
+        }
+      ]
+    },
+    {
+      "section": "User guide",
+      "key": "user-guide",
+      "pages": [
+        {
+          "path": "user-guide/backup-restore.md",
+          "title": "Backup & restore"
+        },
+        {
+          "path": "user-guide/channels.md",
+          "title": "Channels (linear playout)"
+        },
+        {
+          "path": "user-guide/dashboard.md",
+          "title": "Dashboard"
+        },
+        {
+          "path": "user-guide/media-library.md",
+          "title": "Media library"
+        },
+        {
+          "path": "user-guide/metadata-thumbnails.md",
+          "title": "Metadata & thumbnails"
+        },
+        {
+          "path": "user-guide/monitoring.md",
+          "title": "Monitoring"
+        },
+        {
+          "path": "user-guide/platforms.md",
+          "title": "Platforms"
+        },
+        {
+          "path": "user-guide/playlists.md",
+          "title": "Playlists"
+        },
+        {
+          "path": "user-guide/preflight-checks.md",
+          "title": "Preflight checks"
+        },
+        {
+          "path": "user-guide/recordings-replay.md",
+          "title": "Recordings & replay"
+        },
+        {
+          "path": "user-guide/settings.md",
+          "title": "Settings"
+        },
+        {
+          "path": "user-guide/sources-storage.md",
+          "title": "Sources / storage"
+        },
+        {
+          "path": "user-guide/stream-editor.md",
+          "title": "Stream editor"
+        },
+        {
+          "path": "user-guide/streams.md",
+          "title": "Stream jobs"
+        },
+        {
+          "path": "user-guide/updates.md",
+          "title": "Updates"
+        },
+        {
+          "path": "user-guide/users-roles.md",
+          "title": "Users & roles"
+        }
+      ]
+    },
+    {
+      "section": "Admin guide",
+      "key": "admin-guide",
+      "pages": [
+        {
+          "path": "admin-guide/cloud-sources.md",
+          "title": "Cloud sources"
+        },
+        {
+          "path": "admin-guide/deployment.md",
+          "title": "Deployment"
+        },
+        {
+          "path": "admin-guide/docker-compose.md",
+          "title": "Operating with Docker Compose"
+        },
+        {
+          "path": "admin-guide/https.md",
+          "title": "HTTPS / TLS"
+        },
+        {
+          "path": "admin-guide/logs.md",
+          "title": "Logs"
+        },
+        {
+          "path": "admin-guide/nfs.md",
+          "title": "NFS"
+        },
+        {
+          "path": "admin-guide/reverse-proxy.md",
+          "title": "Reverse proxy"
+        },
+        {
+          "path": "admin-guide/secrets.md",
+          "title": "Secrets management"
+        },
+        {
+          "path": "admin-guide/security.md",
+          "title": "Security best practices"
+        },
+        {
+          "path": "admin-guide/smb-cifs.md",
+          "title": "SMB / CIFS"
+        },
+        {
+          "path": "admin-guide/storage-mounts.md",
+          "title": "Storage mounts"
+        },
+        {
+          "path": "admin-guide/system-requirements.md",
+          "title": "System requirements"
+        },
+        {
+          "path": "admin-guide/troubleshooting.md",
+          "title": "Troubleshooting (admin)"
+        }
+      ]
+    },
+    {
+      "section": "Developer guide",
+      "key": "developer-guide",
+      "pages": [
+        {
+          "path": "developer-guide/api.md",
+          "title": "API (developer)"
+        },
+        {
+          "path": "developer-guide/architecture.md",
+          "title": "Architecture"
+        },
+        {
+          "path": "developer-guide/backend.md",
+          "title": "Backend"
+        },
+        {
+          "path": "developer-guide/contributing.md",
+          "title": "Contributing (developer)"
+        },
+        {
+          "path": "developer-guide/database.md",
+          "title": "Database"
+        },
+        {
+          "path": "developer-guide/documentation-rules.md",
+          "title": "Documentation rules"
+        },
+        {
+          "path": "developer-guide/ffmpeg-command-builder.md",
+          "title": "FFmpeg command builder"
+        },
+        {
+          "path": "developer-guide/frontend.md",
+          "title": "Frontend"
+        },
+        {
+          "path": "developer-guide/media-library.md",
+          "title": "Media library (developer)"
+        },
+        {
+          "path": "developer-guide/migrations.md",
+          "title": "Migrations"
+        },
+        {
+          "path": "developer-guide/platform-integrations.md",
+          "title": "Platform integrations"
+        },
+        {
+          "path": "developer-guide/process-manager.md",
+          "title": "Process manager"
+        },
+        {
+          "path": "developer-guide/project-structure.md",
+          "title": "Project structure"
+        },
+        {
+          "path": "developer-guide/storage-integrations.md",
+          "title": "Storage integrations"
+        },
+        {
+          "path": "developer-guide/testing.md",
+          "title": "Testing, linting, type checks"
+        },
+        {
+          "path": "developer-guide/websocket-sse.md",
+          "title": "WebSockets / SSE"
+        }
+      ]
+    },
+    {
+      "section": "API reference",
+      "key": "api",
+      "pages": [
+        {
+          "path": "api/auth.md",
+          "title": "API: auth"
+        },
+        {
+          "path": "api/backup-restore.md",
+          "title": "API: backup/restore"
+        },
+        {
+          "path": "api/media-library.md",
+          "title": "API: media library"
+        },
+        {
+          "path": "api/monitoring.md",
+          "title": "API: monitoring"
+        },
+        {
+          "path": "api/overview.md",
+          "title": "API overview"
+        },
+        {
+          "path": "api/platforms.md",
+          "title": "API: platforms & metadata"
+        },
+        {
+          "path": "api/sources.md",
+          "title": "API: sources"
+        },
+        {
+          "path": "api/streams.md",
+          "title": "API: streams"
+        }
+      ]
+    },
+    {
+      "section": "Reference",
+      "key": "reference",
+      "pages": [
+        {
+          "path": "reference/configuration.md",
+          "title": "Configuration"
+        },
+        {
+          "path": "reference/environment-variables.md",
+          "title": "Environment variables"
+        },
+        {
+          "path": "reference/ffmpeg-profiles.md",
+          "title": "FFmpeg profiles"
+        },
+        {
+          "path": "reference/glossary.md",
+          "title": "Glossary"
+        },
+        {
+          "path": "reference/permissions.md",
+          "title": "Permissions"
+        },
+        {
+          "path": "reference/placeholders.md",
+          "title": "Placeholders (templates)"
+        },
+        {
+          "path": "reference/roles.md",
+          "title": "Roles"
+        }
+      ]
+    },
+    {
+      "section": "Troubleshooting",
+      "key": "troubleshooting",
+      "pages": [
+        {
+          "path": "troubleshooting/docker.md",
+          "title": "Docker problems"
+        },
+        {
+          "path": "troubleshooting/ffmpeg-errors.md",
+          "title": "FFmpeg errors"
+        },
+        {
+          "path": "troubleshooting/index.md",
+          "title": "Troubleshooting"
+        },
+        {
+          "path": "troubleshooting/native-installation.md",
+          "title": "Native installation"
+        },
+        {
+          "path": "troubleshooting/performance.md",
+          "title": "Performance"
+        },
+        {
+          "path": "troubleshooting/platform-errors.md",
+          "title": "Platform errors"
+        },
+        {
+          "path": "troubleshooting/smb-problems.md",
+          "title": "SMB problems"
+        },
+        {
+          "path": "troubleshooting/stream-not-starting.md",
+          "title": "Stream not starting"
+        }
+      ]
+    }
+  ]
+}

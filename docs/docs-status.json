@@ -1,0 +1,754 @@
+{
+  "generated": "2026-06-25",
+  "summary": {
+    "pages": 74,
+    "de": 74,
+    "en": 74,
+    "placeholders": 118,
+    "stale": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "pages": {
+    "admin-guide/cloud-sources.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/deployment.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/docker-compose.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/https.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/logs.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/nfs.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/reverse-proxy.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/secrets.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/security.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "admin-guide/smb-cifs.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/storage-mounts.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/system-requirements.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "admin-guide/troubleshooting.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "api/auth.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "api/backup-restore.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "api/media-library.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "api/monitoring.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "api/overview.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "api/platforms.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "api/sources.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "api/streams.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/api.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/architecture.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/backend.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/contributing.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/database.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/documentation-rules.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "developer-guide/ffmpeg-command-builder.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/frontend.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/media-library.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/migrations.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/platform-integrations.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/process-manager.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/project-structure.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/storage-integrations.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/testing.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "developer-guide/websocket-sse.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "getting-started/first-setup.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "getting-started/installation-docker.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "getting-started/installation-native.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "getting-started/overview.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "getting-started/quickstart.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "index.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "reference/configuration.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "reference/environment-variables.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "reference/ffmpeg-profiles.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "reference/glossary.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "reference/permissions.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "reference/placeholders.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "reference/roles.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "troubleshooting/docker.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "troubleshooting/ffmpeg-errors.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "troubleshooting/index.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "troubleshooting/native-installation.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "troubleshooting/performance.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "troubleshooting/platform-errors.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "troubleshooting/smb-problems.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "troubleshooting/stream-not-starting.md": {
+      "de": true,
+      "en": true,
+      "de_status": "stable",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": false,
+      "en_status": "stable",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": false
+    },
+    "user-guide/backup-restore.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/channels.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/dashboard.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/media-library.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/metadata-thumbnails.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/monitoring.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/platforms.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/playlists.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/preflight-checks.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/recordings-replay.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/settings.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/sources-storage.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/stream-editor.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/streams.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/updates.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    },
+    "user-guide/users-roles.md": {
+      "de": true,
+      "en": true,
+      "de_status": "draft",
+      "de_lastReviewed": "2026-06-24",
+      "de_placeholder": true,
+      "en_status": "draft",
+      "en_lastReviewed": "2026-06-24",
+      "en_placeholder": true
+    }
+  }
+}

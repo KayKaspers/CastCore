@@ -1,6 +1,7 @@
 import { FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import HelpLink from "../components/HelpLink";
 import { Badge, Button, Field, Input, Panel } from "../components/ui";
 import { api, ApiException } from "../lib/api";
 import type { BrowseResult, StorageSource, TestResult } from "../lib/types";
@@ -33,7 +34,10 @@ export default function SourcesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-semibold text-mist">{t("nav.sources")}</h1>
+      <h1 className="text-2xl font-semibold text-mist flex items-center gap-2">
+        {t("nav.sources")} <HelpLink page="user-guide/sources-storage.md" />
+        <span className="text-xs"><HelpLink page="troubleshooting/smb-problems.md" label="SMB-Hilfe" /></span>
+      </h1>
       {error && <p className="text-danger text-sm">{error}</p>}
 
       <div className="grid lg:grid-cols-2 gap-4">

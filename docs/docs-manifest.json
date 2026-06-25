@@ -1,0 +1,153 @@
+{
+  "$comment": "CastCore documentation manifest. Maps features to their docs, UI routes, API routes and models. Update this whenever a feature changes (see developer-guide/documentation-rules).",
+  "version": 1,
+  "primaryLanguage": "de",
+  "languages": ["de", "en"],
+  "features": [
+    {
+      "id": "getting-started",
+      "module": "core",
+      "status": "implemented",
+      "docs": {
+        "de": ["docs/de/getting-started/overview.md", "docs/de/getting-started/installation-docker.md", "docs/de/getting-started/installation-native.md", "docs/de/getting-started/first-setup.md", "docs/de/getting-started/quickstart.md"],
+        "en": ["docs/en/getting-started/overview.md", "docs/en/getting-started/installation-docker.md", "docs/en/getting-started/installation-native.md", "docs/en/getting-started/first-setup.md", "docs/en/getting-started/quickstart.md"]
+      },
+      "uiRoutes": ["/login", "/setup"],
+      "apiRoutes": ["/api/v1/setup/state", "/api/v1/setup/admin", "/api/v1/auth/login"],
+      "models": ["User", "Role", "SetupState"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "stream-jobs",
+      "module": "streams",
+      "status": "implemented",
+      "docs": {
+        "de": ["docs/de/user-guide/streams.md", "docs/de/user-guide/stream-editor.md", "docs/de/user-guide/preflight-checks.md"],
+        "en": ["docs/en/user-guide/streams.md", "docs/en/user-guide/stream-editor.md", "docs/en/user-guide/preflight-checks.md"]
+      },
+      "uiRoutes": ["/streams"],
+      "apiRoutes": ["/api/v1/stream-jobs", "/api/v1/ffmpeg-profiles", "/api/v1/destinations"],
+      "models": ["StreamJob", "FFmpegProfile", "Input", "Output", "Destination", "ProcessStatus"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "sources-storage",
+      "module": "storage",
+      "status": "implemented",
+      "docs": {
+        "de": ["docs/de/user-guide/sources-storage.md", "docs/de/admin-guide/smb-cifs.md", "docs/de/admin-guide/storage-mounts.md"],
+        "en": ["docs/en/user-guide/sources-storage.md", "docs/en/admin-guide/smb-cifs.md", "docs/en/admin-guide/storage-mounts.md"]
+      },
+      "uiRoutes": ["/sources"],
+      "apiRoutes": ["/api/v1/storage-sources"],
+      "models": ["StorageSource", "SmbSource"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "media-library",
+      "module": "media",
+      "status": "implemented",
+      "docs": {
+        "de": ["docs/de/user-guide/media-library.md", "docs/de/developer-guide/media-library.md"],
+        "en": ["docs/en/user-guide/media-library.md", "docs/en/developer-guide/media-library.md"]
+      },
+      "uiRoutes": ["/media"],
+      "apiRoutes": ["/api/v1/media"],
+      "models": ["MediaItem", "MediaProbe"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "playlists",
+      "module": "playlists",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/playlists.md"], "en": ["docs/en/user-guide/playlists.md"] },
+      "uiRoutes": ["/playlists"],
+      "apiRoutes": ["/api/v1/playlists"],
+      "models": ["Playlist", "PlaylistItem"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "channels",
+      "module": "channels",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/channels.md"], "en": ["docs/en/user-guide/channels.md"] },
+      "uiRoutes": ["/channels"],
+      "apiRoutes": ["/api/v1/channels"],
+      "models": ["Channel"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "platform-metadata",
+      "module": "platforms",
+      "status": "implemented",
+      "docs": {
+        "de": ["docs/de/user-guide/platforms.md", "docs/de/user-guide/metadata-thumbnails.md", "docs/de/reference/placeholders.md"],
+        "en": ["docs/en/user-guide/platforms.md", "docs/en/user-guide/metadata-thumbnails.md", "docs/en/reference/placeholders.md"]
+      },
+      "uiRoutes": ["/resources", "/streams"],
+      "apiRoutes": ["/api/v1/destinations", "/api/v1/stream-jobs/{id}/metadata", "/api/v1/metadata/resolve"],
+      "models": ["Destination", "PlatformMetadata"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "recordings",
+      "module": "recording",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/recordings-replay.md"], "en": ["docs/en/user-guide/recordings-replay.md"] },
+      "uiRoutes": ["/recordings"],
+      "apiRoutes": ["/api/v1/recordings"],
+      "models": ["Recording"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "monitoring",
+      "module": "monitoring",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/monitoring.md"], "en": ["docs/en/user-guide/monitoring.md"] },
+      "uiRoutes": ["/monitoring"],
+      "apiRoutes": ["/api/v1/monitoring/system", "/api/v1/monitoring/outputs"],
+      "models": ["ProcessStatus"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "notifications",
+      "module": "notifications",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/settings.md"], "en": ["docs/en/user-guide/settings.md"] },
+      "uiRoutes": ["/notifications"],
+      "apiRoutes": ["/api/v1/notifications"],
+      "models": ["Notification"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "scheduler",
+      "module": "scheduler",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/settings.md"], "en": ["docs/en/user-guide/settings.md"] },
+      "uiRoutes": ["/scheduler"],
+      "apiRoutes": ["/api/v1/scheduler"],
+      "models": ["SchedulerEntry"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "backup-restore",
+      "module": "backup",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/backup-restore.md", "docs/de/api/backup-restore.md"], "en": ["docs/en/user-guide/backup-restore.md", "docs/en/api/backup-restore.md"] },
+      "uiRoutes": ["/backup"],
+      "apiRoutes": ["/api/v1/backups"],
+      "models": ["Backup"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
+      "id": "security",
+      "module": "core",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/admin-guide/security.md", "docs/de/admin-guide/secrets.md", "docs/de/reference/roles.md"], "en": ["docs/en/admin-guide/security.md", "docs/en/admin-guide/secrets.md", "docs/en/reference/roles.md"] },
+      "uiRoutes": ["/users"],
+      "apiRoutes": ["/api/v1/auth", "/api/v1/users"],
+      "models": ["User", "Role", "Session", "ApiToken", "AuditEvent"],
+      "lastReviewed": "2026-06-24"
+    }
+  ]
+}

@@ -40,7 +40,16 @@
     "users": "Benutzerverwaltung",
     "backup": "Backup / Restore",
     "notifications": "Benachrichtigungen",
-    "updates": "Updates"
+    "updates": "Updates",
+    "help": "Hilfe"
+  },
+  "help": {
+    "moreInfo": "Mehr erfahren"
+  },
+  "docs": {
+    "backToApp": "Zurück zur App",
+    "search": "Dokumentation durchsuchen…",
+    "editHint": "Diese Seite bearbeiten:"
   },
   "auth": {
     "login": "Anmelden",

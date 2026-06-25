@@ -5,6 +5,26 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — bilingual documentation & in-app help system
+- Full bilingual docs tree under `docs/de` (primary) + `docs/en` (parallel), structurally
+  synchronized: getting-started, user-guide, admin-guide, developer-guide, api, reference,
+  troubleshooting (74 pages per language). Cornerstone pages written in full; the rest are
+  non-empty, templated stubs with descriptions + TODOs.
+- **Documentation system**: `docs/docs-manifest.json` (feature → docs/UI/API/model map),
+  `scripts/check_docs.py` (validates DE/EN parity, manifest references, empty pages,
+  stale `lastReviewed`; regenerates `docs/docs-status.json` and `docs/nav.json`),
+  `docs/templates/` (page/troubleshooting/feature templates, DE+EN), and a
+  `.github/workflows/docs-check.yml` CI check (parity + broken internal links).
+- **In-app help**: `/docs` viewer (renders the Markdown via `marked`, sidebar nav from
+  `nav.json`, search, breadcrumbs, language-aware, "back to app"); a **Help** entry in the
+  main navigation; a reusable `HelpLink` component and `helpLinks` map wiring UI areas
+  (stream jobs, sources/SMB) and the FFmpeg log-hint banner to the matching docs pages.
+  Docs are bind-mounted read-only into the frontend container (single source of truth).
+- **Process rule** documented in `CLAUDE.md`, `CONTRIBUTING.md` and the documentation-rules
+  page: *no feature change without a documentation update* (DE + EN).
+- Verified: `check_docs.py` reports 0 errors / 0 warnings across 74 pages per language and
+  generated `docs-status.json` + `nav.json`.
+
 ### Added — platform metadata + description templates
 - `platform_metadata` (migration `0012`): per stream-job, per-platform title, description
   template, category, tags, language, visibility, scheduled start (unique per job+platform).
