@@ -3,34 +3,53 @@ title: "API: platforms & metadata"
 description: "Destinations and platform metadata/templates."
 lang: en
 audience: "Developers / Integrators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: platforms & metadata
 
-> Destinations and platform metadata/templates.
+> Output destinations (transport) and platform metadata (title/description/thumbnail) are
+> separate. Operator+.
 
-**Audience:** Developers / Integrators
+**Audience:** developers / integrators.
 
-## Overview
+## Destinations
 
-Destinations and platform metadata/templates.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET/POST/PATCH/DELETE` | `/api/v1/destinations[/{id}]` | Destinations; `kind` ∈ platform/rtmp/hls/recording/preview |
 
-## Contents
+`stream_key` is write-only and stored encrypted; responses only show `has_stream_key`.
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+## Metadata & templates
 
-- TODO: add the step-by-step guide or in-depth explanation.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/stream-jobs/{id}/metadata` | All platform metadata of a job |
+| `PUT/DELETE` | `/api/v1/stream-jobs/{id}/metadata/{platform}` | Create/update/delete |
+| `GET` | `/api/v1/stream-jobs/{id}/metadata/{platform}/resolved` | Resolved metadata + warnings |
+| `GET` | `/api/v1/metadata/placeholders` | List of placeholders |
+| `POST` | `/api/v1/metadata/resolve` | `{template, context}` → resolved text |
 
-## Notes
+## Thumbnails / assets
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET/POST/DELETE` | `/api/v1/assets[/{id}]` | Upload/list/delete images |
+| `GET` | `/api/v1/assets/{id}/file` | Serve the image file |
+
+Upload validation (magic bytes, size) – see
+[Metadata & thumbnails](/docs/en/user-guide/metadata-thumbnails.md).
+
+## Placeholders
+
+`{stream_title} {date} {time} {platform} {category} {tags} {source_name} {server_name} {channel_name}`
+([reference](/docs/en/reference/placeholders.md)).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Platforms (UI)](/docs/en/user-guide/platforms.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

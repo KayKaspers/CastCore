@@ -3,34 +3,53 @@ title: "API: Medienbibliothek"
 description: "Scan, Auflistung, ffprobe-Daten."
 lang: de
 audience: "Entwickler / Integratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: Medienbibliothek
 
-> Scan, Auflistung, ffprobe-Daten.
+> Quellen scannen und indexierte Medien abfragen. Operator+.
 
-**Zielgruppe:** Entwickler / Integratoren
+**Zielgruppe:** Entwickler / Integratoren.
 
-## Überblick
+## Endpunkte
 
-Scan, Auflistung, ffprobe-Daten.
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `POST` | `/api/v1/media/scan/{source_id}` | Quelle scannen (inkrementell) |
+| `GET` | `/api/v1/media` | Auflisten/filtern |
+| `GET` | `/api/v1/media/{id}` | Detail inkl. ffprobe-Daten |
+| `DELETE` | `/api/v1/media/{id}` | Eintrag entfernen |
 
-## Inhalt
+## Filter (Query)
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+| Parameter | Bedeutung |
+| --- | --- |
+| `source_id` | nur Medien dieser Quelle |
+| `kind` | `video` / `audio` / `image` / `other` |
+| `streamable` | nur streamfähige (`true`) |
+| `q` | Suche im Dateinamen |
+| `limit` / `offset` | Paginierung |
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Scan-Ergebnis
 
-## Hinweise
+```json
+{ "files": 128, "indexed": 12, "probed": 12 }
+```
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Playlists
+
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET/POST/PATCH/DELETE` | `/api/v1/playlists[/{id}]` | Playlists |
+| `POST/DELETE` | `/api/v1/playlists/{id}/items[/{item}]` | Items hinzufügen/entfernen |
+| `POST` | `/api/v1/playlists/{id}/reorder` | Reihenfolge setzen |
+| `GET` | `/api/v1/playlists/{id}/resolve` | Auflösen → absolute Pfade + Dauer |
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Medienbibliothek (UI)](/docs/de/user-guide/media-library.md) · [Playlists](/docs/de/user-guide/playlists.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

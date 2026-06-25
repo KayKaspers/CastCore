@@ -4,7 +4,7 @@
     "pages": 74,
     "de": 74,
     "en": 74,
-    "placeholders": 70,
+    "placeholders": 54,
     "stale": 0,
     "errors": 0,
     "warnings": 0
@@ -143,82 +143,82 @@
     "api/auth.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "api/backup-restore.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "api/media-library.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "api/monitoring.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "api/overview.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "api/platforms.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "api/sources.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "api/streams.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "developer-guide/api.md": {
       "de": true,

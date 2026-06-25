@@ -3,34 +3,42 @@ title: "API: Monitoring"
 description: "System- und Output-Metriken."
 lang: de
 audience: "Entwickler / Integratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: Monitoring
 
-> System- und Output-Metriken.
+> System- und Stream-Metriken. Für jeden angemeldeten Nutzer lesbar.
 
-**Zielgruppe:** Entwickler / Integratoren
+**Zielgruppe:** Entwickler / Integratoren.
 
-## Überblick
+## REST
 
-System- und Output-Metriken.
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET` | `/api/v1/monitoring/system` | CPU, RAM, Disk, FFmpeg-Prozesse |
+| `GET` | `/api/v1/monitoring/outputs` | Live-Metriken pro Output (fps, bitrate, speed, CPU, RAM) |
+| `GET` | `/api/v1/health` · `/api/v1/system/health` | Liveness / Readiness |
 
-## Inhalt
+## WebSocket (Live)
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+| Kanal | Inhalt |
+| --- | --- |
+| `WS /api/v1/ws/logs/{job_id}?token=<access>` | FFmpeg-Logzeilen `{line, level, hint}` |
+| `WS /api/v1/ws/status?token=<access>` | Statuswechsel + Metriken pro Output |
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+Browser können keine Header auf WebSockets setzen → Token als `?token=` übergeben.
 
-## Hinweise
+## Beispiel: System-Metriken
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+```json
+{ "cpu_percent": 13.2, "mem_percent": 39.4, "disk_percent": 0.6, "ffmpeg_processes": 2 }
+```
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Monitoring (UI)](/docs/de/user-guide/monitoring.md) · [Performance](/docs/de/troubleshooting/performance.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

@@ -3,34 +3,52 @@ title: "API: Auth"
 description: "Login, JWT-Refresh, Logout, API-Tokens."
 lang: de
 audience: "Entwickler / Integratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: Auth
 
-> Login, JWT-Refresh, Logout, API-Tokens.
+> Authentifizierung über JWT (Access + rotierender Refresh).
 
-**Zielgruppe:** Entwickler / Integratoren
+**Zielgruppe:** Entwickler / Integratoren.
 
-## Überblick
+## Endpunkte
 
-Login, JWT-Refresh, Logout, API-Tokens.
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `POST` | `/api/v1/auth/login` | Anmeldung → `access_token`, `refresh_token`, `user` |
+| `POST` | `/api/v1/auth/refresh` | Neues Token-Paar aus Refresh-Token |
+| `POST` | `/api/v1/auth/logout` | Eigene Sessions widerrufen |
+| `GET` | `/api/v1/auth/me` | Aktuelles Profil |
 
-## Inhalt
+## Beispiel: Login
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+```bash
+curl -k -X POST https://<host>/api/v1/auth/login \
+  -H 'content-type: application/json' \
+  -d '{"username":"admin","password":"<geheim>"}'
+```
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+Antwort:
+```json
+{ "access_token": "…", "refresh_token": "…", "token_type": "bearer", "user": { … } }
+```
+
+## Token-Nutzung
+
+```bash
+curl -k https://<host>/api/v1/auth/me -H 'authorization: Bearer <access_token>'
+```
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+- Access-Token kurzlebig (`ACCESS_TOKEN_TTL_MINUTES`), Refresh rotiert und ist widerrufbar.
+- Passwörter werden mit **argon2id** gehasht.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Rollen](/docs/de/reference/roles.md) · [Security](/docs/de/admin-guide/security.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

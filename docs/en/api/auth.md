@@ -3,34 +3,52 @@ title: "API: auth"
 description: "Login, JWT refresh, logout, API tokens."
 lang: en
 audience: "Developers / Integrators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: auth
 
-> Login, JWT refresh, logout, API tokens.
+> Authentication via JWT (access + rotating refresh).
 
-**Audience:** Developers / Integrators
+**Audience:** developers / integrators.
 
-## Overview
+## Endpoints
 
-Login, JWT refresh, logout, API tokens.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/v1/auth/login` | Sign in → `access_token`, `refresh_token`, `user` |
+| `POST` | `/api/v1/auth/refresh` | New token pair from a refresh token |
+| `POST` | `/api/v1/auth/logout` | Revoke own sessions |
+| `GET` | `/api/v1/auth/me` | Current profile |
 
-## Contents
+## Example: login
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+```bash
+curl -k -X POST https://<host>/api/v1/auth/login \
+  -H 'content-type: application/json' \
+  -d '{"username":"admin","password":"<secret>"}'
+```
 
-- TODO: add the step-by-step guide or in-depth explanation.
+Response:
+```json
+{ "access_token": "…", "refresh_token": "…", "token_type": "bearer", "user": { … } }
+```
+
+## Using the token
+
+```bash
+curl -k https://<host>/api/v1/auth/me -H 'authorization: Bearer <access_token>'
+```
 
 ## Notes
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+- Access token short-lived (`ACCESS_TOKEN_TTL_MINUTES`), refresh rotates and is revocable.
+- Passwords are hashed with **argon2id**.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Roles](/docs/en/reference/roles.md) · [Security](/docs/en/admin-guide/security.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

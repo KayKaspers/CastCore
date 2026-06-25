@@ -3,34 +3,53 @@ title: "API: media library"
 description: "Scan, listing, ffprobe data."
 lang: en
 audience: "Developers / Integrators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: media library
 
-> Scan, listing, ffprobe data.
+> Scan sources and query indexed media. Operator+.
 
-**Audience:** Developers / Integrators
+**Audience:** developers / integrators.
 
-## Overview
+## Endpoints
 
-Scan, listing, ffprobe data.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `POST` | `/api/v1/media/scan/{source_id}` | Scan a source (incremental) |
+| `GET` | `/api/v1/media` | List/filter |
+| `GET` | `/api/v1/media/{id}` | Detail incl. ffprobe data |
+| `DELETE` | `/api/v1/media/{id}` | Remove an entry |
 
-## Contents
+## Filters (query)
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+| Parameter | Meaning |
+| --- | --- |
+| `source_id` | only media of this source |
+| `kind` | `video` / `audio` / `image` / `other` |
+| `streamable` | only streamable (`true`) |
+| `q` | search in the filename |
+| `limit` / `offset` | pagination |
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Scan result
 
-## Notes
+```json
+{ "files": 128, "indexed": 12, "probed": 12 }
+```
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+## Playlists
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET/POST/PATCH/DELETE` | `/api/v1/playlists[/{id}]` | Playlists |
+| `POST/DELETE` | `/api/v1/playlists/{id}/items[/{item}]` | Add/remove items |
+| `POST` | `/api/v1/playlists/{id}/reorder` | Set order |
+| `GET` | `/api/v1/playlists/{id}/resolve` | Resolve → absolute paths + duration |
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Media library (UI)](/docs/en/user-guide/media-library.md) · [Playlists](/docs/en/user-guide/playlists.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

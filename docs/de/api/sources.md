@@ -3,34 +3,41 @@ title: "API: Quellen"
 description: "Storage-Quellen, Test, Mount, Browse."
 lang: de
 audience: "Entwickler / Integratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: Quellen
 
-> Storage-Quellen, Test, Mount, Browse.
+> Lokale und SMB-Quellen verwalten. Operator+. Passwörter write-only/verschlüsselt.
 
-**Zielgruppe:** Entwickler / Integratoren
+**Zielgruppe:** Entwickler / Integratoren.
 
-## Überblick
+## Endpunkte
 
-Storage-Quellen, Test, Mount, Browse.
-
-## Inhalt
-
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
-
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET` | `/api/v1/storage-sources` | Quellen auflisten |
+| `POST` | `/api/v1/storage-sources/local` | Lokale Quelle anlegen |
+| `POST` | `/api/v1/storage-sources/smb` | SMB-Quelle anlegen |
+| `GET/DELETE` | `/api/v1/storage-sources/{id}` | Detail / löschen |
+| `POST` | `/api/v1/storage-sources/{id}/test` | Erreichbarkeit testen |
+| `POST` | `/api/v1/storage-sources/{id}/mount` · `/unmount` | SMB mounten/aushängen |
+| `GET` | `/api/v1/storage-sources/{id}/browse?subpath=` | Verzeichnis durchsuchen |
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+- `browse` ist **traversal-geschützt** (auf den Quellpfad beschränkt) und markiert
+  streamfähige Medien.
+- SMB-Mounts im Container brauchen erweiterte Rechte – siehe
+  [Storage-Mounts](/docs/de/admin-guide/storage-mounts.md).
+- Fehlgeschlagener `test` löst das Event `source_offline` aus
+  ([Benachrichtigungen](/docs/de/user-guide/settings.md)).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Quellen / Storage (UI)](/docs/de/user-guide/sources-storage.md)
+- [Medienbibliothek](/docs/de/api/media-library.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

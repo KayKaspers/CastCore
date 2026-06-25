@@ -3,34 +3,54 @@ title: "API: Plattformen & Metadaten"
 description: "Destinations und Plattform-Metadaten/Templates."
 lang: de
 audience: "Entwickler / Integratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: Plattformen & Metadaten
 
-> Destinations und Plattform-Metadaten/Templates.
+> Ausgabeziele (Transport) und Plattform-Metadaten (Titel/Beschreibung/Thumbnail) sind
+> getrennt. Operator+.
 
-**Zielgruppe:** Entwickler / Integratoren
+**Zielgruppe:** Entwickler / Integratoren.
 
-## Überblick
+## Ziele (Destinations)
 
-Destinations und Plattform-Metadaten/Templates.
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET/POST/PATCH/DELETE` | `/api/v1/destinations[/{id}]` | Ziele; `kind` ∈ platform/rtmp/hls/recording/preview |
 
-## Inhalt
+`stream_key` ist write-only und wird verschlüsselt gespeichert; Antworten zeigen nur
+`has_stream_key`.
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+## Metadaten & Templates
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET` | `/api/v1/stream-jobs/{id}/metadata` | Alle Plattform-Metadaten eines Jobs |
+| `PUT/DELETE` | `/api/v1/stream-jobs/{id}/metadata/{platform}` | Anlegen/aktualisieren/löschen |
+| `GET` | `/api/v1/stream-jobs/{id}/metadata/{platform}/resolved` | Aufgelöste Metadaten + Warnungen |
+| `GET` | `/api/v1/metadata/placeholders` | Liste der Platzhalter |
+| `POST` | `/api/v1/metadata/resolve` | `{template, context}` → aufgelöster Text |
 
-## Hinweise
+## Thumbnails / Assets
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET/POST/DELETE` | `/api/v1/assets[/{id}]` | Bilder hochladen/auflisten/löschen |
+| `GET` | `/api/v1/assets/{id}/file` | Bilddatei ausliefern |
+
+Upload-Validierung (Magic-Bytes, Größe) – siehe
+[Metadaten & Thumbnails](/docs/de/user-guide/metadata-thumbnails.md).
+
+## Platzhalter
+
+`{stream_title} {date} {time} {platform} {category} {tags} {source_name} {server_name} {channel_name}`
+([Referenz](/docs/de/reference/placeholders.md)).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Plattformen (UI)](/docs/de/user-guide/platforms.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

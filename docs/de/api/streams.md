@@ -3,34 +3,52 @@ title: "API: Streams"
 description: "Stream-Jobs, Profile, Start/Stop, Preflight."
 lang: de
 audience: "Entwickler / Integratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: Streams
 
-> Stream-Jobs, Profile, Start/Stop, Preflight.
+> Stream-Jobs, FFmpeg-Profile, Ziele und Prozesssteuerung. Alle Routen erfordern
+> mindestens **Operator**.
 
-**Zielgruppe:** Entwickler / Integratoren
+**Zielgruppe:** Entwickler / Integratoren.
 
-## Überblick
+## Stream-Jobs
 
-Stream-Jobs, Profile, Start/Stop, Preflight.
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET/POST` | `/api/v1/stream-jobs` | Auflisten / anlegen (mit Inputs/Outputs) |
+| `GET/DELETE` | `/api/v1/stream-jobs/{id}` | Detail / löschen |
+| `POST` | `/api/v1/stream-jobs/{id}/preview` | Maskierte Command-Vorschau |
+| `POST` | `/api/v1/stream-jobs/{id}/preflight` | Startklar-Prüfung (🟢/🟡/🔴) |
+| `POST` | `/api/v1/stream-jobs/{id}/dry-run` | Kurzer Test-Encode (Speed/FPS) |
+| `POST` | `/api/v1/stream-jobs/{id}/start` · `/stop` · `/restart` | Prozesssteuerung |
+| `POST` | `/api/v1/stream-jobs/{id}/recording` | Recording an/aus |
 
-## Inhalt
+## Profile & Ziele
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET/POST/PATCH/DELETE` | `/api/v1/ffmpeg-profiles[/{id}]` | FFmpeg-Profile |
+| `GET/POST/PATCH/DELETE` | `/api/v1/destinations[/{id}]` | Ziele (Stream-Key write-only) |
+| `POST` | `/api/v1/ffmpeg/preview` | Command aus Inputs/Outputs (maskiert) |
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Metadaten (pro Job/Plattform)
 
-## Hinweise
+| Methode | Pfad | Zweck |
+| --- | --- | --- |
+| `GET/PUT/DELETE` | `/api/v1/stream-jobs/{id}/metadata/{platform}` | Metadaten je Plattform |
+| `GET` | `/api/v1/stream-jobs/{id}/metadata/{platform}/resolved` | Aufgelöste Vorschau |
+| `POST` | `/api/v1/metadata/resolve` | Template generisch auflösen |
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Live-Logs
+
+`WS /api/v1/ws/logs/{job_id}?token=<access>` – siehe [Monitoring](/docs/de/api/monitoring.md).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Stream-Jobs (UI)](/docs/de/user-guide/streams.md) · [FFmpeg-Profile](/docs/de/reference/ffmpeg-profiles.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

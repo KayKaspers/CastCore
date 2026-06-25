@@ -3,34 +3,59 @@ title: "API-Überblick"
 description: "Basis-URL, Auth, Fehlerformat, OpenAPI/Swagger."
 lang: de
 audience: "Entwickler / Integratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API-Überblick
 
-> Basis-URL, Auth, Fehlerformat, OpenAPI/Swagger.
+> CastCore bietet eine REST-API (JSON) plus WebSockets für Live-Logs/Status. Basis:
+> `/api/v1`.
 
-**Zielgruppe:** Entwickler / Integratoren
+**Zielgruppe:** Entwickler / Integratoren.
 
-## Überblick
+## Authentifizierung
 
-Basis-URL, Auth, Fehlerformat, OpenAPI/Swagger.
+- `POST /api/v1/auth/login` liefert **Access-** und **Refresh-Token**.
+- Anfragen mit `Authorization: Bearer <access_token>`.
+- Automatisierung: API-Tokens via `X-API-Key` (siehe [Auth](/docs/de/api/auth.md)).
 
-## Inhalt
+## Fehlerformat
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Fehler liefern **übersetzbare Codes** statt fester Texte:
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+```json
+{ "detail": { "error": { "code": "preflight.source_unreachable",
+                          "params": { "source": "Studio NAS" }, "level": "error" } } }
+```
 
-## Hinweise
+Das Frontend übersetzt `code` via i18n (`error.*`).
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Rollen
 
-## Verwandte Seiten
+Jede Route verlangt eine Rolle (Admin/Operator/Viewer). Admin darf immer.
+Siehe [Rollen](/docs/de/reference/roles.md).
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+## OpenAPI / Swagger
+
+- Interaktive Doku: **`/api/docs`** (Swagger UI)
+- Schema: **`/api/openapi.json`**
+
+## Live (WebSocket)
+
+| Kanal | Zweck |
+| --- | --- |
+| `WS /api/v1/ws/logs/{job_id}` | Live-FFmpeg-Logs + Hinweise |
+| `WS /api/v1/ws/status` | Status-/Metrik-Updates |
+
+Token wird als Query-Parameter `?token=` übergeben.
+
+## Bereiche
+
+- [Auth](/docs/de/api/auth.md) · [Streams](/docs/de/api/streams.md) ·
+  [Quellen](/docs/de/api/sources.md) · [Plattformen & Metadaten](/docs/de/api/platforms.md)
+- [Medienbibliothek](/docs/de/api/media-library.md) · [Monitoring](/docs/de/api/monitoring.md)
+  · [Backup/Restore](/docs/de/api/backup-restore.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

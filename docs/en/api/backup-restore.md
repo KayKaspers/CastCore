@@ -3,34 +3,49 @@ title: "API: backup/restore"
 description: "Create, download and restore backups."
 lang: en
 audience: "Developers / Integrators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: backup/restore
 
-> Create, download and restore backups.
+> Logical backups (gz-JSON) of the application tables. **Admin** required.
 
-**Audience:** Developers / Integrators
+**Audience:** developers / integrators.
 
-## Overview
+## Endpoints
 
-Create, download and restore backups.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/backups` | List backups |
+| `POST` | `/api/v1/backups` | Create a backup |
+| `GET` | `/api/v1/backups/{id}/download` | Backup file (`.json.gz`) |
+| `POST` | `/api/v1/backups/{id}/restore?confirm=true` | Restore (overwrites everything) |
+| `DELETE` | `/api/v1/backups/{id}` | Delete a backup |
 
-## Contents
+## Important
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+> ⚠️ **Restore without `confirm=true` → 400.** Restore **overwrites all data** (except the
+> backup history and the audit log).
 
-- TODO: add the step-by-step guide or in-depth explanation.
+> 🔐 Secrets are stored in the backup only **encrypted** – restore requires the same
+> `ENCRYPTION_KEY` ([Secrets](/docs/en/admin-guide/secrets.md)).
 
-## Notes
+## Update status
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/update/state` | Version, deployment, migration status |
+
+## Audit
+
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/audit` | Audit events (filter `action`, pagination) |
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Backup & restore (UI)](/docs/en/user-guide/backup-restore.md) · [Updates](/docs/en/user-guide/updates.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

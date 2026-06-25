@@ -3,34 +3,41 @@ title: "API: sources"
 description: "Storage sources, test, mount, browse."
 lang: en
 audience: "Developers / Integrators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # API: sources
 
-> Storage sources, test, mount, browse.
+> Manage local and SMB sources. Operator+. Passwords write-only/encrypted.
 
-**Audience:** Developers / Integrators
+**Audience:** developers / integrators.
 
-## Overview
+## Endpoints
 
-Storage sources, test, mount, browse.
-
-## Contents
-
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
-
-- TODO: add the step-by-step guide or in-depth explanation.
+| Method | Path | Purpose |
+| --- | --- | --- |
+| `GET` | `/api/v1/storage-sources` | List sources |
+| `POST` | `/api/v1/storage-sources/local` | Create a local source |
+| `POST` | `/api/v1/storage-sources/smb` | Create an SMB source |
+| `GET/DELETE` | `/api/v1/storage-sources/{id}` | Detail / delete |
+| `POST` | `/api/v1/storage-sources/{id}/test` | Test reachability |
+| `POST` | `/api/v1/storage-sources/{id}/mount` · `/unmount` | Mount/unmount SMB |
+| `GET` | `/api/v1/storage-sources/{id}/browse?subpath=` | Browse a directory |
 
 ## Notes
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+- `browse` is **traversal-protected** (confined to the source path) and flags streamable
+  media.
+- In-container SMB mounts need elevated privileges – see
+  [Storage mounts](/docs/en/admin-guide/storage-mounts.md).
+- A failed `test` raises the `source_offline` event
+  ([Notifications](/docs/en/user-guide/settings.md)).
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Sources / storage (UI)](/docs/en/user-guide/sources-storage.md)
+- [Media library](/docs/en/api/media-library.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_
