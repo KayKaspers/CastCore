@@ -11,6 +11,7 @@ from fastapi import APIRouter
 from app.api.v1.endpoints import (
     app_settings,
     assets,
+    audit,
     auth,
     backups,
     channels,
@@ -47,6 +48,7 @@ api_router.include_router(metadata.router)
 api_router.include_router(metadata.generic)
 api_router.include_router(assets.router)
 api_router.include_router(backups.router)
+api_router.include_router(audit.router)
 api_router.include_router(notifications.router)
 api_router.include_router(monitoring.router)
 api_router.include_router(recordings.router)

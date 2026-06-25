@@ -26,7 +26,9 @@ from app.models.backup import Backup
 from app.services import notification_service
 
 FORMAT_VERSION = 1
-_EXCLUDE = {"backups", "alembic_version"}
+# backups: history survives a restore. audit_events: the audit trail must survive a
+# restore (tamper-resistant) and is operational, not migratable data.
+_EXCLUDE = {"backups", "alembic_version", "audit_events"}
 
 
 def _tables() -> list[sa.Table]:

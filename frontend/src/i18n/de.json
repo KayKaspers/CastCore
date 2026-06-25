@@ -40,6 +40,7 @@
     "settings": "Einstellungen",
     "users": "Benutzerverwaltung",
     "backup": "Backup / Restore",
+    "audit": "Audit-Log",
     "notifications": "Benachrichtigungen",
     "updates": "Updates",
     "help": "Hilfe"

@@ -43,6 +43,16 @@ lastReviewed: 2026-06-24
 - **Sichere Uploads**: Typ-/Größenprüfung, generierte Dateinamen.
 - Mount-Credentials in restriktiven `0600`-Dateien.
 
+## Audit-Log
+
+CastCore protokolliert sicherheitsrelevante Aktionen im **Audit-Log** (UI: `/audit`,
+nur Admin). Erfasst werden u. a.: **Login**, **Stream Start/Stop/Restart**,
+**Backup erstellen/wiederherstellen**, **Benutzer anlegen/löschen** – jeweils mit
+Akteur, Aktion, Ziel, IP und Zeitstempel.
+
+> 🔐 Das Audit-Log ist von **Backup/Restore ausgenommen** – es überlebt eine
+> Wiederherstellung und bleibt so nachvollziehbar.
+
 ## Checkliste
 
 - [ ] `SECRET_KEY` und `ENCRYPTION_KEY` einzigartig gesetzt und gesichert

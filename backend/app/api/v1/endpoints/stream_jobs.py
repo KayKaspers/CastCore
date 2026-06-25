@@ -7,11 +7,11 @@ import uuid
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
 
-from app.api.deps import DbDep, require_roles
+from app.api.deps import CurrentUser, DbDep, require_roles
 from app.core.errors import CastCoreError, ErrorCode
 from app.models.streaming import Input, Output, StreamJob
 from app.schemas.streaming import CommandPreviewOut, PreflightReport, StreamJobIn, StreamJobOut
-from app.services import dry_run_service, notification_service, preflight_service, stream_service
+from app.services import audit_service, dry_run_service, notification_service, preflight_service, stream_service
 from app.services.ffmpeg import mask_command
 
 router = APIRouter(
@@ -94,23 +94,26 @@ async def dry_run_job(job_id: uuid.UUID, db: DbDep) -> dict:
 
 
 @router.post("/{job_id}/start", response_model=CommandPreviewOut)
-async def start_job(job_id: uuid.UUID, db: DbDep) -> CommandPreviewOut:
+async def start_job(job_id: uuid.UUID, db: DbDep, user: CurrentUser) -> CommandPreviewOut:
     job = await _get_job(db, job_id)
     argvs = await stream_service.start_job(db, job)
+    await audit_service.record(db, actor_id=user.id, action="stream.start", target_type="stream_job", target_id=str(job_id))
     return CommandPreviewOut(previews={oid: mask_command(argv) for oid, argv in argvs.items()})
 
 
 @router.post("/{job_id}/stop", status_code=202)
-async def stop_job(job_id: uuid.UUID, db: DbDep) -> dict:
+async def stop_job(job_id: uuid.UUID, db: DbDep, user: CurrentUser) -> dict:
     job = await _get_job(db, job_id)
     await stream_service.stop_job(db, job)
+    await audit_service.record(db, actor_id=user.id, action="stream.stop", target_type="stream_job", target_id=str(job_id))
     return {"status": "stopping"}
 
 
 @router.post("/{job_id}/restart", response_model=CommandPreviewOut)
-async def restart_job(job_id: uuid.UUID, db: DbDep) -> CommandPreviewOut:
+async def restart_job(job_id: uuid.UUID, db: DbDep, user: CurrentUser) -> CommandPreviewOut:
     job = await _get_job(db, job_id)
     argvs = await stream_service.restart_job(db, job)
+    await audit_service.record(db, actor_id=user.id, action="stream.restart", target_type="stream_job", target_id=str(job_id))
     return CommandPreviewOut(previews={oid: mask_command(argv) for oid, argv in argvs.items()})
 
 

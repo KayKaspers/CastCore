@@ -247,6 +247,17 @@ export interface Asset {
   used: boolean;
 }
 
+export interface AuditEvent {
+  id: string;
+  actor: string | null;
+  action: string;
+  target_type: string | null;
+  target_id: string | null;
+  ip: string | null;
+  meta: Record<string, unknown>;
+  at: string;
+}
+
 export interface NotificationChannel {
   id: string;
   name: string;

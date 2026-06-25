@@ -11,10 +11,10 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from sqlalchemy import select
 
-from app.api.deps import DbDep, require_roles
+from app.api.deps import CurrentUser, DbDep, require_roles
 from app.core.errors import CastCoreError, ErrorCode
 from app.models.backup import Backup
-from app.services import backup_service
+from app.services import audit_service, backup_service
 
 router = APIRouter(
     prefix="/backups",
@@ -48,8 +48,10 @@ async def list_backups(db: DbDep) -> list[BackupOut]:
 
 
 @router.post("", response_model=BackupOut, status_code=201)
-async def create_backup(db: DbDep) -> BackupOut:
-    return _out(await backup_service.create_backup(db, kind="manual"))
+async def create_backup(db: DbDep, user: CurrentUser) -> BackupOut:
+    backup = await backup_service.create_backup(db, kind="manual")
+    await audit_service.record(db, actor_id=user.id, action="backup.create", target_type="backup", target_id=str(backup.id))
+    return _out(backup)
 
 
 async def _get(db: DbDep, backup_id: uuid.UUID) -> Backup:
@@ -71,11 +73,14 @@ async def download_backup(backup_id: uuid.UUID, db: DbDep) -> FileResponse:
 async def restore_backup(
     backup_id: uuid.UUID,
     db: DbDep,
+    user: CurrentUser,
     confirm: bool = Query(default=False, description="must be true — restore overwrites all data"),
 ) -> RestoreResult:
     if not confirm:
         raise CastCoreError(ErrorCode.VALIDATION_FAILED, params={"confirm": "required"})
     b = await _get(db, backup_id)
+    # audit_events are excluded from restore, so this survives the wipe.
+    await audit_service.record(db, actor_id=user.id, action="backup.restore", target_type="backup", target_id=str(backup_id))
     try:
         counts = await backup_service.restore_backup(db, b)
     except FileNotFoundError as exc:

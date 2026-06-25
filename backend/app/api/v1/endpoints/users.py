@@ -7,12 +7,12 @@ import uuid
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
 
-from app.api.deps import DbDep, require_roles
+from app.api.deps import CurrentUser, DbDep, require_roles
 from app.core.errors import CastCoreError, ErrorCode
 from app.core.security import hash_password
 from app.models.user import User
 from app.schemas.user import UserCreate, UserOut, UserUpdate, user_to_out
-from app.services import auth_service
+from app.services import audit_service, auth_service
 
 router = APIRouter(
     prefix="/users",
@@ -28,7 +28,7 @@ async def list_users(db: DbDep) -> list[UserOut]:
 
 
 @router.post("", response_model=UserOut, status_code=201)
-async def create_user(payload: UserCreate, db: DbDep) -> UserOut:
+async def create_user(payload: UserCreate, db: DbDep, actor: CurrentUser) -> UserOut:
     if await auth_service.get_user_by_username(db, payload.username):
         raise CastCoreError(ErrorCode.VALIDATION_FAILED, params={"username": "taken"}, http_status=409)
     user = await auth_service.create_user(
@@ -39,6 +39,8 @@ async def create_user(payload: UserCreate, db: DbDep) -> UserOut:
         language=payload.language,
         role_names=payload.roles,
     )
+    await audit_service.record(db, actor_id=actor.id, action="user.create", target_type="user",
+                               target_id=str(user.id), meta={"username": user.username})
     return user_to_out(user)
 
 
@@ -62,7 +64,9 @@ async def update_user(user_id: uuid.UUID, payload: UserUpdate, db: DbDep) -> Use
 
 
 @router.delete("/{user_id}", status_code=204)
-async def delete_user(user_id: uuid.UUID, db: DbDep) -> None:
+async def delete_user(user_id: uuid.UUID, db: DbDep, actor: CurrentUser) -> None:
     user = await db.get(User, user_id)
     if user is not None:
+        await audit_service.record(db, actor_id=actor.id, action="user.delete", target_type="user",
+                                   target_id=str(user_id), meta={"username": user.username})
         await db.delete(user)

@@ -5,6 +5,15 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — audit log
+- `audit_service` records security-relevant actions to the existing `audit_events` table:
+  **login**, **stream start/stop/restart**, **backup create/restore**, **user create/delete**
+  (actor, action, target, IP, timestamp). Best-effort — auditing never breaks the action.
+- The audit log is now **excluded from backup/restore** so the trail survives a restore.
+- Endpoint `GET /audit` (admin, filter + pagination) and an admin **Audit log** page.
+- Docs: audit section added to `admin-guide/security.md` (DE+EN); manifest updated.
+- Verified: user create/delete and stream start/stop appear in the audit trail.
+
 ### Added — internal HLS web player (channel preview)
 - `HlsPlayer` component (hls.js, native HLS on Safari) and a **Preview** button on the
   Channels page that plays a running channel's HLS right in the dashboard.
