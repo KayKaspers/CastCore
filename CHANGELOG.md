@@ -5,6 +5,18 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — platform metadata + description templates
+- `platform_metadata` (migration `0012`): per stream-job, per-platform title, description
+  template, category, tags, language, visibility, scheduled start (unique per job+platform).
+- `metadata_service` resolves description/title templates with placeholders
+  `{stream_title} {date} {time} {platform} {category} {tags} {source_name} {server_name}
+  {channel_name}`; returns resolved metadata + warnings for pre-start review.
+- Endpoints: list/upsert/delete `/stream-jobs/{id}/metadata/{platform}`, `…/resolved`,
+  and generic `/metadata/resolve` + `/metadata/placeholders`.
+- Frontend metadata editor (per-platform tabs, template field with placeholder hint,
+  "resolve preview") reachable from each stream job.
+- Verified: template resolved title/description with all placeholders filled correctly.
+
 ### Added — Phase 3: channel health + fallback
 - The status consumer now reconciles **channel** status from the real Process Manager
   state (running/stopped/failed), so channel crashes become visible (no longer optimistic).

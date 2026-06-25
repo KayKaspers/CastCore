@@ -17,6 +17,7 @@ from app.api.v1.endpoints import (
     ffmpeg_profiles,
     health,
     media,
+    metadata,
     monitoring,
     notifications,
     playlists,
@@ -39,6 +40,8 @@ api_router.include_router(destinations.router)
 api_router.include_router(storage_sources.router)
 api_router.include_router(media.router)
 api_router.include_router(stream_jobs.router)
+api_router.include_router(metadata.router)
+api_router.include_router(metadata.generic)
 api_router.include_router(backups.router)
 api_router.include_router(notifications.router)
 api_router.include_router(monitoring.router)

@@ -2,6 +2,7 @@ import { FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import LogsPanel from "../components/LogsPanel";
+import MetadataPanel from "../components/MetadataPanel";
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { api, ApiException } from "../lib/api";
 import type { CommandPreview, Destination, FFmpegProfile, PreflightReport, StreamJob } from "../lib/types";
@@ -17,6 +18,7 @@ export default function StreamJobsPage() {
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<Record<string, string> | null>(null);
   const [logsJob, setLogsJob] = useState<StreamJob | null>(null);
+  const [metaJob, setMetaJob] = useState<StreamJob | null>(null);
   const [preflight, setPreflight] = useState<PreflightReport | null>(null);
 
   const act = async (id: string, action: "start" | "stop" | "restart") => {
@@ -76,6 +78,10 @@ export default function StreamJobsPage() {
         <LogsPanel jobId={logsJob.id} jobName={logsJob.name} onClose={() => setLogsJob(null)} />
       )}
 
+      {metaJob && (
+        <MetadataPanel jobId={metaJob.id} jobName={metaJob.name} onClose={() => setMetaJob(null)} />
+      )}
+
       {preflight && (
         <Panel>
           <div className="flex items-center justify-between mb-3">
@@ -130,6 +136,7 @@ export default function StreamJobsPage() {
                   <div className="flex items-center gap-2 justify-end">
                     <Button variant="ghost" onClick={() => showPreview(job.id)}>⌘</Button>
                     <Button variant="ghost" onClick={() => setLogsJob(job)}>{t("nav.logs")}</Button>
+                    <Button variant="ghost" onClick={() => setMetaJob(job)}>Meta</Button>
                     <Button variant="ghost" onClick={() => runPreflight(job.id)}>{t("nav.preflight")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "start")}>{t("common.start")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "stop")}>{t("common.stop")}</Button>
