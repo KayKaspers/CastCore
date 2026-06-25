@@ -5,6 +5,13 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — internal HLS web player (channel preview)
+- `HlsPlayer` component (hls.js, native HLS on Safari) and a **Preview** button on the
+  Channels page that plays a running channel's HLS right in the dashboard.
+- Docs: in-browser preview section added to `channels.md` (DE+EN).
+- Verified: frontend builds with hls.js (tsc clean); a running channel serves the HLS
+  playlist with content-type `application/vnd.apple.mpegurl`.
+
 ### Added — dry-run / test stream (completes Phase 2)
 - `dry_run_service` runs a short (~5s) test encode of the job's source through its profile
   into a throwaway file (no live output, no network), then reports success, encoding

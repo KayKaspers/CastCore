@@ -100,6 +100,9 @@
     "button": "Dry-Run",
     "title": "Dry-Run / Teststream"
   },
+  "channels": {
+    "preview": "Vorschau"
+  },
   "backup": {
     "create": "Backup erstellen",
     "restore": "Wiederherstellen",

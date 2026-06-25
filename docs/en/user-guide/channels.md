@@ -30,6 +30,14 @@ lastReviewed: 2026-06-24
 - If no playlist file is playable and a **fallback video** is set, it loops. Without
   either, the start fails with a clear message.
 
+## In-browser preview (web player)
+
+Use **Preview** to open an integrated **HLS web player** right in the dashboard and watch
+the running channel in the browser (hls.js, native on Safari). Requirement: the channel is
+`running`, so HLS segments already exist.
+
+> 💡 HLS has a few seconds of latency by design – that's normal for a visual playout check.
+
 ## EPG & M3U
 
 - **EPG/XMLTV** is generated from item durations as a schedule (now+next).

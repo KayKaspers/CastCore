@@ -1,6 +1,7 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import HlsPlayer from "../components/HlsPlayer";
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { api, ApiException } from "../lib/api";
 import type { Channel, FFmpegProfile, Playlist } from "../lib/types";
@@ -12,6 +13,7 @@ export default function ChannelsPage() {
   const playlists = useAsync<Playlist[]>(() => api.get("/playlists"), []);
   const profiles = useAsync<FFmpegProfile[]>(() => api.get("/ffmpeg-profiles"), []);
   const [error, setError] = useState<string | null>(null);
+  const [watch, setWatch] = useState<{ id: string; name: string } | null>(null);
 
   // Live-refresh channel status (reconciled by the backend status consumer).
   useEffect(() => {
@@ -39,6 +41,18 @@ export default function ChannelsPage() {
 
       <NewChannel playlists={playlists.data ?? []} profiles={profiles.data ?? []} onDone={() => channels.reload()} onError={onErr} />
 
+      {watch && (
+        <Panel>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-mist text-sm">{t("channels.preview")} · <span className="text-slate">{watch.name}</span></h2>
+            <button className="text-xs text-slate hover:text-mist" onClick={() => setWatch(null)}>✕</button>
+          </div>
+          <div className="max-w-2xl">
+            <HlsPlayer src={`/api/v1/channels/${watch.id}/hls/index.m3u8`} />
+          </div>
+        </Panel>
+      )}
+
       <Panel className="!p-0 overflow-hidden">
         <table className="w-full text-sm">
           <thead className="text-slate text-left text-xs uppercase">
@@ -60,6 +74,7 @@ export default function ChannelsPage() {
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2 justify-end">
+                    <Button variant="ghost" onClick={() => setWatch({ id: ch.id, name: ch.name })}>{t("channels.preview")}</Button>
                     <Button variant="ghost" onClick={() => act(ch.id, "start")}>{t("common.start")}</Button>
                     <Button variant="ghost" onClick={() => act(ch.id, "stop")}>{t("common.stop")}</Button>
                     <Button variant="danger" onClick={() => api.del(`/channels/${ch.id}`).then(() => channels.reload())}>✕</Button>

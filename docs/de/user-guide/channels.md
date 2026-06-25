@@ -32,6 +32,15 @@ lastReviewed: 2026-06-24
 - Ist keine Playlist-Datei spielbar und ein **Fallback-Video** gesetzt, läuft dieses in
   Schleife. Ohne beides bricht der Start mit klarer Meldung ab.
 
+## Vorschau im Browser (Webplayer)
+
+Über **Vorschau** öffnest du einen integrierten **HLS-Webplayer** direkt im Dashboard und
+siehst den laufenden Channel im Browser (hls.js, in Safari nativ). Voraussetzung: der
+Channel läuft (`running`), sodass bereits HLS-Segmente vorliegen.
+
+> 💡 HLS hat bauartbedingt einige Sekunden Latenz – für eine Sichtkontrolle des Playouts
+> ist das normal.
+
 ## EPG & M3U
 
 - **EPG/XMLTV** wird aus den Item-Dauern als Sendeplan erzeugt (now+next).
