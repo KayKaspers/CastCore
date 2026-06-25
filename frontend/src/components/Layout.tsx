@@ -17,6 +17,7 @@ const NAV = [
   { to: "/recordings", key: "recordings", end: false },
   { to: "/scheduler", key: "scheduler", end: false },
   { to: "/resources", key: "platforms", end: false },
+  { to: "/assets", key: "assets", end: false },
   { to: "/notifications", key: "notifications", end: false },
   { to: "/backup", key: "backup", end: false },
   { to: "/setup", key: "settings", end: false },

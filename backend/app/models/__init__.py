@@ -5,6 +5,7 @@ Alembic sees them.
 """
 
 from app.db.base import Base
+from app.models.asset import Asset
 from app.models.audit import AuditEvent
 from app.models.channel import Channel
 from app.models.backup import Backup
@@ -54,4 +55,5 @@ __all__ = [
     "PlaylistItem",
     "Channel",
     "PlatformMetadata",
+    "Asset",
 ]

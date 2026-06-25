@@ -9,6 +9,7 @@ from __future__ import annotations
 from fastapi import APIRouter
 
 from app.api.v1.endpoints import (
+    assets,
     auth,
     backups,
     channels,
@@ -42,6 +43,7 @@ api_router.include_router(media.router)
 api_router.include_router(stream_jobs.router)
 api_router.include_router(metadata.router)
 api_router.include_router(metadata.generic)
+api_router.include_router(assets.router)
 api_router.include_router(backups.router)
 api_router.include_router(notifications.router)
 api_router.include_router(monitoring.router)

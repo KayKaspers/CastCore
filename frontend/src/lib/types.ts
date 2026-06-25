@@ -223,6 +223,18 @@ export interface Recording {
   retention_until: string | null;
 }
 
+export interface Asset {
+  id: string;
+  filename: string;
+  original_name: string | null;
+  kind: string;
+  mime: string;
+  size_bytes: number;
+  width: number | null;
+  height: number | null;
+  used: boolean;
+}
+
 export interface NotificationChannel {
   id: string;
   name: string;

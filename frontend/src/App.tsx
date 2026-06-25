@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AssetsPage from "./pages/AssetsPage";
 import BackupPage from "./pages/BackupPage";
 import ChannelsPage from "./pages/ChannelsPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -39,6 +40,7 @@ export default function App() {
         <Route path="/recordings" element={<RecordingsPage />} />
         <Route path="/scheduler" element={<SchedulerPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/assets" element={<AssetsPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/docs" element={<DocsPage />} />

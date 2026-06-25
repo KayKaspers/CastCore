@@ -90,6 +90,19 @@
       "lastReviewed": "2026-06-24"
     },
     {
+      "id": "assets",
+      "module": "assets",
+      "status": "implemented",
+      "docs": {
+        "de": ["docs/de/user-guide/metadata-thumbnails.md"],
+        "en": ["docs/en/user-guide/metadata-thumbnails.md"]
+      },
+      "uiRoutes": ["/assets"],
+      "apiRoutes": ["/api/v1/assets"],
+      "models": ["Asset", "PlatformMetadata"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
       "id": "recordings",
       "module": "recording",
       "status": "implemented",

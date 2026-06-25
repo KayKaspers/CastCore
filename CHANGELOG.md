@@ -5,6 +5,20 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — thumbnail / asset management (secure uploads)
+- `assets` model (migration `0013`) + `platform_metadata.thumbnail_asset_id`.
+- `asset_service` with **secure image upload**: magic-byte type validation (PNG/JPEG/
+  WebP/GIF, not extension-based), 10 MB size limit, generated safe filenames (never the
+  user's name on disk), best-effort PNG/JPEG dimension parsing, content de-dup by sha256.
+- Endpoints `/assets` (operator): upload, list, serve, delete. Platform metadata accepts
+  `thumbnail_asset_id`; resolved metadata returns `thumbnail_url` and a `thumbnail.missing`
+  warning.
+- Frontend: Assets page (upload + grid via auth-aware `AuthImg`), thumbnail picker in the
+  metadata editor, DE/EN strings + upload error messages.
+- Docs: `user-guide/metadata-thumbnails.md` filled (DE+EN); manifest `assets` feature added.
+- Verified: valid PNG accepted (mime + dimensions), non-image rejected (400
+  `unsupported_type`), file served, thumbnail resolved into metadata.
+
 ### Added — bilingual documentation & in-app help system
 - Full bilingual docs tree under `docs/de` (primary) + `docs/en` (parallel), structurally
   synchronized: getting-started, user-guide, admin-guide, developer-guide, api, reference,

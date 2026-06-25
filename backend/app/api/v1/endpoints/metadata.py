@@ -28,6 +28,7 @@ class MetadataIn(BaseModel):
     language: str | None = None
     visibility: str = Field(default="public", pattern="^(public|unlisted|private)$")
     scheduled_start: dt.datetime | None = None
+    thumbnail_asset_id: uuid.UUID | None = None
 
 
 class MetadataOut(MetadataIn):
@@ -46,6 +47,7 @@ def _out(m: PlatformMetadata) -> MetadataOut:
         id=m.id, stream_job_id=m.stream_job_id, platform=m.platform, title=m.title,
         description_template=m.description_template, category=m.category, tags=m.tags,
         language=m.language, visibility=m.visibility, scheduled_start=m.scheduled_start,
+        thumbnail_asset_id=m.thumbnail_asset_id,
     )
 
 

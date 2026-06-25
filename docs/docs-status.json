@@ -4,7 +4,7 @@
     "pages": 74,
     "de": 74,
     "en": 74,
-    "placeholders": 102,
+    "placeholders": 100,
     "stale": 0,
     "errors": 0,
     "warnings": 0
@@ -633,12 +633,12 @@
     "user-guide/metadata-thumbnails.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "user-guide/monitoring.md": {
       "de": true,

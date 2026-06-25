@@ -27,3 +27,6 @@ class PlatformMetadata(Base, TimestampMixin):
     language: Mapped[str | None] = mapped_column(String(8), nullable=True)
     visibility: Mapped[str] = mapped_column(String(16), default="public", nullable=False)  # public|unlisted|private
     scheduled_start: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    thumbnail_asset_id: Mapped[uuid.UUID | None] = mapped_column(
+        ForeignKey("assets.id", ondelete="SET NULL"), nullable=True
+    )

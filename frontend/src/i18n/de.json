@@ -46,6 +46,10 @@
   "help": {
     "moreInfo": "Mehr erfahren"
   },
+  "assets": {
+    "upload": "Bild hochladen",
+    "note": "Erlaubt: PNG, JPEG, WebP, GIF · max. 10 MB. Dateien werden geprüft und unter sicherem Namen gespeichert."
+  },
   "docs": {
     "backToApp": "Zurück zur App",
     "search": "Dokumentation durchsuchen…",
@@ -135,6 +139,11 @@
     },
     "validation": {
       "failed": "Die Eingaben sind ungültig."
+    },
+    "upload": {
+      "unsupported_type": "Dateityp nicht unterstützt (erlaubt: PNG, JPEG, WebP, GIF).",
+      "too_large": "Datei zu groß (max. 10 MB).",
+      "empty": "Datei ist leer."
     }
   }
 }

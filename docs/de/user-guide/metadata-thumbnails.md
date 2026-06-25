@@ -3,34 +3,59 @@ title: "Metadaten & Thumbnails"
 description: "Plattform-Metadaten und Beschreibungsvorlagen mit Platzhaltern pflegen."
 lang: de
 audience: "Anwender / Operatoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Metadaten & Thumbnails
 
-> Plattform-Metadaten und Beschreibungsvorlagen mit Platzhaltern pflegen.
+> Pro Stream-Job und Plattform pflegst du eigene **Metadaten** (Titel, Beschreibung,
+> Kategorie, Tags, Sprache, Sichtbarkeit, Thumbnail). Vor dem Start werden sie aufgelöst
+> und geprüft.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Operatoren. Aufruf: **Stream-Jobs → Meta**.
 
-## Überblick
+## Metadaten bearbeiten
 
-Plattform-Metadaten und Beschreibungsvorlagen mit Platzhaltern pflegen.
+1. Bei einem Job auf **Meta** klicken.
+2. **Plattform** wählen (Twitch/YouTube/Kick/Facebook/Custom). Ein ✓ markiert bereits
+   gepflegte Plattformen.
+3. Felder ausfüllen: **Titel**, **Kategorie**, **Tags**, **Sprache**, **Sichtbarkeit**,
+   **Beschreibungsvorlage** und **Thumbnail**.
+4. **Speichern**. Mit **„Vorschau auflösen"** siehst du den finalen Text.
 
-## Inhalt
+## Beschreibungsvorlagen mit Platzhaltern
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Titel und Beschreibung dürfen [Platzhalter](/docs/de/reference/placeholders.md) enthalten,
+z. B. `{stream_title}`, `{date}`, `{platform}`, `{source_name}`. Beispiel:
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+```
+Live: {stream_title} am {date} um {time} | Quelle: {source_name} | #{platform}
+```
+
+## Thumbnails & Asset-Bibliothek
+
+Thumbnails verwaltest du unter **Thumbnails / Assets** (`/assets`):
+
+- **Bild hochladen** – erlaubt sind **PNG, JPEG, WebP, GIF** bis **10 MB**.
+- Im Metadaten-Editor wählst du pro Plattform ein hochgeladenes Asset als Thumbnail.
+
+### Sicherheit beim Upload
+
+> 🔐 Uploads werden anhand der **Magic Bytes** (nicht nur der Endung) geprüft, auf die
+> Größe begrenzt und unter einem **generierten, sicheren Dateinamen** gespeichert. Der
+> Originalname landet nie als Pfad auf der Platte; Assets werden nie ausgeführt.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 💡 Die Auflösung zeigt **Warnungen** (z. B. fehlendes Thumbnail oder fehlende
+> Kategorie), damit du sie vor dem Start beheben kannst.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Plattformen](/docs/de/user-guide/platforms.md)
+- [Platzhalter](/docs/de/reference/placeholders.md)
+- [API: Plattformen & Metadaten](/docs/de/api/platforms.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

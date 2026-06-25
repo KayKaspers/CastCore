@@ -63,6 +63,9 @@ async def resolve_metadata(db: AsyncSession, job: StreamJob, meta: PlatformMetad
         warnings.append("title.empty")
     if meta.platform in ("youtube",) and not meta.category:
         warnings.append("category.recommended")
+    thumb_id = str(meta.thumbnail_asset_id) if meta.thumbnail_asset_id else None
+    if not thumb_id:
+        warnings.append("thumbnail.missing")
     return {
         "platform": meta.platform,
         "title": title,
@@ -72,5 +75,7 @@ async def resolve_metadata(db: AsyncSession, job: StreamJob, meta: PlatformMetad
         "language": meta.language,
         "visibility": meta.visibility,
         "scheduled_start": meta.scheduled_start.isoformat() if meta.scheduled_start else None,
+        "thumbnail_asset_id": thumb_id,
+        "thumbnail_url": f"/api/v1/assets/{thumb_id}/file" if thumb_id else None,
         "warnings": warnings,
     }

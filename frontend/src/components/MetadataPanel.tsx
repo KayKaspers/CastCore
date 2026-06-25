@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { api, ApiException } from "../lib/api";
+import type { Asset } from "../lib/types";
+import AuthImg from "./AuthImg";
 import { Badge, Button, Field, Input, Panel, Select } from "./ui";
 
 const PLATFORMS = ["twitch", "youtube", "kick", "facebook", "custom"];
@@ -15,6 +17,7 @@ interface Meta {
   tags: string[];
   language: string | null;
   visibility: string;
+  thumbnail_asset_id?: string | null;
 }
 
 interface Resolved {
@@ -31,6 +34,10 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
   const [resolved, setResolved] = useState<Resolved | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [tagsStr, setTagsStr] = useState("");
+  const [thumbId, setThumbId] = useState("");
+  const [assets, setAssets] = useState<Asset[]>([]);
+
+  useEffect(() => { api.get<Asset[]>("/assets").then(setAssets).catch(() => undefined); }, []);
 
   const loadAll = () => api.get<Meta[]>(`/stream-jobs/${jobId}/metadata`).then(setAll).catch(() => undefined);
   useEffect(() => { loadAll(); /* eslint-disable-next-line */ }, [jobId]);
@@ -40,6 +47,7 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
     const f = existing ?? { platform, title: "", description_template: "", category: "", tags: [], language: "de", visibility: "public" };
     setForm({ ...f, platform });
     setTagsStr((f.tags ?? []).join(", "));
+    setThumbId(f.thumbnail_asset_id ?? "");
     setResolved(null);
   }, [platform, all]);
 
@@ -53,6 +61,7 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
         tags: tagsStr.split(",").map((s) => s.trim()).filter(Boolean),
         language: form.language || null,
         visibility: form.visibility,
+        thumbnail_asset_id: thumbId || null,
       });
       await loadAll();
     } catch (e) { if (e instanceof ApiException) setError(e.localized); }
@@ -87,6 +96,15 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
         <Field label="Kategorie"><Input value={form.category ?? ""} onChange={(e) => setForm({ ...form, category: e.target.value })} /></Field>
         <Field label="Tags (Komma)"><Input value={tagsStr} onChange={(e) => setTagsStr(e.target.value)} /></Field>
         <Field label="Sprache"><Input value={form.language ?? ""} onChange={(e) => setForm({ ...form, language: e.target.value })} /></Field>
+        <Field label="Thumbnail (Asset)">
+          <Select value={thumbId} onChange={(e) => setThumbId(e.target.value)}>
+            <option value="">—</option>
+            {assets.map((a) => <option key={a.id} value={a.id}>{a.original_name ?? a.filename}</option>)}
+          </Select>
+        </Field>
+        <div className="flex items-end">
+          {thumbId && <AuthImg assetId={thumbId} className="h-16 rounded-md border border-slate/30" />}
+        </div>
         <div className="col-span-2">
           <Field label="Beschreibungsvorlage">
             <textarea
