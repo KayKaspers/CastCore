@@ -13,7 +13,17 @@ lastReviewed: 2026-06-24
 > Systemnahe Werte werden über Umgebungsvariablen gesetzt
 > ([Umgebungsvariablen](/docs/de/reference/environment-variables.md)).
 
-**Zielgruppe:** Anwender / Administratoren.
+**Zielgruppe:** Anwender / Administratoren. UI-Bereich: **Einstellungen** (`/settings`).
+
+## Mein Profil & Sprache
+
+Unter **Mein Profil** wählst du deine **Sprache** (Deutsch/Englisch). Die Auswahl wird
+**pro Benutzer gespeichert** und gilt auch nach erneuter Anmeldung auf anderen Geräten
+(nicht nur lokal im Browser).
+
+## Instanz-Einstellungen (Admin)
+
+Administratoren setzen **Instanzname** und **Standardsprache** für neue Benutzer.
 
 ## Benachrichtigungen
 

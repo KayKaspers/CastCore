@@ -20,7 +20,7 @@ const NAV = [
   { to: "/assets", key: "assets", end: false },
   { to: "/notifications", key: "notifications", end: false },
   { to: "/backup", key: "backup", end: false },
-  { to: "/setup", key: "settings", end: false },
+  { to: "/settings", key: "settings", end: false },
   { to: "/docs", key: "help", end: false },
 ];
 

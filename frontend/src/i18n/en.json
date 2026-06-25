@@ -50,6 +50,15 @@
     "upload": "Upload image",
     "note": "Allowed: PNG, JPEG, WebP, GIF · max. 10 MB. Files are validated and stored under a safe name."
   },
+  "settings": {
+    "profile": "My profile",
+    "instance": "Instance settings",
+    "instanceName": "Instance name",
+    "defaultLanguage": "Default language (new users)",
+    "languageNote": "Your language is saved and applies after signing in again on other devices.",
+    "setup": "First-time setup / system check",
+    "saved": "Saved."
+  },
   "docs": {
     "backToApp": "Back to app",
     "search": "Search documentation…",

@@ -5,6 +5,18 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — settings service (persisted language + instance settings)
+- `settings_service` for instance-wide settings (`instance_name`, `default_language`)
+  stored in the `settings` table; per-user profile updates on the `User` model.
+- Endpoints `/settings/me` (GET/PATCH own profile incl. **persisted language**) and
+  `/settings` (admin GET/PATCH instance settings).
+- Frontend **Settings** page (`/settings`): profile with language switch saved to the
+  backend (follows the user across devices/logins), admin instance settings, link to the
+  setup wizard. Main-nav "Settings" now points here.
+- Docs: `user-guide/settings.md` extended with profile/instance sections (DE+EN);
+  manifest `settings` feature added.
+- Verified: per-user language change persists in the DB; instance settings round-trip.
+
 ### Added — notification triggers wired (backup / preflight / source)
 - The `backup_done`, `preflight_failed` and `source_offline` events now actually fire:
   `backup_done` after every backup (manual or scheduled), `preflight_failed` when a

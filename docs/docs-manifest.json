@@ -153,6 +153,16 @@
       "lastReviewed": "2026-06-24"
     },
     {
+      "id": "settings",
+      "module": "core",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/settings.md"], "en": ["docs/en/user-guide/settings.md"] },
+      "uiRoutes": ["/settings"],
+      "apiRoutes": ["/api/v1/settings/me", "/api/v1/settings"],
+      "models": ["User", "Setting"],
+      "lastReviewed": "2026-06-24"
+    },
+    {
       "id": "security",
       "module": "core",
       "status": "implemented",

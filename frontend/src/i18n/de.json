@@ -50,6 +50,15 @@
     "upload": "Bild hochladen",
     "note": "Erlaubt: PNG, JPEG, WebP, GIF · max. 10 MB. Dateien werden geprüft und unter sicherem Namen gespeichert."
   },
+  "settings": {
+    "profile": "Mein Profil",
+    "instance": "Instanz-Einstellungen",
+    "instanceName": "Instanzname",
+    "defaultLanguage": "Standardsprache (neue Benutzer)",
+    "languageNote": "Deine Sprache wird gespeichert und gilt auch nach erneuter Anmeldung auf anderen Geräten.",
+    "setup": "Ersteinrichtung / Systemcheck",
+    "saved": "Gespeichert."
+  },
   "docs": {
     "backToApp": "Zurück zur App",
     "search": "Dokumentation durchsuchen…",

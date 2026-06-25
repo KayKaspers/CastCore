@@ -13,7 +13,17 @@ lastReviewed: 2026-06-24
 > System-level values are set via environment variables
 > ([Environment variables](/docs/en/reference/environment-variables.md)).
 
-**Audience:** users / administrators.
+**Audience:** users / administrators. UI area: **Settings** (`/settings`).
+
+## My profile & language
+
+Under **My profile** you choose your **language** (German/English). The choice is **saved
+per user** and applies after signing in again on other devices (not just locally in the
+browser).
+
+## Instance settings (admin)
+
+Administrators set the **instance name** and the **default language** for new users.
 
 ## Notifications
 

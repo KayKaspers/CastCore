@@ -15,6 +15,7 @@ import PlaylistsPage from "./pages/PlaylistsPage";
 import RecordingsPage from "./pages/RecordingsPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import SchedulerPage from "./pages/SchedulerPage";
+import SettingsPage from "./pages/SettingsPage";
 import SetupWizardPage from "./pages/SetupWizardPage";
 import SourcesPage from "./pages/SourcesPage";
 import StreamJobsPage from "./pages/StreamJobsPage";
@@ -44,6 +45,7 @@ export default function App() {
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/docs" element={<DocsPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
         <Route path="/setup" element={<SetupWizardPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
