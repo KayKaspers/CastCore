@@ -22,7 +22,7 @@ this repo, ▢ = planned.
 - ✅ Preflight checks (delivered in Phase 1)
 - ✅ Dry-run / teststream (short test encode + speed/fps report)
 - ✅ Recording + replay (per-job, retention field)
-- ▢ Internal HLS preview / webplayer
+- ✅ Internal HLS preview / webplayer (hls.js channel preview)
 - ✅ Platform metadata API + template resolution (+ secure thumbnail/asset management)
 - ✅ Notifications (email/webhook/discord/telegram/gotify/slack)
 - ✅ Richer monitoring views (system + per-output live metrics)
