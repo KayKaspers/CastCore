@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import BackupPage from "./pages/BackupPage";
+import ChannelsPage from "./pages/ChannelsPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
 import MediaLibraryPage from "./pages/MediaLibraryPage";
@@ -29,6 +30,7 @@ export default function App() {
       >
         <Route path="/" element={<DashboardPage />} />
         <Route path="/streams" element={<StreamJobsPage />} />
+        <Route path="/channels" element={<ChannelsPage />} />
         <Route path="/sources" element={<SourcesPage />} />
         <Route path="/media" element={<MediaLibraryPage />} />
         <Route path="/playlists" element={<PlaylistsPage />} />

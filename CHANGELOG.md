@@ -5,6 +5,18 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 3: linear channels (start)
+- `channels` model (migration `0010`) + `channel_service`: 24/7 playout that loops a
+  playlist via the FFmpeg concat demuxer into a rolling HLS output (supervised by the
+  Process Manager through the control channel).
+- EPG/XMLTV generation (now+next from playlist item durations) and an M3U lineup export.
+- Endpoints: channel CRUD + start/stop (operator); **public** HLS serving
+  (`/channels/{id}/hls/{path}`), `/channels/{id}/epg.xml`, `/channels/export.m3u` for
+  IPTV players. Frontend Channels page (create from playlist, start/stop, HLS/EPG links,
+  M3U lineup).
+- Verified live: a channel started, produced a served HLS playlist with .ts segments,
+  generated XMLTV programmes and appeared in the M3U export.
+
 ### Added — Phase 2: playlists (completes Phase 2)
 - `playlists` + `playlist_items` (migration `0009`) with modes sequential/shuffle/loop.
 - `playlist_service.resolve` turns a playlist into an ordered list of absolute media

@@ -11,6 +11,7 @@ from fastapi import APIRouter
 from app.api.v1.endpoints import (
     auth,
     backups,
+    channels,
     destinations,
     ffmpeg_preview,
     ffmpeg_profiles,
@@ -44,6 +45,9 @@ api_router.include_router(monitoring.router)
 api_router.include_router(recordings.router)
 api_router.include_router(scheduler.router)
 api_router.include_router(playlists.router)
+# public channel routes (HLS/EPG/M3U) must be registered before the authed channel router
+api_router.include_router(channels.public_router)
+api_router.include_router(channels.router)
 api_router.include_router(ws.router)
 api_router.include_router(ffmpeg_preview.router)
 

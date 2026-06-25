@@ -35,6 +35,10 @@ thumbnails/
 *.sqlite3
 *.db
 
+# --- Claude Code Verlauf (nur via Nextcloud syncen, nicht auf GitHub) ---
+.claude-history/
+.claude/settings.local.json
+
 # --- Docker ---
 docker-compose.override.yml
 

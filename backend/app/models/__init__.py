@@ -6,6 +6,7 @@ Alembic sees them.
 
 from app.db.base import Base
 from app.models.audit import AuditEvent
+from app.models.channel import Channel
 from app.models.backup import Backup
 from app.models.media import MediaItem, MediaProbe
 from app.models.notification import Notification
@@ -50,4 +51,5 @@ __all__ = [
     "SchedulerEntry",
     "Playlist",
     "PlaylistItem",
+    "Channel",
 ]

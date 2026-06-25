@@ -165,6 +165,18 @@ export interface OutputMetrics {
   started_at: string | null;
 }
 
+export interface Channel {
+  id: string;
+  name: string;
+  description: string | null;
+  playlist_id: string | null;
+  ffmpeg_profile_id: string | null;
+  hls_enabled: boolean;
+  epg_enabled: boolean;
+  enabled: boolean;
+  status: string;
+}
+
 export interface PlaylistItem {
   id: string;
   media_item_id: string;
