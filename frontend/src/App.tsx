@@ -21,6 +21,7 @@ import SettingsPage from "./pages/SettingsPage";
 import SetupWizardPage from "./pages/SetupWizardPage";
 import SourcesPage from "./pages/SourcesPage";
 import StreamJobsPage from "./pages/StreamJobsPage";
+import UpdatesPage from "./pages/UpdatesPage";
 
 export default function App() {
   return (
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/audit" element={<AuditPage />} />
+        <Route path="/updates" element={<UpdatesPage />} />
         <Route path="/docs" element={<DocsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/setup" element={<SetupWizardPage />} />

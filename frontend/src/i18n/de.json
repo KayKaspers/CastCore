@@ -108,6 +108,10 @@
     "autoRestart": "Auto-Restart bei Absturz",
     "maxRetry": "Max. Versuche"
   },
+  "updates": {
+    "howto": "Wie aktualisieren?",
+    "guide": "Update-Anleitung öffnen"
+  },
   "backup": {
     "create": "Backup erstellen",
     "restore": "Wiederherstellen",

@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — update / version info
+- `update_service` reports the running version, environment, deployment mode
+  (docker/native, auto-detected) and the DB **migration status** (current vs. head
+  Alembic revision, up-to-date flag). CastCore does not self-update; this is informational.
+- Endpoint `GET /update/state` (admin) and an **Updates** page showing version + migration
+  status with a link to the update guide.
+- Docs: `user-guide/updates.md` filled (DE+EN, Docker & native update, rollback via backup);
+  manifest `updates` feature added.
+- Verified: reports docker deployment with DB at head and up_to_date=true.
+
 ### Added — stream self-healing (auto-restart on failure)
 - The status consumer now auto-restarts a failed output per the job's `fallback_policy`
   (`auto_restart`, `max_retry`, `retry_delay_s`): on an unexpected failure it rebuilds the

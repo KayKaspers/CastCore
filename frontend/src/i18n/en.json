@@ -108,6 +108,10 @@
     "autoRestart": "Auto-restart on failure",
     "maxRetry": "Max. retries"
   },
+  "updates": {
+    "howto": "How to update?",
+    "guide": "Open update guide"
+  },
   "backup": {
     "create": "Create backup",
     "restore": "Restore",

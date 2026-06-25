@@ -29,6 +29,7 @@ from app.api.v1.endpoints import (
     setup,
     storage_sources,
     stream_jobs,
+    update,
     users,
     ws,
 )
@@ -49,6 +50,7 @@ api_router.include_router(metadata.generic)
 api_router.include_router(assets.router)
 api_router.include_router(backups.router)
 api_router.include_router(audit.router)
+api_router.include_router(update.router)
 api_router.include_router(notifications.router)
 api_router.include_router(monitoring.router)
 api_router.include_router(recordings.router)

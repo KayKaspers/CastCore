@@ -2,35 +2,63 @@
 title: "Updates"
 description: "CastCore aktualisieren (Docker und nativ)."
 lang: de
-audience: "Anwender / Operatoren"
-status: draft
+audience: "Administratoren"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Updates
 
-> CastCore aktualisieren (Docker und nativ).
+> Die **Updates**-Seite (`/updates`, nur Admin) zeigt die laufende Version, den
+> Deployment-Modus und den **Migrationsstatus** der Datenbank.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Was die Seite zeigt
 
-CastCore aktualisieren (Docker und nativ).
+| Feld | Bedeutung |
+| --- | --- |
+| **Version** | Laufende CastCore-Version. |
+| **Environment** | `production` / `development`. |
+| **Deployment** | `docker` oder `native` (automatisch erkannt). |
+| **DB-Revision / Head-Revision** | Aktuelle bzw. neueste Alembic-Migration. |
+| **Schema aktuell** | Ob die Datenbank auf dem neuesten Stand ist. |
 
-## Inhalt
+## Aktualisieren mit Docker
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+```bash
+git pull
+docker compose pull        # falls vorgefertigte Images genutzt werden
+docker compose up -d --build
+```
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+Das Backend führt **Migrationen automatisch** beim Start aus
+([Installation mit Docker](/docs/de/getting-started/installation-docker.md)).
+
+## Native Aktualisierung
+
+```bash
+sudo ./scripts/update.sh
+```
+
+`update.sh` legt **vor** dem Update ein Backup an, aktualisiert den Code, wendet
+Migrationen an und startet die Dienste neu.
+
+## Vor jedem Update
+
+> ⚠️ **Backup empfohlen.** Erstelle vorher ein [Backup](/docs/de/user-guide/backup-restore.md).
+> Bei Problemen ist der Rollback = das Backup vor dem Update wiederherstellen.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 💡 Steht „Migrationen: ausstehend", werden sie beim nächsten Docker-Start automatisch
+> angewendet; nativ über `update.sh`.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Backup & Restore](/docs/de/user-guide/backup-restore.md)
+- [Installation mit Docker](/docs/de/getting-started/installation-docker.md)
+- [Migrationen (Entwickler)](/docs/de/developer-guide/migrations.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

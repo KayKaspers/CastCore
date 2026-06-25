@@ -153,6 +153,16 @@
       "lastReviewed": "2026-06-24"
     },
     {
+      "id": "updates",
+      "module": "core",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/user-guide/updates.md"], "en": ["docs/en/user-guide/updates.md"] },
+      "uiRoutes": ["/updates"],
+      "apiRoutes": ["/api/v1/update/state"],
+      "models": [],
+      "lastReviewed": "2026-06-24"
+    },
+    {
       "id": "settings",
       "module": "core",
       "status": "implemented",
