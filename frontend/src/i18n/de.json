@@ -112,6 +112,9 @@
     "howto": "Wie aktualisieren?",
     "guide": "Update-Anleitung öffnen"
   },
+  "users": {
+    "resetPw": "Passwort zurücksetzen"
+  },
   "backup": {
     "create": "Backup erstellen",
     "restore": "Wiederherstellen",

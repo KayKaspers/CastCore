@@ -4,7 +4,7 @@
     "pages": 74,
     "de": 74,
     "en": 74,
-    "placeholders": 94,
+    "placeholders": 92,
     "stale": 0,
     "errors": 0,
     "warnings": 0
@@ -743,12 +743,12 @@
     "user-guide/users-roles.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     }
   }
 }

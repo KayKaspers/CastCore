@@ -112,6 +112,9 @@
     "howto": "How to update?",
     "guide": "Open update guide"
   },
+  "users": {
+    "resetPw": "Reset password"
+  },
   "backup": {
     "create": "Create backup",
     "restore": "Restore",

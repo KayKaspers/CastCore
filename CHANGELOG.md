@@ -5,6 +5,14 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — user management page (all 21 mandatory UI pages now present)
+- Admin **Users** page (`/users`): create users, toggle roles (admin/operator/viewer),
+  enable/disable accounts, reset passwords, delete — with self-protection (can't disable
+  or delete your own account). Backed by the existing `/users` API.
+- Docs: `user-guide/users-roles.md` filled (DE+EN); manifest updated.
+- This completes the 21 mandatory UI pages from the product brief.
+- Verified: create, role change, deactivate, password reset and delete all work.
+
 ### Added — update / version info
 - `update_service` reports the running version, environment, deployment mode
   (docker/native, auto-detected) and the DB **migration status** (current vs. head

@@ -2,35 +2,52 @@
 title: "Users & roles"
 description: "Manage users and assign roles (Admin/Operator/Viewer)."
 lang: en
-audience: "Users / Operators"
-status: draft
+audience: "Administrators"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Users & roles
 
-> Manage users and assign roles (Admin/Operator/Viewer).
+> In **User management** (`/users`, admin only) you create users, assign roles, reset
+> passwords and enable/disable accounts.
 
-**Audience:** Users / Operators
+**Audience:** administrators.
 
-## Overview
+## Create a user
 
-Manage users and assign roles (Admin/Operator/Viewer).
+1. In the form provide a **username**, **password** (min. 8 chars), optional **email** and
+   a **role**.
+2. **Create**. The user can sign in afterwards; their language can be changed per user
+   later under [Settings](/docs/en/user-guide/settings.md).
 
-## Contents
+## Change roles
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+Toggle the roles **admin**, **operator**, **viewer** per user right in the table. At least
+one role is kept. Role meanings: [Roles](/docs/en/reference/roles.md).
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Account active/inactive
+
+Use the **active** checkbox to lock or unlock an account. A **disabled** user cannot sign
+in.
+
+## Reset password
+
+**Reset password** → enter a new password (min. 8 chars).
 
 ## Notes
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+> 🔐 Actions like create/delete are recorded in the
+> [audit log](/docs/en/admin-guide/security.md). You cannot disable or delete your **own**
+> account.
+
+> ⚠️ Passwords are hashed with **argon2id** and never stored in clear text.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Roles](/docs/en/reference/roles.md)
+- [Permissions](/docs/en/reference/permissions.md)
+- [Security best practices](/docs/en/admin-guide/security.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

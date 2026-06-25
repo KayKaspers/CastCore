@@ -2,35 +2,52 @@
 title: "Benutzer & Rollen"
 description: "Benutzer verwalten und Rollen (Admin/Operator/Viewer) vergeben."
 lang: de
-audience: "Anwender / Operatoren"
-status: draft
+audience: "Administratoren"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Benutzer & Rollen
 
-> Benutzer verwalten und Rollen (Admin/Operator/Viewer) vergeben.
+> In der **Benutzerverwaltung** (`/users`, nur Admin) legst du Benutzer an, vergibst
+> Rollen, setzt Passwörter zurück und aktivierst/deaktivierst Konten.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Benutzer anlegen
 
-Benutzer verwalten und Rollen (Admin/Operator/Viewer) vergeben.
+1. Im Formular **Benutzername**, **Passwort** (mind. 8 Zeichen), optional **E-Mail** und
+   eine **Rolle** angeben.
+2. **Erstellen**. Der Benutzer kann sich danach anmelden; seine Sprache lässt sich später
+   unter [Einstellungen](/docs/de/user-guide/settings.md) pro Benutzer ändern.
 
-## Inhalt
+## Rollen ändern
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Aktiviere/deaktiviere pro Benutzer die Rollen **admin**, **operator**, **viewer** direkt
+in der Tabelle. Mindestens eine Rolle bleibt erhalten. Bedeutung der Rollen:
+[Rollen](/docs/de/reference/roles.md).
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Konto aktiv/inaktiv
+
+Über das **Aktiv**-Häkchen sperrst oder entsperrst du ein Konto. Ein **deaktivierter**
+Benutzer kann sich nicht anmelden.
+
+## Passwort zurücksetzen
+
+**Passwort zurücksetzen** → neues Passwort (mind. 8 Zeichen) eingeben.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 🔐 Aktionen wie Anlegen/Löschen werden im [Audit-Log](/docs/de/admin-guide/security.md)
+> protokolliert. Das **eigene** Konto kann nicht deaktiviert oder gelöscht werden.
+
+> ⚠️ Passwörter werden mit **argon2id** gehasht und niemals im Klartext gespeichert.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Rollen](/docs/de/reference/roles.md)
+- [Berechtigungen](/docs/de/reference/permissions.md)
+- [Security Best Practices](/docs/de/admin-guide/security.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

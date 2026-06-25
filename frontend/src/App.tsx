@@ -22,6 +22,7 @@ import SetupWizardPage from "./pages/SetupWizardPage";
 import SourcesPage from "./pages/SourcesPage";
 import StreamJobsPage from "./pages/StreamJobsPage";
 import UpdatesPage from "./pages/UpdatesPage";
+import UsersPage from "./pages/UsersPage";
 
 export default function App() {
   return (
@@ -50,6 +51,7 @@ export default function App() {
         <Route path="/backup" element={<BackupPage />} />
         <Route path="/audit" element={<AuditPage />} />
         <Route path="/updates" element={<UpdatesPage />} />
+        <Route path="/users" element={<UsersPage />} />
         <Route path="/docs" element={<DocsPage />} />
         <Route path="/settings" element={<SettingsPage />} />
         <Route path="/setup" element={<SetupWizardPage />} />

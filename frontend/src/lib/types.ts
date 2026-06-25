@@ -247,6 +247,17 @@ export interface Asset {
   used: boolean;
 }
 
+export interface ManagedUser {
+  id: string;
+  username: string;
+  email: string | null;
+  language: string;
+  is_active: boolean;
+  roles: string[];
+  last_login_at: string | null;
+  created_at: string;
+}
+
 export interface AuditEvent {
   id: string;
   actor: string | null;
