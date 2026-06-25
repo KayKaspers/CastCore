@@ -132,6 +132,17 @@ services:
     depends_on: [backend, frontend]
     networks: [castcore]
 
+  # --- Optional: Prometheus metrics (profile: monitoring) ---
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    profiles: ["monitoring"]
+    volumes:
+      - ./deploy/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - castcore_prom:/prometheus
+    depends_on: [backend]
+    networks: [castcore]
+
   # --- Optional: MediaMTX media router (profile: mediamtx) ---
   mediamtx:
     image: bluenviron/mediamtx:latest
@@ -147,6 +158,7 @@ volumes:
   castcore_data:
   castcore_caddy_data:
   castcore_caddy_config:
+  castcore_prom:
 
 networks:
   castcore:

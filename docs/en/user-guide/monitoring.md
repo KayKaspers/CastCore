@@ -39,6 +39,22 @@ database.
 > 💡 FPS/bitrate appear once FFmpeg emits progress lines; CPU/RAM after a few seconds of
 > process runtime.
 
+## Prometheus / Grafana
+
+CastCore exposes a **Prometheus exporter** at `/api/v1/metrics` (standard text format).
+Metrics include `castcore_cpu_percent`, `castcore_mem_percent`,
+`castcore_disk_free_bytes`, `castcore_ffmpeg_processes`, `castcore_outputs_running` and
+per-output `castcore_output_fps|bitrate_kbps|speed|cpu_percent|rss_mb` (label `output_id`).
+
+A preconfigured Prometheus service ships in the **monitoring** compose profile:
+
+```bash
+docker compose --profile monitoring up -d
+```
+
+> ⚠️ The `/metrics` endpoint is **unauthenticated** (Prometheus convention). Labels only
+> contain UUIDs (no job names). Restrict it at the reverse proxy in production.
+
 ## Related pages
 
 - [Stream jobs](/docs/en/user-guide/streams.md)

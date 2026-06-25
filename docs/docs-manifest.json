@@ -118,7 +118,7 @@
       "status": "implemented",
       "docs": { "de": ["docs/de/user-guide/monitoring.md"], "en": ["docs/en/user-guide/monitoring.md"] },
       "uiRoutes": ["/monitoring"],
-      "apiRoutes": ["/api/v1/monitoring/system", "/api/v1/monitoring/outputs"],
+      "apiRoutes": ["/api/v1/monitoring/system", "/api/v1/monitoring/outputs", "/api/v1/metrics"],
       "models": ["ProcessStatus"],
       "lastReviewed": "2026-06-24"
     },

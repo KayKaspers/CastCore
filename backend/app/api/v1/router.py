@@ -21,6 +21,7 @@ from app.api.v1.endpoints import (
     health,
     media,
     metadata,
+    metrics,
     monitoring,
     notifications,
     playlists,
@@ -53,6 +54,7 @@ api_router.include_router(audit.router)
 api_router.include_router(update.router)
 api_router.include_router(notifications.router)
 api_router.include_router(monitoring.router)
+api_router.include_router(metrics.router)
 api_router.include_router(recordings.router)
 api_router.include_router(scheduler.router)
 api_router.include_router(playlists.router)

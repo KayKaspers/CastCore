@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 4: Prometheus metrics exporter
+- `GET /api/v1/metrics` exposes system metrics (CPU/mem/disk/ffmpeg/jobs) and per-output
+  stream metrics (fps/bitrate/speed/cpu/rss, labelled by `output_id`) in the standard
+  Prometheus text format (no external client dependency; unauthenticated by convention,
+  UUID-only labels).
+- A preconfigured **Prometheus** service ships in the `monitoring` compose profile
+  (`deploy/prometheus/prometheus.yml`, scrapes `/api/v1/metrics`).
+- Docs: Prometheus/Grafana section added to `monitoring.md` (DE+EN); manifest updated.
+- Verified: endpoint returns valid exposition format with `text/plain; version=0.0.4`.
+
 ### Docs — admin guide & troubleshooting filled (DE+EN)
 - Wrote full content for `admin-guide/`: deployment, docker-compose, reverse-proxy, https,
   storage-mounts, secrets, logs — grounded in the actual compose/Caddyfile/install scripts.

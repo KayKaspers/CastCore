@@ -1,0 +1,12 @@
+# Prometheus scrape config for CastCore (compose profile: monitoring).
+# Scrapes the backend's Prometheus exporter at /api/v1/metrics.
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: castcore
+    metrics_path: /api/v1/metrics
+    static_configs:
+      - targets: ["backend:8000"]
