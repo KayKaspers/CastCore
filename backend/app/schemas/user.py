@@ -33,6 +33,7 @@ class UserOut(UserBase):
     id: uuid.UUID
     is_active: bool
     roles: list[str] = Field(default_factory=list)
+    totp_enabled: bool = False
     last_login_at: dt.datetime | None = None
     created_at: dt.datetime
 
@@ -46,6 +47,7 @@ def user_to_out(user) -> UserOut:
         language=user.language,
         is_active=user.is_active,
         roles=user.role_names,
+        totp_enabled=user.totp_enabled,
         last_login_at=user.last_login_at,
         created_at=user.created_at,
     )

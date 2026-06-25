@@ -10,8 +10,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import get_settings
 from app.core.errors import CastCoreError, ErrorCode
+from app.core import totp
 from app.core.security import (
     create_access_token,
+    decrypt_secret,
     generate_refresh_token,
     hash_password,
     hash_token,
@@ -52,10 +54,17 @@ async def create_user(
     return user
 
 
-async def authenticate(db: AsyncSession, username: str, password: str) -> User:
+async def authenticate(
+    db: AsyncSession, username: str, password: str, totp_code: str | None = None
+) -> User:
     user = await get_user_by_username(db, username)
     if user is None or not user.is_active or not verify_password(password, user.password_hash):
         raise CastCoreError(ErrorCode.AUTH_INVALID_CREDENTIALS, http_status=401)
+    if user.totp_enabled and user.totp_secret:
+        if not totp_code:
+            raise CastCoreError(ErrorCode.AUTH_TOTP_REQUIRED, http_status=401)
+        if not totp.verify(decrypt_secret(user.totp_secret), totp_code):
+            raise CastCoreError(ErrorCode.AUTH_TOTP_INVALID, http_status=401)
     user.last_login_at = dt.datetime.now(dt.timezone.utc)
     return user
 

@@ -37,6 +37,8 @@ class ErrorCode:
     AUTH_INVALID_CREDENTIALS = "auth.invalid_credentials"
     AUTH_TOKEN_EXPIRED = "auth.token_expired"
     AUTH_FORBIDDEN = "auth.forbidden"
+    AUTH_TOTP_REQUIRED = "auth.totp_required"
+    AUTH_TOTP_INVALID = "auth.totp_invalid"
 
     SETUP_ALREADY_COMPLETED = "setup.already_completed"
     SETUP_FFMPEG_NOT_FOUND = "setup.ffmpeg_not_found"

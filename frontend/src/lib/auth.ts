@@ -10,16 +10,18 @@ export interface AuthUser {
   email: string | null;
   language: string;
   roles: string[];
+  totp_enabled?: boolean;
 }
 
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: AuthUser | null;
-  login: (username: string, password: string) => Promise<void>;
+  login: (username: string, password: string, totpCode?: string) => Promise<void>;
   refresh: () => Promise<boolean>;
   logout: () => void;
   hasRole: (...roles: string[]) => boolean;
+  updateUser: (patch: Partial<AuthUser>) => void;
 }
 
 const LS = {
@@ -38,11 +40,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   refreshToken: localStorage.getItem(LS.refresh),
   user: loadUser(),
 
-  login: async (username, password) => {
+  login: async (username, password, totpCode) => {
     const res = await fetch(`${BASE}/auth/login`, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify({ username, password, totp_code: totpCode || null }),
     });
     if (!res.ok) {
       const body = await res.json().catch(() => ({}));
@@ -84,5 +86,13 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     if (!u) return false;
     if (u.roles.includes("admin")) return true;
     return roles.some((r) => u.roles.includes(r));
+  },
+
+  updateUser: (patch) => {
+    const u = get().user;
+    if (!u) return;
+    const next = { ...u, ...patch };
+    localStorage.setItem(LS.user, JSON.stringify(next));
+    set({ user: next });
   },
 }));

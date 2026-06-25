@@ -4,7 +4,7 @@ description: "Härtung, Rollen, Secrets, sichere Uploads, Audit."
 lang: de
 audience: "Administratoren"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-25
 ---
 
 # Security Best Practices
@@ -20,7 +20,34 @@ lastReviewed: 2026-06-24
 - **JWT** Access-Token (kurzlebig) + rotierende, widerrufbare Refresh-Token.
 - Rollen **Admin / Operator / Viewer** – serverseitig erzwungen
   ([Rollen](/docs/de/reference/roles.md)).
-- Optional **2FA (TOTP)** vorbereitet.
+- Optionale **Zwei-Faktor-Authentifizierung (2FA / TOTP)** pro Benutzer.
+
+## Zwei-Faktor-Authentifizierung (2FA)
+
+CastCore unterstützt zeitbasierte Einmalcodes (**TOTP**, RFC 6238), kompatibel mit
+gängigen Authenticator-Apps (Google Authenticator, Aegis, 1Password, …).
+
+**Einrichten** (jeder Benutzer für sein eigenes Konto, unter **Einstellungen → Profil**):
+
+1. **2FA einrichten** wählen. CastCore erzeugt ein geheimes Schlüsselmaterial.
+2. Den angezeigten `otpauth://`-Link bzw. den manuellen Schlüssel in der
+   Authenticator-App hinterlegen.
+3. Einen aktuellen 6-stelligen Code eingeben und **Aktivieren**. Erst dann ist 2FA aktiv.
+
+**Anmeldung:** Ist 2FA aktiv, fragt CastCore nach Benutzername und Passwort zusätzlich
+den aktuellen Code ab.
+
+**Deaktivieren:** Unter **Einstellungen → Profil** durch Eingabe eines gültigen Codes –
+das verhindert versehentliches Abschalten durch Dritte.
+
+> 🔐 Das TOTP-Geheimnis wird wie alle Secrets **verschlüsselt at-rest** gespeichert
+> (Fernet, `ENCRYPTION_KEY`) und nie im Klartext zurückgegeben.
+>
+> ⚠️ Geht der zweite Faktor verloren, kann ein **Admin** 2FA für den betroffenen
+> Benutzer zurücksetzen (Benutzer löschen/neu anlegen bzw. Datensatz bereinigen).
+> Bewahre Backup-Codes deiner App sicher auf.
+
+Siehe auch: [Einstellungen](/docs/de/user-guide/settings.md).
 
 ## Secrets
 
@@ -68,4 +95,4 @@ Akteur, Aktion, Ziel, IP und Zeitstempel.
 - [Backup & Restore](/docs/de/user-guide/backup-restore.md)
 
 ---
-_Stand: 2026-06-24 · Status: Stabil_
+_Stand: 2026-06-25 · Status: Stabil_

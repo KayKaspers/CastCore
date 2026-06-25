@@ -5,6 +5,20 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Phase 4: Two-factor authentication (2FA / TOTP)
+- Per-user **TOTP** 2FA (RFC 6238), implemented with the standard library only
+  (`backend/app/core/totp.py`) — compatible with Google Authenticator, Aegis, 1Password.
+- New endpoints: `POST /auth/2fa/setup` (generate secret + `otpauth://` URI),
+  `POST /auth/2fa/verify` (activate), `POST /auth/2fa/disable` (requires a valid code).
+  `POST /auth/login` now accepts an optional `totp_code`; logins for 2FA-enabled users
+  return `auth.totp_required` / `auth.totp_invalid` until a valid code is supplied.
+- The TOTP secret is stored **encrypted at-rest** (Fernet) and never returned in clear text;
+  `users.totp_enabled` added via migration `0014_totp`. `UserOut` now exposes `totp_enabled`.
+- Frontend: Settings → Profile gains a **2FA** section (set up → scan/enter key → confirm →
+  activate; disable with a code). Login shows a code field when 2FA is required. DE/EN i18n.
+- Docs: 2FA sections in `admin-guide/security.md` and `user-guide/settings.md` (DE+EN);
+  manifest updated. Verified end-to-end in Docker (setup/verify/login/disable, 8 assertions).
+
 ### Added — Phase 4: Prometheus metrics exporter
 - `GET /api/v1/metrics` exposes system metrics (CPU/mem/disk/ffmpeg/jobs) and per-output
   stream metrics (fps/bitrate/speed/cpu/rss, labelled by `output_id`) in the standard

@@ -4,7 +4,7 @@ description: "General settings, notifications and the scheduler."
 lang: en
 audience: "Users / Administrators"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-25
 ---
 
 # Settings
@@ -20,6 +20,17 @@ lastReviewed: 2026-06-24
 Under **My profile** you choose your **language** (German/English). The choice is **saved
 per user** and applies after signing in again on other devices (not just locally in the
 browser).
+
+## Two-factor authentication (2FA)
+
+In **My profile** you can enable 2FA via an **authenticator app** (TOTP):
+
+1. Click **Set up 2FA** – CastCore shows an `otpauth://` link and a manual key.
+2. Add both to your app, then enter a **6-digit code** and click **Activate**.
+3. From now on, sign-in additionally asks for this code.
+
+To **disable**, enter a valid code again. Details and recovery notes:
+[Security best practices](/docs/en/admin-guide/security.md#two-factor-authentication-2fa).
 
 ## Instance settings (admin)
 
@@ -75,4 +86,4 @@ A background loop in the backend runs due entries about every 20 seconds.
 - [Environment variables](/docs/en/reference/environment-variables.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: stable_
+_Last reviewed: 2026-06-25 · Status: stable_

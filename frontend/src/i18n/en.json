@@ -59,7 +59,21 @@
     "defaultLanguage": "Default language (new users)",
     "languageNote": "Your language is saved and applies after signing in again on other devices.",
     "setup": "First-time setup / system check",
-    "saved": "Saved."
+    "saved": "Saved.",
+    "twofa": {
+      "title": "Two-factor authentication (2FA)",
+      "on": "On",
+      "off": "Off",
+      "intro": "Protects your account with a time-based one-time code (TOTP) from an authenticator app such as Google Authenticator, Aegis or 1Password.",
+      "enable": "Set up 2FA",
+      "scanHint": "Scan the QR code or link in your authenticator app – or enter the key manually. Then confirm with a current code.",
+      "manualKey": "Manual key",
+      "activate": "Activate",
+      "disable": "Disable 2FA",
+      "disableHint": "Enter a current code from your app to disable 2FA.",
+      "enabledMsg": "2FA is now active. You'll need a code on every sign-in from now on.",
+      "disabledMsg": "2FA has been disabled."
+    }
   },
   "docs": {
     "backToApp": "Back to app",
@@ -70,7 +84,9 @@
     "login": "Sign in",
     "username": "Username",
     "password": "Password",
-    "logout": "Sign out"
+    "logout": "Sign out",
+    "totpCode": "2FA code",
+    "totpHint": "6-digit code from your authenticator app."
   },
   "setup": {
     "title": "Setup Wizard",
@@ -146,7 +162,9 @@
     "auth": {
       "invalid_credentials": "Username or password is incorrect.",
       "token_expired": "Your session has expired. Please sign in again.",
-      "forbidden": "You don't have permission to do that."
+      "forbidden": "You don't have permission to do that.",
+      "totp_required": "This account has 2FA enabled. Please enter your code.",
+      "totp_invalid": "The 2FA code is invalid or expired."
     },
     "setup": {
       "already_completed": "Setup has already been completed.",

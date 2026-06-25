@@ -17,6 +17,8 @@ export default function LoginPage() {
   const [firstRun, setFirstRun] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [totpCode, setTotpCode] = useState("");
+  const [totpRequired, setTotpRequired] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -39,11 +41,18 @@ export default function LoginPage() {
       if (firstRun) {
         await api.post("/setup/admin", { username, password, language: i18n.language });
       }
-      await login(username, password);
+      await login(username, password, totpCode);
       navigate("/");
     } catch (err) {
-      if (err instanceof ApiException) setError(err.localized);
-      else setError(i18n.t(`error.${(err as Error).message}`, { defaultValue: (err as Error).message }));
+      const code = err instanceof ApiException ? err.code : (err as Error).message;
+      if (code === "auth.totp_required") {
+        setTotpRequired(true);
+        setError(null);
+      } else {
+        if (code === "auth.totp_invalid") setTotpRequired(true);
+        if (err instanceof ApiException) setError(err.localized);
+        else setError(i18n.t(`error.${code}`, { defaultValue: (err as Error).message }));
+      }
     } finally {
       setBusy(false);
     }
@@ -65,6 +74,19 @@ export default function LoginPage() {
             <Field label={t("auth.password")}>
               <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
             </Field>
+            {totpRequired && !firstRun && (
+              <Field label={t("auth.totpCode")} hint={t("auth.totpHint")}>
+                <Input
+                  value={totpCode}
+                  onChange={(e) => setTotpCode(e.target.value)}
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  placeholder="123456"
+                  autoFocus
+                  required
+                />
+              </Field>
+            )}
             {error && <p className="text-danger text-sm">{error}</p>}
             <Button type="submit" disabled={busy} className="w-full">
               {busy ? t("common.loading") : firstRun ? t("common.create") : t("auth.login")}

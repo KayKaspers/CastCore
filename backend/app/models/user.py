@@ -41,6 +41,7 @@ class User(Base, TimestampMixin):
     language: Mapped[str] = mapped_column(String(5), default="de", nullable=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     totp_secret: Mapped[str | None] = mapped_column(String(255), nullable=True)  # encrypted
+    totp_enabled: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     last_login_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     roles: Mapped[list[Role]] = relationship(

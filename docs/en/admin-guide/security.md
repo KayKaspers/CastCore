@@ -4,7 +4,7 @@ description: "Hardening, roles, secrets, safe uploads, audit."
 lang: en
 audience: "Administrators"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-25
 ---
 
 # Security best practices
@@ -20,7 +20,32 @@ lastReviewed: 2026-06-24
 - **JWT** access tokens (short-lived) + rotating, revocable refresh tokens.
 - Roles **Admin / Operator / Viewer** – enforced server-side
   ([Roles](/docs/en/reference/roles.md)).
-- Optional **2FA (TOTP)** prepared.
+- Optional **two-factor authentication (2FA / TOTP)** per user.
+
+## Two-factor authentication (2FA)
+
+CastCore supports time-based one-time codes (**TOTP**, RFC 6238), compatible with common
+authenticator apps (Google Authenticator, Aegis, 1Password, …).
+
+**Set up** (each user for their own account, under **Settings → Profile**):
+
+1. Choose **Set up 2FA**. CastCore generates secret key material.
+2. Add the shown `otpauth://` link or the manual key to your authenticator app.
+3. Enter a current 6-digit code and click **Activate**. Only then is 2FA active.
+
+**Sign-in:** when 2FA is enabled, CastCore asks for the current code in addition to
+username and password.
+
+**Disable:** under **Settings → Profile** by entering a valid code – this prevents an
+accidental or unauthorized shutdown of 2FA.
+
+> 🔐 The TOTP secret is stored **encrypted at-rest** like all secrets (Fernet,
+> `ENCRYPTION_KEY`) and never returned in clear text.
+>
+> ⚠️ If the second factor is lost, an **admin** can reset 2FA for the affected user
+> (delete/recreate the user or clear the record). Keep your app's backup codes safe.
+
+See also: [Settings](/docs/en/user-guide/settings.md).
 
 ## Secrets
 
@@ -67,4 +92,4 @@ timestamp.
 - [Backup & restore](/docs/en/user-guide/backup-restore.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: stable_
+_Last reviewed: 2026-06-25 · Status: stable_

@@ -54,6 +54,8 @@ export default function SettingsPage() {
         <p className="text-xs text-slate">{t("settings.languageNote")}</p>
       </Panel>
 
+      <TwoFactorSettings onError={onErr} onSaved={(m) => setMsg(m)} />
+
       {isAdmin && <InstanceSettings onError={onErr} onSaved={() => setMsg(t("settings.saved"))} />}
 
       <Panel className="max-w-xl">
@@ -61,6 +63,106 @@ export default function SettingsPage() {
         <Link to="/setup" className="text-signal-cyan text-sm hover:underline">→ {t("setup.title")}</Link>
       </Panel>
     </div>
+  );
+}
+
+interface TotpSetup {
+  secret: string;
+  otpauth_uri: string;
+}
+
+function TwoFactorSettings({
+  onError,
+  onSaved,
+}: {
+  onError: (e: unknown) => void;
+  onSaved: (msg: string) => void;
+}) {
+  const { t } = useTranslation();
+  const user = useAuthStore((s) => s.user);
+  const updateUser = useAuthStore((s) => s.updateUser);
+  const enabled = !!user?.totp_enabled;
+
+  const [setup, setSetup] = useState<TotpSetup | null>(null);
+  const [code, setCode] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const begin = async () => {
+    setBusy(true);
+    try {
+      setSetup(await api.post<TotpSetup>("/auth/2fa/setup"));
+      setCode("");
+    } catch (e) { onError(e); } finally { setBusy(false); }
+  };
+
+  const confirm = async () => {
+    setBusy(true);
+    try {
+      await api.post("/auth/2fa/verify", { code });
+      updateUser({ totp_enabled: true });
+      setSetup(null);
+      setCode("");
+      onSaved(t("settings.twofa.enabledMsg"));
+    } catch (e) { onError(e); } finally { setBusy(false); }
+  };
+
+  const disable = async () => {
+    setBusy(true);
+    try {
+      await api.post("/auth/2fa/disable", { code });
+      updateUser({ totp_enabled: false });
+      setCode("");
+      onSaved(t("settings.twofa.disabledMsg"));
+    } catch (e) { onError(e); } finally { setBusy(false); }
+  };
+
+  return (
+    <Panel className="space-y-4 max-w-xl">
+      <h2 className="text-mist flex items-center gap-2">
+        {t("settings.twofa.title")}
+        <Badge status={enabled ? "running" : "stopped"}>
+          {enabled ? t("settings.twofa.on") : t("settings.twofa.off")}
+        </Badge>
+      </h2>
+      <p className="text-xs text-slate">{t("settings.twofa.intro")}</p>
+
+      {!enabled && !setup && (
+        <Button onClick={begin} disabled={busy}>{t("settings.twofa.enable")}</Button>
+      )}
+
+      {!enabled && setup && (
+        <div className="space-y-3">
+          <p className="text-sm text-slate">{t("settings.twofa.scanHint")}</p>
+          <div className="text-xs text-slate">
+            {t("settings.twofa.manualKey")}:
+            <code className="ml-2 text-signal-cyan break-all">{setup.secret}</code>
+          </div>
+          <a href={setup.otpauth_uri} className="text-signal-cyan text-xs hover:underline break-all">
+            {setup.otpauth_uri}
+          </a>
+          <Field label={t("auth.totpCode")} hint={t("auth.totpHint")}>
+            <Input value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric" placeholder="123456" />
+          </Field>
+          <div className="flex gap-2">
+            <Button onClick={confirm} disabled={busy || !code}>{t("settings.twofa.activate")}</Button>
+            <Button variant="ghost" onClick={() => { setSetup(null); setCode(""); }} disabled={busy}>
+              {t("common.cancel")}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {enabled && (
+        <div className="space-y-3">
+          <Field label={t("auth.totpCode")} hint={t("settings.twofa.disableHint")}>
+            <Input value={code} onChange={(e) => setCode(e.target.value)} inputMode="numeric" placeholder="123456" />
+          </Field>
+          <Button variant="danger" onClick={disable} disabled={busy || !code}>
+            {t("settings.twofa.disable")}
+          </Button>
+        </div>
+      )}
+    </Panel>
   );
 }
 

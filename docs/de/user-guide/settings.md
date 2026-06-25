@@ -4,7 +4,7 @@ description: "Allgemeine Einstellungen, Benachrichtigungen und Scheduler."
 lang: de
 audience: "Anwender / Administratoren"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-25
 ---
 
 # Einstellungen
@@ -20,6 +20,19 @@ lastReviewed: 2026-06-24
 Unter **Mein Profil** wählst du deine **Sprache** (Deutsch/Englisch). Die Auswahl wird
 **pro Benutzer gespeichert** und gilt auch nach erneuter Anmeldung auf anderen Geräten
 (nicht nur lokal im Browser).
+
+## Zwei-Faktor-Authentifizierung (2FA)
+
+Im Bereich **Mein Profil** kannst du 2FA per **Authenticator-App** (TOTP) aktivieren:
+
+1. **2FA einrichten** klicken – CastCore zeigt einen `otpauth://`-Link und einen
+   manuellen Schlüssel an.
+2. Beides in deiner App hinterlegen, dann einen **6-stelligen Code** eingeben und
+   **Aktivieren**.
+3. Ab jetzt fragt die Anmeldung zusätzlich nach diesem Code.
+
+Zum **Deaktivieren** gibst du erneut einen gültigen Code ein. Details und Hinweise zur
+Wiederherstellung: [Security Best Practices](/docs/de/admin-guide/security.md#zwei-faktor-authentifizierung-2fa).
 
 ## Instanz-Einstellungen (Admin)
 
@@ -75,4 +88,4 @@ Ein Hintergrund-Loop im Backend führt fällige Einträge alle ~20 Sekunden aus.
 - [Umgebungsvariablen](/docs/de/reference/environment-variables.md)
 
 ---
-_Stand: 2026-06-24 · Status: Stabil_
+_Stand: 2026-06-25 · Status: Stabil_
