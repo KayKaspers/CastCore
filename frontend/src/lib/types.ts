@@ -36,6 +36,9 @@ export interface FFmpegProfile {
   copy_mode: boolean;
   video: Record<string, unknown>;
   audio: Record<string, unknown>;
+  filters?: Record<string, unknown>;
+  expert_args?: string[];
+  global_opts?: Record<string, unknown>;
 }
 
 export interface Destination {

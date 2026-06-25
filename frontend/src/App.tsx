@@ -12,6 +12,7 @@ import MediaLibraryPage from "./pages/MediaLibraryPage";
 import MonitoringPage from "./pages/MonitoringPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import PlaylistsPage from "./pages/PlaylistsPage";
+import ProfilesPage from "./pages/ProfilesPage";
 import RecordingsPage from "./pages/RecordingsPage";
 import ResourcesPage from "./pages/ResourcesPage";
 import SchedulerPage from "./pages/SchedulerPage";
@@ -41,6 +42,7 @@ export default function App() {
         <Route path="/recordings" element={<RecordingsPage />} />
         <Route path="/scheduler" element={<SchedulerPage />} />
         <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/profiles" element={<ProfilesPage />} />
         <Route path="/assets" element={<AssetsPage />} />
         <Route path="/notifications" element={<NotificationsPage />} />
         <Route path="/backup" element={<BackupPage />} />

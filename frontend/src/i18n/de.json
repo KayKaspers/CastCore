@@ -30,6 +30,7 @@
     "mediaLibrary": "Medienbibliothek",
     "playlists": "Playlists",
     "platforms": "Plattformen",
+    "ffmpegProfiles": "FFmpeg-Profile",
     "assets": "Thumbnails / Assets",
     "logs": "Live-Logs",
     "monitoring": "Monitoring",

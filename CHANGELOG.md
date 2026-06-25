@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — full FFmpeg profile editor (incl. GPU encoders)
+- Dedicated **FFmpeg profiles** page (`/profiles`) with the complete option set: codec
+  (incl. GPU **NVENC/QSV/VAAPI**), bitrate, resolution, FPS, preset, tune, GOP,
+  pixel format, audio codec/bitrate/disable, `filter_complex` and free-form expert args.
+- Create **and edit** existing profiles; **live command preview** via `/ffmpeg/preview`
+  (masked stream key). Profiles moved out of the Resources page into their own nav entry.
+- Docs: `reference/ffmpeg-profiles.md` filled (DE+EN) including GPU notes.
+- Verified: a GPU profile round-trips (create/edit), the preview renders all fields, and
+  an invalid codec is rejected (400) by the command-builder whitelist.
+
 ### Added — settings service (persisted language + instance settings)
 - `settings_service` for instance-wide settings (`instance_name`, `default_language`)
   stored in the `settings` table; per-user profile updates on the `User` model.
