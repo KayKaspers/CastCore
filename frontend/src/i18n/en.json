@@ -96,6 +96,10 @@
   "ffmpeg": {
     "commandPreview": "Command preview"
   },
+  "dryRun": {
+    "button": "Dry-run",
+    "title": "Dry-run / test stream"
+  },
   "backup": {
     "create": "Create backup",
     "restore": "Restore",

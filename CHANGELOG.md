@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — dry-run / test stream (completes Phase 2)
+- `dry_run_service` runs a short (~5s) test encode of the job's source through its profile
+  into a throwaway file (no live output, no network), then reports success, encoding
+  **speed**, **fps**, a plain-language message and the last log lines.
+- Endpoint `POST /stream-jobs/{id}/dry-run`; UI **Dry-run** button + report panel
+  (speed < 1× highlighted). Docs: dry-run section added to `preflight-checks.md` (DE+EN);
+  manifest stream-jobs api routes updated.
+- Verified: a good lavfi job reports ok with ~22× speed; a missing-file job reports the
+  FFmpeg error.
+
 ### Added — full FFmpeg profile editor (incl. GPU encoders)
 - Dedicated **FFmpeg profiles** page (`/profiles`) with the complete option set: codec
   (incl. GPU **NVENC/QSV/VAAPI**), bitrate, resolution, FPS, preset, tune, GOP,

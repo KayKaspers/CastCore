@@ -26,7 +26,7 @@
         "en": ["docs/en/user-guide/streams.md", "docs/en/user-guide/stream-editor.md", "docs/en/user-guide/preflight-checks.md"]
       },
       "uiRoutes": ["/streams"],
-      "apiRoutes": ["/api/v1/stream-jobs", "/api/v1/ffmpeg-profiles", "/api/v1/destinations"],
+      "apiRoutes": ["/api/v1/stream-jobs", "/api/v1/stream-jobs/{id}/preflight", "/api/v1/stream-jobs/{id}/dry-run", "/api/v1/ffmpeg-profiles", "/api/v1/destinations"],
       "models": ["StreamJob", "FFmpegProfile", "Input", "Output", "Destination", "ProcessStatus"],
       "lastReviewed": "2026-06-24"
     },

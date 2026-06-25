@@ -6,7 +6,7 @@ import LogsPanel from "../components/LogsPanel";
 import MetadataPanel from "../components/MetadataPanel";
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { api, ApiException } from "../lib/api";
-import type { CommandPreview, Destination, FFmpegProfile, PreflightReport, StreamJob } from "../lib/types";
+import type { CommandPreview, Destination, DryRunReport, FFmpegProfile, PreflightReport, StreamJob } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
 export default function StreamJobsPage() {
@@ -21,6 +21,19 @@ export default function StreamJobsPage() {
   const [logsJob, setLogsJob] = useState<StreamJob | null>(null);
   const [metaJob, setMetaJob] = useState<StreamJob | null>(null);
   const [preflight, setPreflight] = useState<PreflightReport | null>(null);
+  const [dryRun, setDryRun] = useState<DryRunReport | null>(null);
+  const [dryBusy, setDryBusy] = useState(false);
+
+  const runDryRun = async (id: string) => {
+    setError(null); setDryRun(null); setDryBusy(true);
+    try {
+      setDryRun(await api.post<DryRunReport>(`/stream-jobs/${id}/dry-run`));
+    } catch (e) {
+      if (e instanceof ApiException) setError(e.localized);
+    } finally {
+      setDryBusy(false);
+    }
+  };
 
   const act = async (id: string, action: "start" | "stop" | "restart") => {
     setError(null);
@@ -107,6 +120,25 @@ export default function StreamJobsPage() {
         </Panel>
       )}
 
+      {dryRun && (
+        <Panel>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-mist text-sm flex items-center gap-2">
+              {t("dryRun.title")} <Badge status={dryRun.ok ? "green" : "red"}>{dryRun.ok ? "ok" : "fail"}</Badge>
+            </h2>
+            <button className="text-xs text-slate hover:text-mist" onClick={() => setDryRun(null)}>✕</button>
+          </div>
+          <div className="flex gap-6 text-sm mb-2">
+            <span className="text-slate">Speed: <span className={dryRun.speed != null && dryRun.speed < 1 ? "text-warning" : "text-mist"}>{dryRun.speed != null ? `${dryRun.speed}×` : "—"}</span></span>
+            <span className="text-slate">FPS: <span className="text-mist">{dryRun.fps ?? "—"}</span></span>
+          </div>
+          <p className={`text-sm ${dryRun.ok ? "text-mist" : "text-danger"}`}>{dryRun.message}</p>
+          {dryRun.log_tail.length > 0 && (
+            <pre className="mt-2 text-xs text-slate whitespace-pre-wrap break-all bg-deep-navy rounded p-3 max-h-48 overflow-auto">{dryRun.log_tail.join("\n")}</pre>
+          )}
+        </Panel>
+      )}
+
       {preview && (
         <Panel>
           <div className="flex items-center justify-between mb-2">
@@ -141,6 +173,7 @@ export default function StreamJobsPage() {
                     <Button variant="ghost" onClick={() => setLogsJob(job)}>{t("nav.logs")}</Button>
                     <Button variant="ghost" onClick={() => setMetaJob(job)}>Meta</Button>
                     <Button variant="ghost" onClick={() => runPreflight(job.id)}>{t("nav.preflight")}</Button>
+                    <Button variant="ghost" disabled={dryBusy} onClick={() => runDryRun(job.id)}>{t("dryRun.button")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "start")}>{t("common.start")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "stop")}>{t("common.stop")}</Button>
                     <Button variant="ghost" onClick={() => act(job.id, "restart")}>{t("common.restart")}</Button>

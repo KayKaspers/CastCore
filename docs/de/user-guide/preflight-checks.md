@@ -36,6 +36,19 @@ lastReviewed: 2026-06-24
 2. Rote Punkte zuerst beheben (Quelle, Output, Stream-Key, Speicher).
 3. Bei Grün/Gelb **Start**.
 
+## Dry-Run / Teststream
+
+Zusätzlich zum Preflight gibt es den **Dry-Run**: ein kurzer Test-Encode (~5 Sekunden)
+mit dem Profil des Jobs – **ohne** Live-Ausgang und **ohne** das echte Ziel zu kontaktieren.
+
+- Aufruf: **Stream-Jobs → Dry-Run**.
+- Ergebnis: 🟢 ok / 🔴 fehlgeschlagen, gemessene **Encoding-Speed** und **FPS**, eine
+  Klartext-Meldung und die letzten Log-Zeilen.
+- Nutzen: prüft, ob die Quelle dekodiert und das Profil kodiert, und schätzt die Last.
+
+> ⚠️ **Speed < 1.0×** beim Dry-Run bedeutet, dass die Maschine den Stream nicht in
+> Echtzeit schafft → [Performance](/docs/de/troubleshooting/performance.md).
+
 ## Hinweise
 
 > 💡 Der Preflight nutzt **ffprobe** auf der ersten Quelle – Netzwerk-/Mount-Quellen

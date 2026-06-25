@@ -36,6 +36,19 @@ lastReviewed: 2026-06-24
 2. Fix red items first (source, output, stream key, disk space).
 3. **Start** when green/yellow.
 
+## Dry-run / test stream
+
+Besides preflight there is the **dry-run**: a short test encode (~5 seconds) using the
+job's profile – **without** a live output and **without** contacting the real destination.
+
+- Invoke: **Stream jobs → Dry-run**.
+- Result: 🟢 ok / 🔴 failed, measured **encoding speed** and **FPS**, a plain-language
+  message and the last log lines.
+- Purpose: checks that the source decodes and the profile encodes, and estimates load.
+
+> ⚠️ **Speed < 1.0×** in the dry-run means the machine can't keep real time →
+> [Performance](/docs/en/troubleshooting/performance.md).
+
 ## Notes
 
 > 💡 Preflight uses **ffprobe** on the first source – network/mount sources must be

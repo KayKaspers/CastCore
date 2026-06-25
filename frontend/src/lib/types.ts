@@ -76,6 +76,15 @@ export interface PreflightReport {
   checks: PreflightCheck[];
 }
 
+export interface DryRunReport {
+  ok: boolean;
+  returncode?: number;
+  speed: number | null;
+  fps: number | null;
+  message: string;
+  log_tail: string[];
+}
+
 export interface StorageSource {
   id: string;
   name: string;
