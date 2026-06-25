@@ -2,35 +2,61 @@
 title: "Docker-Probleme"
 description: "Container starten nicht, DB/Redis nicht erreichbar."
 lang: de
-audience: "Operatoren / Administratoren"
-status: draft
+audience: "Administratoren"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Docker-Probleme
 
-> Container starten nicht, DB/Redis nicht erreichbar.
+> Hilfe, wenn der Stack nicht sauber hochkommt.
 
-**Zielgruppe:** Operatoren / Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Symptom: Container startet neu / „unhealthy"
 
-Container starten nicht, DB/Redis nicht erreichbar.
+**Diagnose:**
+```bash
+docker compose ps
+docker compose logs --tail=50 <dienst>
+```
+**Häufige Ursachen:**
 
-## Inhalt
+| Ursache | Lösung |
+| --- | --- |
+| `.env` unvollständig | `SECRET_KEY`, `ENCRYPTION_KEY`, `POSTGRES_PASSWORD` setzen |
+| Backend wartet auf DB | Bis `postgres` „healthy" ist; Logs prüfen |
+| Port 80/443 belegt | Anderen Dienst stoppen oder Ports anpassen |
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+## Symptom: Datenbank nicht erreichbar
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+**Diagnose:** `docker compose logs postgres` und `docker compose exec backend python -c "import socket;socket.create_connection(('postgres',5432),2)"`.
+**Lösung:** Passwort in `.env` konsistent; `postgres` healthy abwarten.
 
-## Hinweise
+## Symptom: Redis nicht erreichbar
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+Steuerkanal/Status hängen davon ab. `docker compose logs redis`, Healthcheck prüfen.
+
+## Symptom: Migrationen schlagen fehl
+
+Backend-Log zeigt Alembic-Fehler. Bei frischer DB: Volume prüfen; bei Upgrade vorher
+[Backup](/docs/de/user-guide/backup-restore.md) erstellen.
+
+## Reverse-Proxy / HTTPS
+
+Caddy-Parsefehler oder kein Zertifikat → [HTTPS](/docs/de/admin-guide/https.md) und
+[Reverse Proxy](/docs/de/admin-guide/reverse-proxy.md).
+
+## Neustart von vorn (Achtung: löscht Daten)
+
+```bash
+docker compose down -v && docker compose up -d --build
+```
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Docker-Compose-Betrieb](/docs/de/admin-guide/docker-compose.md)
+- [Umgebungsvariablen](/docs/de/reference/environment-variables.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

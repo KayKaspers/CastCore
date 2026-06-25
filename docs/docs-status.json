@@ -4,7 +4,7 @@
     "pages": 74,
     "de": 74,
     "en": 74,
-    "placeholders": 78,
+    "placeholders": 70,
     "stale": 0,
     "errors": 0,
     "warnings": 0
@@ -513,12 +513,12 @@
     "troubleshooting/docker.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "troubleshooting/ffmpeg-errors.md": {
       "de": true,
@@ -543,32 +543,32 @@
     "troubleshooting/native-installation.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "troubleshooting/performance.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "troubleshooting/platform-errors.md": {
       "de": true,
       "en": true,
-      "de_status": "draft",
+      "de_status": "stable",
       "de_lastReviewed": "2026-06-24",
-      "de_placeholder": true,
-      "en_status": "draft",
+      "de_placeholder": false,
+      "en_status": "stable",
       "en_lastReviewed": "2026-06-24",
-      "en_placeholder": true
+      "en_placeholder": false
     },
     "troubleshooting/smb-problems.md": {
       "de": true,

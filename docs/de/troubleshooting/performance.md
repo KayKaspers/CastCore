@@ -3,34 +3,48 @@ title: "Performance"
 description: "Encoding-Speed < 1.0x, hohe CPU, Engpässe."
 lang: de
 audience: "Operatoren / Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Performance
 
-> Encoding-Speed < 1.0x, hohe CPU, Engpässe.
+> Wenn die Maschine den Stream nicht in Echtzeit schafft oder die Last zu hoch ist.
 
-**Zielgruppe:** Operatoren / Administratoren
+**Zielgruppe:** Operatoren / Administratoren.
 
-## Überblick
+## Symptom: Encoding-Speed < 1.0×
 
-Encoding-Speed < 1.0x, hohe CPU, Engpässe.
+**Bedeutung:** FFmpeg kodiert langsamer als Echtzeit → der Stream stockt/fällt zurück.
+**Mögliche Ursachen:** zu hohe Auflösung/Bitrate, zu langsames Preset, CPU überlastet,
+mehrere parallele Streams.
+**Lösung:**
 
-## Inhalt
+- Im [FFmpeg-Profil](/docs/de/reference/ffmpeg-profiles.md) ein **schnelleres Preset**
+  (z. B. `veryfast`/`ultrafast`) und/oder **niedrigere Auflösung/Bitrate** wählen.
+- **GPU-Encoder** (NVENC/QSV/VAAPI) nutzen, falls Hardware vorhanden.
+- Anzahl paralleler Streams reduzieren.
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+## Symptom: hohe CPU-Last
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+**Diagnose:** [Monitoring](/docs/de/user-guide/monitoring.md) – CPU pro Output und gesamt.
+**Lösung:** wie oben; Stream Copy nutzen, wo möglich (kein Re-Encode).
 
-## Hinweise
+## Vorab prüfen
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+Mit dem [Dry-Run](/docs/de/user-guide/preflight-checks.md) schätzt du die Encoding-Speed,
+**bevor** du live gehst.
+
+## Relevante Werte
+
+- **speed** (×), **fps**, **CPU%**, **RAM** pro Output im Monitoring.
+- Dropped Frames, sofern ermittelbar.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Monitoring](/docs/de/user-guide/monitoring.md)
+- [FFmpeg-Profile](/docs/de/reference/ffmpeg-profiles.md)
+- [Systemanforderungen](/docs/de/admin-guide/system-requirements.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

@@ -3,34 +3,52 @@ title: "Plattform-Fehler"
 description: "RTMP rejected, falscher Stream-Key, API-Fehler."
 lang: de
 audience: "Operatoren / Administratoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Plattform-Fehler
 
-> RTMP rejected, falscher Stream-Key, API-Fehler.
+> Wenn der Stream-Transport zu einer Plattform (Twitch/YouTube/…) scheitert.
 
-**Zielgruppe:** Operatoren / Administratoren
+**Zielgruppe:** Operatoren / Administratoren.
 
-## Überblick
+## Symptom: „RTMP rejected" / Verbindung abgewiesen
 
-RTMP rejected, falscher Stream-Key, API-Fehler.
+**Mögliche Ursachen:** falscher **Stream-Key**, falsche Ingest-**URL**, Konto nicht
+streambereit, Stream bereits aktiv.
+**Diagnose:** Live-Logs ansehen (RTMP-Fehlerzeile); Ziel-URL und Key in der
+[Destination](/docs/de/user-guide/platforms.md) prüfen.
+**Lösung:** Stream-Key neu aus dem Plattform-Dashboard kopieren; URL korrekt setzen
+(z. B. `rtmp://…/app`). Der Key wird verschlüsselt gespeichert – einfach neu eingeben.
 
-## Inhalt
+## Symptom: kein Bild / kein Ton auf der Plattform
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+**Ursachen:** Eingabe hat keinen Video-/Audiostream; Codec nicht plattformkompatibel.
+**Lösung:** [Preflight](/docs/de/user-guide/preflight-checks.md) ausführen; ein
+Re-Encode-Profil (`libx264`/`aac`) statt `copy` verwenden
+([FFmpeg-Profile](/docs/de/reference/ffmpeg-profiles.md)).
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Symptom: falscher Stream-Key
 
-## Hinweise
+Der Hinweis im Live-Log deutet darauf hin. Key in der Destination ersetzen.
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Symptom: Metadaten/Thumbnail nicht gesetzt
+
+Transport (FFmpeg) und Metadaten sind getrennt. Titel/Beschreibung/Thumbnail unter
+**Meta** pro Plattform pflegen ([Metadaten & Thumbnails](/docs/de/user-guide/metadata-thumbnails.md)).
+
+## Relevante Logs
+
+```bash
+docker compose logs -f process-manager
+```
+Im UI: **Stream-Jobs → Live-Logs**.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Plattformen](/docs/de/user-guide/platforms.md)
+- [Metadaten & Thumbnails](/docs/de/user-guide/metadata-thumbnails.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

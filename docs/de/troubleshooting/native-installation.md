@@ -2,35 +2,58 @@
 title: "Native Installation"
 description: "Probleme bei der nativen Installation."
 lang: de
-audience: "Operatoren / Administratoren"
-status: draft
+audience: "Administratoren"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Native Installation
 
-> Probleme bei der nativen Installation.
+> Hilfe bei der Installation ohne Docker über `scripts/install.sh`.
 
-**Zielgruppe:** Operatoren / Administratoren
+**Zielgruppe:** Administratoren.
 
-## Überblick
+## Symptom: „Unsupported OS"
 
-Probleme bei der nativen Installation.
+`install.sh` unterstützt Debian 12 / Ubuntu LTS. Auf anderen Systemen ggf. anpassen.
 
-## Inhalt
+## Symptom: Pakete/FFmpeg fehlen
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+**Diagnose:** `command -v ffmpeg ffprobe`.
+**Lösung:** `sudo apt install ffmpeg`; `FFMPEG_PATH`/`FFPROBE_PATH` in
+`/etc/castcore/castcore.env` korrekt setzen.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Symptom: systemd-Dienst startet nicht
 
-## Hinweise
+```bash
+systemctl status castcore-backend
+journalctl -u castcore-backend -n 50
+```
+**Häufig:** DB/Redis nicht erreichbar, Rechteproblem auf `/var/lib/castcore`.
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+## Symptom: Rechteproblem auf Datenverzeichnis
+
+Verzeichnisse gehören dem Systembenutzer `castcore`:
+```bash
+sudo chown -R castcore:castcore /var/lib/castcore /var/log/castcore
+```
+
+## Symptom: PostgreSQL-Verbindung scheitert
+
+Lokale DB/Anmeldedaten prüfen (vom Installer angelegt) bzw. externe DB in
+`castcore.env` konfigurieren.
+
+## Update / Deinstallation
+
+```bash
+sudo ./scripts/update.sh       # Backup + Migrationen + Neustart
+sudo ./scripts/uninstall.sh    # entfernt Dienste (Daten bleiben; --purge löscht alles)
+```
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Native Installation](/docs/de/getting-started/installation-native.md)
+- [Logs](/docs/de/admin-guide/logs.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

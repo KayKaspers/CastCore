@@ -2,35 +2,61 @@
 title: "Docker problems"
 description: "Containers won't start, DB/Redis unreachable."
 lang: en
-audience: "Operators / Administrators"
-status: draft
+audience: "Administrators"
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Docker problems
 
-> Containers won't start, DB/Redis unreachable.
+> Help when the stack doesn't come up cleanly.
 
-**Audience:** Operators / Administrators
+**Audience:** administrators.
 
-## Overview
+## Symptom: container restarts / "unhealthy"
 
-Containers won't start, DB/Redis unreachable.
+**Diagnosis:**
+```bash
+docker compose ps
+docker compose logs --tail=50 <service>
+```
+**Common causes:**
 
-## Contents
+| Cause | Fix |
+| --- | --- |
+| Incomplete `.env` | Set `SECRET_KEY`, `ENCRYPTION_KEY`, `POSTGRES_PASSWORD` |
+| Backend waiting for DB | Until `postgres` is healthy; check logs |
+| Port 80/443 in use | Stop the other service or change ports |
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+## Symptom: database unreachable
 
-- TODO: add the step-by-step guide or in-depth explanation.
+**Diagnosis:** `docker compose logs postgres` and `docker compose exec backend python -c "import socket;socket.create_connection(('postgres',5432),2)"`.
+**Fix:** keep the password in `.env` consistent; wait for `postgres` healthy.
 
-## Notes
+## Symptom: Redis unreachable
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+The control channel/status depend on it. `docker compose logs redis`, check the healthcheck.
+
+## Symptom: migrations fail
+
+The backend log shows an Alembic error. For a fresh DB: check the volume; for an upgrade,
+create a [backup](/docs/en/user-guide/backup-restore.md) first.
+
+## Reverse proxy / HTTPS
+
+Caddy parse error or no certificate → [HTTPS](/docs/en/admin-guide/https.md) and
+[Reverse proxy](/docs/en/admin-guide/reverse-proxy.md).
+
+## Start over (caution: deletes data)
+
+```bash
+docker compose down -v && docker compose up -d --build
+```
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Operating with Docker Compose](/docs/en/admin-guide/docker-compose.md)
+- [Environment variables](/docs/en/reference/environment-variables.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_
