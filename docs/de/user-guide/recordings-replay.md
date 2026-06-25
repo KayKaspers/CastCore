@@ -3,34 +3,49 @@ title: "Recordings & Replay"
 description: "Streams aufnehmen, Aufnahmen verwalten und herunterladen."
 lang: de
 audience: "Anwender / Operatoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Recordings & Replay
 
-> Streams aufnehmen, Aufnahmen verwalten und herunterladen.
+> CastCore kann jeden Stream parallel als MP4 aufnehmen. Aufnahmen erscheinen mit Dauer,
+> Größe und Status im Replay-Bereich.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Operatoren. UI-Bereich: **Recordings / Replay** (`/recordings`).
 
-## Überblick
+## Aufnahme aktivieren
 
-Streams aufnehmen, Aufnahmen verwalten und herunterladen.
+1. Im [Stream-Editor](/docs/de/user-guide/stream-editor.md) die Option **Recording**
+   aktivieren (oder am bestehenden Job umschalten).
+2. Job **starten** – parallel zu den Live-Outputs entsteht eine Aufnahme mit
+   Zeitstempel-Dateinamen unter dem Recordings-Verzeichnis.
+3. Beim **Stop** wird die Aufnahme finalisiert (Größe, Dauer, Status `completed`).
 
-## Inhalt
+## Replay-Liste
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+| Spalte | Bedeutung |
+| --- | --- |
+| **Datei** | Zeitstempel-Dateiname + Startzeit. |
+| **Status** | `recording` (läuft), `completed`, `failed`. |
+| **Dauer / Größe** | Länge und Dateigröße. |
+| **↓** | Download (erst nach Abschluss). |
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Aufbewahrung
+
+Pro Job lässt sich eine **Aufbewahrungsdauer (Tage)** setzen. Das Feld `retention_until`
+wird gespeichert; die automatische Bereinigung folgt über den
+[Scheduler](/docs/de/user-guide/settings.md).
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 💡 Aufnahmen liegen im `RECORDINGS_DIR` (siehe
+> [Umgebungsvariablen](/docs/de/reference/environment-variables.md)).
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Stream-Editor](/docs/de/user-guide/stream-editor.md)
+- [Backup & Restore](/docs/de/user-guide/backup-restore.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

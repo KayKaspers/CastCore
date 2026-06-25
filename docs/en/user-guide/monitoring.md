@@ -3,34 +3,47 @@ title: "Monitoring"
 description: "Live system and stream metrics: CPU, RAM, FPS, bitrate."
 lang: en
 audience: "Users / Operators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Monitoring
 
-> Live system and stream metrics: CPU, RAM, FPS, bitrate.
+> Monitoring shows system and stream metrics in real time. It auto-refreshes every 2
+> seconds.
 
-**Audience:** Users / Operators
+**Audience:** users / operators / viewers. UI area: **Monitoring** (`/monitoring`).
 
-## Overview
+## System metrics
 
-Live system and stream metrics: CPU, RAM, FPS, bitrate.
+| Tile | Meaning |
+| --- | --- |
+| **CPU** | Overall host CPU usage. |
+| **RAM** | Memory usage (used/total). |
+| **Disk** | Usage of the data directory, free space. |
+| **FFmpeg** | Number of running FFmpeg processes. |
 
-## Contents
+## Output table
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+Per active output: **status**, **FPS**, **kbit/s**, **speed**, **CPU%**, **RAM**. Values
+come from the process manager (psutil + FFmpeg progress) and are reconciled into the
+database.
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Important signals
+
+> ⚠️ **Speed < 1.0×** (highlighted yellow) means real-time isn't kept – typically under
+> high load. See [Performance](/docs/en/troubleshooting/performance.md).
 
 ## Notes
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+> 💡 FPS/bitrate appear once FFmpeg emits progress lines; CPU/RAM after a few seconds of
+> process runtime.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Stream jobs](/docs/en/user-guide/streams.md)
+- [Performance](/docs/en/troubleshooting/performance.md)
+- [API: monitoring](/docs/en/api/monitoring.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

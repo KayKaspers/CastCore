@@ -3,34 +3,47 @@ title: "Monitoring"
 description: "System- und Stream-Metriken live: CPU, RAM, FPS, Bitrate."
 lang: de
 audience: "Anwender / Operatoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Monitoring
 
-> System- und Stream-Metriken live: CPU, RAM, FPS, Bitrate.
+> Das Monitoring zeigt System- und Stream-Metriken in Echtzeit. Es aktualisiert sich
+> automatisch alle 2 Sekunden.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Operatoren / Viewer. UI-Bereich: **Monitoring** (`/monitoring`).
 
-## Überblick
+## System-Kennzahlen
 
-System- und Stream-Metriken live: CPU, RAM, FPS, Bitrate.
+| Kachel | Bedeutung |
+| --- | --- |
+| **CPU** | Gesamt-CPU-Auslastung des Hosts. |
+| **RAM** | Speicherauslastung (genutzt/gesamt). |
+| **Disk** | Belegung des Datenverzeichnisses, freier Platz. |
+| **FFmpeg** | Anzahl laufender FFmpeg-Prozesse. |
 
-## Inhalt
+## Output-Tabelle
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+Pro aktivem Output: **Status**, **FPS**, **kbit/s**, **Speed**, **CPU%**, **RAM**.
+Die Werte stammen aus dem Process Manager (psutil + FFmpeg-Progress) und werden in der
+Datenbank abgeglichen.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Wichtige Signale
+
+> ⚠️ **Speed < 1.0×** (gelb markiert) bedeutet, dass die Echtzeit nicht gehalten wird –
+> typisch bei zu hoher Last. Siehe [Performance](/docs/de/troubleshooting/performance.md).
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 💡 FPS/Bitrate erscheinen erst, sobald FFmpeg Fortschrittszeilen liefert; CPU/RAM nach
+> wenigen Sekunden Prozesslaufzeit.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Stream-Jobs](/docs/de/user-guide/streams.md)
+- [Performance](/docs/de/troubleshooting/performance.md)
+- [API: Monitoring](/docs/de/api/monitoring.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

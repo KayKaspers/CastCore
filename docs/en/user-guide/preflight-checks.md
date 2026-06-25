@@ -3,34 +3,48 @@ title: "Preflight checks"
 description: "Check before start whether a job is ready (traffic light)."
 lang: en
 audience: "Users / Operators"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Preflight checks
 
-> Check before start whether a job is ready (traffic light).
+> The preflight check verifies **before** stream start whether a job is ready and returns
+> a traffic-light result.
 
-**Audience:** Users / Operators
+**Audience:** users / operators. Invoke: **Stream jobs → Preflight**.
 
-## Overview
+## Result traffic light
 
-Check before start whether a job is ready (traffic light).
+- 🟢 **Green** – ready to start.
+- 🟡 **Yellow** – warnings (e.g. no audio), start possible.
+- 🔴 **Red** – blocking errors, start not advisable.
 
-## Contents
+## Checked items (selection)
 
-> ⚠️ **Draft** – This page exists and describes the topic, but details, examples and screenshots are still being added.
+| Check | Meaning |
+| --- | --- |
+| **source_readable** | Source is readable with ffprobe. |
+| **has_video / has_audio** | Input contains a video / audio track. |
+| **outputs / destination** | At least one active output with a destination. |
+| **output_url / stream_key** | Output URL set, stream key present. |
+| **disk_space** | Enough free space for recordings. |
 
-- TODO: add the step-by-step guide or in-depth explanation.
+## Step by step
+
+1. Click **Preflight** on a job.
+2. Fix red items first (source, output, stream key, disk space).
+3. **Start** when green/yellow.
 
 ## Notes
 
-- Security: see [Security best practices](/docs/en/admin-guide/security.md).
+> 💡 Preflight uses **ffprobe** on the first source – network/mount sources must be
+> reachable for this.
 
 ## Related pages
 
-- [Documentation home](/docs/en/index.md)
-- [Glossary](/docs/en/reference/glossary.md)
+- [Stream jobs](/docs/en/user-guide/streams.md)
+- [Stream not starting](/docs/en/troubleshooting/stream-not-starting.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: draft · Language: English_
+_Last reviewed: 2026-06-24 · Status: stable_

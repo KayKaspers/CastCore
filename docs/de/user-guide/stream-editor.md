@@ -3,34 +3,56 @@ title: "Stream-Editor"
 description: "Inputs, Outputs, Profil und Recording eines Streams konfigurieren."
 lang: de
 audience: "Anwender / Operatoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Stream-Editor
 
-> Inputs, Outputs, Profil und Recording eines Streams konfigurieren.
+> Im Stream-Editor legst du fest, **was** gestreamt wird (Input), **wie** (FFmpeg-Profil)
+> und **wohin** (Output/Destination) – optional mit **Recording**.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Operatoren. UI-Bereich: **Stream-Jobs → Erstellen**.
 
-## Überblick
+## Felder
 
-Inputs, Outputs, Profil und Recording eines Streams konfigurieren.
+| Feld | Bedeutung |
+| --- | --- |
+| **Name** | Anzeigename des Jobs (auch `{stream_title}` in Metadaten). |
+| **FFmpeg-Profil** | Encoding-Einstellungen, siehe [FFmpeg-Profile](/docs/de/reference/ffmpeg-profiles.md). |
+| **Input-URI** | Datei, Gerät oder URL. Mit **lavfi** für FFmpeg-Testquellen. |
+| **Destination** | Ausgabeziel ([Plattform/RTMP/Recording](/docs/de/user-guide/platforms.md)). |
+| **Format** | `flv` (RTMP), `hls`, `mpegts` (SRT/UDP), `mp4` (Aufnahme). |
+| **Recording** | Parallele Aufnahme als MP4 aktivieren. |
 
-## Inhalt
+## Schritt für Schritt
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+1. **Name** vergeben.
+2. **Input** wählen: lokale Datei/Pfad oder URL. Für einen schnellen Test
+   `testsrc=size=1280x720:rate=30` mit aktivierter **lavfi**-Option.
+3. **Profil** wählen (oder Standard). Für reine Weiterleitung ohne Neukodierung `copy`.
+4. **Destination** + **Format** wählen.
+5. Optional **Recording** aktivieren.
+6. Speichern, dann in der Liste **Preflight** und **Start**.
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Inputs & Outputs
+
+Ein Job kann mehrere Inputs und mehrere Outputs haben (Multi-Destination). Jeder aktive
+Output wird als eigener FFmpeg-Prozess überwacht.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 💡 Eine Eingabe aus der [Medienbibliothek](/docs/de/user-guide/media-library.md)
+> übernimmst du am einfachsten per „copy path".
+
+> ⚠️ `copy` (Stream Copy) funktioniert nur, wenn Quelle und Ziel kompatibel sind –
+> sonst ein Encoding-Profil (`libx264`/`aac`) verwenden.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Stream-Jobs](/docs/de/user-guide/streams.md)
+- [FFmpeg-Profile](/docs/de/reference/ffmpeg-profiles.md)
+- [Quellen / Storage](/docs/de/user-guide/sources-storage.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_

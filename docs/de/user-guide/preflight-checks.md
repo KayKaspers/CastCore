@@ -3,34 +3,48 @@ title: "Preflight-Checks"
 description: "Vor dem Start prüfen, ob ein Job startklar ist (Ampel)."
 lang: de
 audience: "Anwender / Operatoren"
-status: draft
+status: stable
 lastReviewed: 2026-06-24
 ---
 
 # Preflight-Checks
 
-> Vor dem Start prüfen, ob ein Job startklar ist (Ampel).
+> Der Preflight-Check prüft **vor** dem Streamstart, ob ein Job startklar ist, und gibt
+> ein Ampel-Ergebnis zurück.
 
-**Zielgruppe:** Anwender / Operatoren
+**Zielgruppe:** Anwender / Operatoren. Aufruf: **Stream-Jobs → Preflight**.
 
-## Überblick
+## Ergebnis-Ampel
 
-Vor dem Start prüfen, ob ein Job startklar ist (Ampel).
+- 🟢 **Grün** – startklar.
+- 🟡 **Gelb** – Warnungen (z. B. kein Audio), Start möglich.
+- 🔴 **Rot** – blockierende Fehler, Start nicht sinnvoll.
 
-## Inhalt
+## Geprüfte Punkte (Auswahl)
 
-> ⚠️ **Entwurf** – Diese Seite ist angelegt und beschreibt das Thema, wird aber noch um Details, Beispiele und Screenshots ergänzt.
+| Prüfung | Bedeutung |
+| --- | --- |
+| **source_readable** | Quelle ist mit ffprobe lesbar. |
+| **has_video / has_audio** | Eingabe enthält Video- bzw. Audiospur. |
+| **outputs / destination** | Mindestens ein aktiver Output mit Ziel. |
+| **output_url / stream_key** | Ausgabe-URL gesetzt, Stream-Key vorhanden. |
+| **disk_space** | Genug freier Speicher für Aufnahmen. |
 
-- TODO: Schritt-für-Schritt-Anleitung bzw. ausführliche Erklärung ergänzen.
+## Schritt für Schritt
+
+1. Bei einem Job **Preflight** klicken.
+2. Rote Punkte zuerst beheben (Quelle, Output, Stream-Key, Speicher).
+3. Bei Grün/Gelb **Start**.
 
 ## Hinweise
 
-- Sicherheit: siehe [Security Best Practices](/docs/de/admin-guide/security.md).
+> 💡 Der Preflight nutzt **ffprobe** auf der ersten Quelle – Netzwerk-/Mount-Quellen
+> müssen dafür erreichbar sein.
 
 ## Verwandte Seiten
 
-- [Dokumentations-Startseite](/docs/de/index.md)
-- [Glossar](/docs/de/reference/glossary.md)
+- [Stream-Jobs](/docs/de/user-guide/streams.md)
+- [Stream startet nicht](/docs/de/troubleshooting/stream-not-starting.md)
 
 ---
-_Stand: 2026-06-24 · Status: Entwurf · Sprache: Deutsch (Hauptsprache)_
+_Stand: 2026-06-24 · Status: Stabil_
