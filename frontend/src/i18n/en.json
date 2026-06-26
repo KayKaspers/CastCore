@@ -222,7 +222,8 @@
       "token_expired": "Your session has expired. Please sign in again.",
       "forbidden": "You don't have permission to do that.",
       "totp_required": "This account has 2FA enabled. Please enter your code.",
-      "totp_invalid": "The 2FA code is invalid or expired."
+      "totp_invalid": "The 2FA code is invalid or expired.",
+      "rate_limited": "Too many attempts. Please wait a moment and try again."
     },
     "setup": {
       "already_completed": "Setup has already been completed.",

@@ -5,11 +5,12 @@ from __future__ import annotations
 import datetime as dt
 import uuid
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlalchemy import select
 
 from app.api.deps import CurrentUser, DbDep
 from app.core.errors import CastCoreError, ErrorCode
+from app.core.ratelimit import rate_limit
 from app.core.security import generate_api_token, hash_token
 from app.models.user import ApiToken
 from app.schemas.token import ApiTokenCreate, ApiTokenCreated, ApiTokenOut
@@ -26,7 +27,7 @@ async def list_tokens(user: CurrentUser, db: DbDep) -> list[ApiTokenOut]:
     return [ApiTokenOut.model_validate(t) for t in res.scalars().all()]
 
 
-@router.post("", response_model=ApiTokenCreated, status_code=201)
+@router.post("", response_model=ApiTokenCreated, status_code=201, dependencies=[Depends(rate_limit("token_create"))])
 async def create_token(payload: ApiTokenCreate, user: CurrentUser, db: DbDep) -> ApiTokenCreated:
     raw = generate_api_token()
     expires_at = None

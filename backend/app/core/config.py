@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     access_token_ttl_minutes: int = Field(default=30)
     refresh_token_ttl_days: int = Field(default=14)
 
+    # Rate limiting for sensitive auth endpoints (Redis-backed, fixed window).
+    rate_limit_enabled: bool = Field(default=True)
+    rate_limit_auth_attempts: int = Field(default=10)
+    rate_limit_auth_window_seconds: int = Field(default=300)
+
     # Database
     postgres_host: str = "postgres"
     postgres_port: int = 5432

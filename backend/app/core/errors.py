@@ -22,6 +22,7 @@ class CastCoreError(HTTPException):
         http_status: int = status.HTTP_400_BAD_REQUEST,
         params: dict[str, Any] | None = None,
         level: str = "error",
+        headers: dict[str, str] | None = None,
     ) -> None:
         self.code = code
         self.params = params or {}
@@ -29,6 +30,7 @@ class CastCoreError(HTTPException):
         super().__init__(
             status_code=http_status,
             detail={"error": {"code": code, "params": self.params, "level": level}},
+            headers=headers,
         )
 
 
@@ -39,6 +41,7 @@ class ErrorCode:
     AUTH_FORBIDDEN = "auth.forbidden"
     AUTH_TOTP_REQUIRED = "auth.totp_required"
     AUTH_TOTP_INVALID = "auth.totp_invalid"
+    AUTH_RATE_LIMITED = "auth.rate_limited"
 
     SETUP_ALREADY_COMPLETED = "setup.already_completed"
     SETUP_FFMPEG_NOT_FOUND = "setup.ffmpeg_not_found"

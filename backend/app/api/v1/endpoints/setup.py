@@ -10,6 +10,7 @@ from fastapi import APIRouter, Depends
 
 from app.api.deps import DbDep, require_roles
 from app.core.errors import CastCoreError, ErrorCode
+from app.core.ratelimit import rate_limit
 from app.schemas.setup import AdminCreate, SetupStatus, SystemCheckResult
 from app.schemas.user import UserOut, user_to_out
 from app.services import setup_service
@@ -22,7 +23,7 @@ async def state(db: DbDep) -> SetupStatus:
     return await setup_service.get_status(db)
 
 
-@router.post("/admin", response_model=UserOut, status_code=201)
+@router.post("/admin", response_model=UserOut, status_code=201, dependencies=[Depends(rate_limit("setup_admin"))])
 async def create_admin(payload: AdminCreate, db: DbDep) -> UserOut:
     user = await setup_service.create_admin(db, payload)
     return user_to_out(user)

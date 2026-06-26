@@ -4,7 +4,7 @@ description: "Login, JWT-Refresh, Logout, API-Tokens."
 lang: de
 audience: "Entwickler / Integratoren"
 status: stable
-lastReviewed: 2026-06-25
+lastReviewed: 2026-06-26
 ---
 
 # API: Auth
@@ -100,10 +100,13 @@ keine Sitzung „aktuell".)
 - Access-Token kurzlebig (`ACCESS_TOKEN_TTL_MINUTES`), Refresh rotiert und ist widerrufbar.
 - Passwörter werden mit **argon2id** gehasht.
 - Behandle API-Tokens wie Passwörter – nicht in Repos/Logs committen.
+- **Rate-Limiting:** `login`, `refresh`, `2fa/verify` und Token-Erstellung sind gedrosselt.
+  Bei Überschreitung antwortet die API mit `429` und Code `auth.rate_limited` (plus
+  `Retry-After`-Header). Details: [Security](/docs/de/admin-guide/security.md#rate-limiting).
 
 ## Verwandte Seiten
 
 - [Rollen](/docs/de/reference/roles.md) · [Security](/docs/de/admin-guide/security.md)
 
 ---
-_Stand: 2026-06-25 · Status: Stabil_
+_Stand: 2026-06-26 · Status: Stabil_

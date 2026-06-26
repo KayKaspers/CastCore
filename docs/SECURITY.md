@@ -28,9 +28,13 @@ Every endpoint declares the required role; checks are enforced server-side.
 
 ## Transport & web
 - HTTPS enforced via reverse proxy (Caddy auto-cert / Nginx).
-- **CSRF** protection for cookie-based flows; **XSS** mitigations (output encoding, CSP).
-- **Rate limiting** on auth and expensive endpoints.
-- Security headers (CSP, HSTS, X-Content-Type-Options, frame-ancestors).
+- The API is **Bearer-token based** (no cookie login), so cookie-CSRF does not apply; no
+  dedicated CSRF token is used.
+- **Rate limiting** (implemented): Redis-backed throttling on sensitive auth endpoints
+  (`login`, `refresh`, `2fa/verify`, token creation, `setup/admin`) → `429 auth.rate_limited`.
+  See the admin security guide for configuration. Broader per-endpoint limits are still TODO.
+- Security headers (implemented at the reverse proxy): **HSTS**, `X-Content-Type-Options`,
+  `Referrer-Policy`. **CSP is not yet set** (TODO).
 
 ## FFmpeg & system safety (critical)
 - **No shell execution.** FFmpeg/ffprobe/mount/rclone invoked with **argument lists**

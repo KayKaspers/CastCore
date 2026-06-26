@@ -4,7 +4,7 @@ description: "Hardening, roles, secrets, safe uploads, audit."
 lang: en
 audience: "Administrators"
 status: stable
-lastReviewed: 2026-06-25
+lastReviewed: 2026-06-26
 ---
 
 # Security best practices
@@ -60,7 +60,25 @@ See also: [Settings](/docs/en/user-guide/settings.md).
 ## Transport & web
 
 - HTTPS via the reverse proxy ([HTTPS](/docs/en/admin-guide/https.md)).
-- CSRF/XSS protection, rate limiting, security headers (CSP, HSTS).
+- Security headers at the reverse proxy: **HSTS**, `X-Content-Type-Options: nosniff`,
+  `Referrer-Policy` (Caddy/nginx). A **CSP** header is currently **not** set.
+- The API is **Bearer-token based** (no cookie login), so classic cookie-CSRF attacks do not
+  apply; there is deliberately no dedicated CSRF token.
+
+## Rate limiting
+
+Sensitive auth endpoints are **throttled** (Redis-backed, fixed window):
+`POST /auth/login`, `/auth/refresh`, `/auth/2fa/verify`, `/tokens` (creation) and
+`/setup/admin`. Per client IP the default is **10 attempts per 300 s**; beyond that the API
+responds `429` with the translatable code `auth.rate_limited` (plus a `Retry-After` header).
+
+- Configurable via `RATE_LIMIT_ENABLED`, `RATE_LIMIT_AUTH_ATTEMPTS`,
+  `RATE_LIMIT_AUTH_WINDOW_SECONDS` ([environment variables](/docs/en/reference/environment-variables.md)).
+- The client IP is taken from the first `X-Forwarded-For` hop – a correctly configured
+  reverse proxy is therefore required.
+- **Fail-open:** if Redis is unreachable, requests are **not** blocked (no accidental
+  lockout). For extra hardening the reverse proxy can throttle too (Caddy `rate_limit` or
+  nginx `limit_req`).
 
 ## System & FFmpeg
 
@@ -94,4 +112,4 @@ timestamp.
 - [Backup & restore](/docs/en/user-guide/backup-restore.md)
 
 ---
-_Last reviewed: 2026-06-25 · Status: stable_
+_Last reviewed: 2026-06-26 · Status: stable_

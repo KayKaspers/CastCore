@@ -5,6 +5,26 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Rate limiting for sensitive auth endpoints (Phase 0, Step 1)
+- Redis-backed fixed-window rate limiter (`core/ratelimit.py`) on `POST /auth/login`,
+  `/auth/refresh`, `/auth/2fa/verify`, `/tokens` (create) and `/setup/admin`. Over the limit
+  → `429` with translatable code `auth.rate_limited` + `Retry-After` header. Default 10
+  attempts / 300 s per client IP (first `X-Forwarded-For` hop); **fails open** if Redis is
+  unreachable. Configurable via `RATE_LIMIT_ENABLED`, `RATE_LIMIT_AUTH_ATTEMPTS`,
+  `RATE_LIMIT_AUTH_WINDOW_SECONDS` (env + compose + .env.example).
+- `CastCoreError` gained an optional `headers` arg (for `Retry-After`).
+- Frontend i18n: `error.auth.rate_limited` (DE/EN) — Login shows a clear message.
+- Tests: `backend/tests/test_ratelimit.py` (6 tests: limit→429, bucket/identity separation,
+  fail-open, disabled-by-setting, dependency enforcement, X-Forwarded-For identity).
+  Whole backend suite green (24 passed). Verified live against the running stack:
+  10×401 then 429 + `Retry-After`, fresh IP unaffected.
+- Docs: security guide (DE+EN) corrected — replaced the inaccurate "rate limiting / CSRF /
+  CSP" claim with the real state (rate limiting now implemented; HSTS/nosniff/Referrer-Policy
+  present; **CSP not set**; API is Bearer-based so cookie-CSRF N/A). Env-vars reference +
+  api/auth.md (429 note) + top-level `docs/SECURITY.md` updated. check_docs green (76 pages).
+- Fixed a stale assertion in `tests/ffmpeg/test_command_builder.py` (argv tail is `-f flv
+  <url>`); the builder was correct, the test expectation was wrong.
+
 ### Added — Platform OAuth account linking (YouTube/Twitch)
 - New provider-agnostic OAuth integration to link real platform accounts. `PlatformAccount`
   model (migration `0015`) stores access/refresh tokens **Fernet-encrypted**, never returned

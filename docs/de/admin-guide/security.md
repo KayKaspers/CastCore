@@ -4,7 +4,7 @@ description: "Härtung, Rollen, Secrets, sichere Uploads, Audit."
 lang: de
 audience: "Administratoren"
 status: stable
-lastReviewed: 2026-06-25
+lastReviewed: 2026-06-26
 ---
 
 # Security Best Practices
@@ -62,7 +62,26 @@ Siehe auch: [Einstellungen](/docs/de/user-guide/settings.md).
 ## Transport & Web
 
 - HTTPS über den Reverse Proxy ([HTTPS](/docs/de/admin-guide/https.md)).
-- CSRF-/XSS-Schutz, Rate-Limiting, Security-Header (CSP, HSTS).
+- Security-Header am Reverse Proxy: **HSTS**, `X-Content-Type-Options: nosniff`,
+  `Referrer-Policy` (Caddy/nginx). Ein **CSP**-Header ist derzeit **nicht** gesetzt.
+- Die API ist **Bearer-Token-basiert** (kein Cookie-Login) – klassische Cookie-CSRF-Angriffe
+  greifen daher nicht; einen dedizierten CSRF-Token gibt es bewusst nicht.
+
+## Rate-Limiting
+
+Sicherheitskritische Auth-Endpunkte sind **gedrosselt** (Redis-basiert, festes Zeitfenster):
+`POST /auth/login`, `/auth/refresh`, `/auth/2fa/verify`, `/tokens` (Erstellung) und
+`/setup/admin`. Pro Client-IP sind standardmäßig **10 Versuche je 300 s** erlaubt; danach
+antwortet die API mit `429` und dem übersetzbaren Code `auth.rate_limited` (inkl.
+`Retry-After`-Header).
+
+- Konfigurierbar über `RATE_LIMIT_ENABLED`, `RATE_LIMIT_AUTH_ATTEMPTS`,
+  `RATE_LIMIT_AUTH_WINDOW_SECONDS` ([Umgebungsvariablen](/docs/de/reference/environment-variables.md)).
+- Die Client-IP wird aus dem ersten `X-Forwarded-For`-Eintrag bestimmt – ein korrekt
+  konfigurierter Reverse Proxy ist daher Voraussetzung.
+- **Fail-open:** Ist Redis nicht erreichbar, wird **nicht** blockiert (kein versehentliches
+  Aussperren). Für zusätzliche Härtung kann der Reverse Proxy ebenfalls drosseln (Caddy
+  `rate_limit` bzw. nginx `limit_req`).
 
 ## System & FFmpeg
 
@@ -96,4 +115,4 @@ Akteur, Aktion, Ziel, IP und Zeitstempel.
 - [Backup & Restore](/docs/de/user-guide/backup-restore.md)
 
 ---
-_Stand: 2026-06-25 · Status: Stabil_
+_Stand: 2026-06-26 · Status: Stabil_

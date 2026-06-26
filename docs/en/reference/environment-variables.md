@@ -56,6 +56,9 @@ lastReviewed: 2026-06-24
 | --- | --- |
 | `FFMPEG_PATH` / `FFPROBE_PATH` | paths to FFmpeg/ffprobe |
 | `ACME_EMAIL` | email for automatic HTTPS certificates (Caddy) |
+| `RATE_LIMIT_ENABLED` | auth rate limiting on/off (default `true`) |
+| `RATE_LIMIT_AUTH_ATTEMPTS` | allowed attempts per window per client IP (default `10`) |
+| `RATE_LIMIT_AUTH_WINDOW_SECONDS` | window length in seconds (default `300`) |
 | `MEDIAMTX_ENABLED` / `MEDIAMTX_API_URL` / `MEDIAMTX_RTSP_URL` | optional MediaMTX integration (enable, API address, RTSP pull base) |
 | `PUBLIC_BASE_URL` | public URL of the instance (for OAuth redirects); e.g. `https://stream.example.com` |
 | `YOUTUBE_CLIENT_ID` / `YOUTUBE_CLIENT_SECRET` | YouTube OAuth (empty = disabled) |

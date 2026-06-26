@@ -36,9 +36,10 @@ def test_basic_rtmp_reencode_argv_order():
     i_idx = argv.index("-i")
     assert argv[argv.index("-stream_loop")] == "-stream_loop" and argv.index("-stream_loop") < i_idx
     assert argv[i_idx + 1] == "/data/media/clip.mp4"
-    # output codecs and format/uri at the end
+    # output codecs and format/uri at the end: "… -f flv <url>"
     assert "-c:v" in argv and "libx264" in argv
-    assert argv[-2] == "-f" and argv[-1] == "rtmp://live.twitch.tv/app/STREAMKEY123"
+    assert argv[-3] == "-f" and argv[-2] == "flv"
+    assert argv[-1] == "rtmp://live.twitch.tv/app/STREAMKEY123"
 
 
 def test_stream_copy():

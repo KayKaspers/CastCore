@@ -5,12 +5,13 @@ from __future__ import annotations
 import uuid
 from typing import Annotated
 
-from fastapi import APIRouter, Header, Request
+from fastapi import APIRouter, Depends, Header, Request
 from pydantic import BaseModel, Field
 
 from app.api.deps import CurrentSessionId, CurrentUser, DbDep
 from app.core import totp
 from app.core.errors import CastCoreError, ErrorCode
+from app.core.ratelimit import rate_limit
 from app.core.security import decrypt_secret, encrypt_secret
 from app.schemas.auth import LoginRequest, LoginResponse, RefreshRequest, TokenPair
 from app.schemas.session import SessionOut
@@ -33,7 +34,7 @@ class TotpStatusResponse(BaseModel):
     enabled: bool
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post("/login", response_model=LoginResponse, dependencies=[Depends(rate_limit("login"))])
 async def login(
     payload: LoginRequest,
     db: DbDep,
@@ -49,7 +50,7 @@ async def login(
     return LoginResponse(access_token=access, refresh_token=refresh, user=user_to_out(user))
 
 
-@router.post("/refresh", response_model=TokenPair)
+@router.post("/refresh", response_model=TokenPair, dependencies=[Depends(rate_limit("refresh"))])
 async def refresh(payload: RefreshRequest, db: DbDep) -> TokenPair:
     access, refresh_token, _ = await auth_service.rotate_refresh_token(db, payload.refresh_token)
     return TokenPair(access_token=access, refresh_token=refresh_token)
@@ -78,7 +79,7 @@ async def totp_setup(user: CurrentUser, db: DbDep) -> TotpSetupResponse:
     )
 
 
-@router.post("/2fa/verify", response_model=TotpStatusResponse)
+@router.post("/2fa/verify", response_model=TotpStatusResponse, dependencies=[Depends(rate_limit("2fa_verify"))])
 async def totp_verify(payload: TotpCodeRequest, user: CurrentUser, db: DbDep) -> TotpStatusResponse:
     """Confirm a code from the authenticator app and activate 2FA."""
     if not user.totp_secret:

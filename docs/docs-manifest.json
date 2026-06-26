@@ -200,7 +200,7 @@
       "uiRoutes": ["/users", "/audit", "/settings"],
       "apiRoutes": ["/api/v1/auth", "/api/v1/auth/2fa/setup", "/api/v1/auth/2fa/verify", "/api/v1/auth/2fa/disable", "/api/v1/auth/sessions", "/api/v1/auth/sessions/revoke-others", "/api/v1/users", "/api/v1/users/{id}/2fa/reset", "/api/v1/tokens", "/api/v1/audit"],
       "models": ["User", "Role", "Session", "ApiToken", "AuditEvent"],
-      "lastReviewed": "2026-06-25"
+      "lastReviewed": "2026-06-26"
     }
   ]
 }
