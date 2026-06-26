@@ -14,9 +14,12 @@ All notable changes to CastCore are documented here. Format loosely follows
   - **compose**: `docker compose config` validation.
 - Replaced the docs-only `docs-check.yml` (its checks now live in `ci.yml`).
 - **Backend tooling made green**: added `[tool.mypy]` config (`ignore_missing_imports`,
-  `files=["app"]`); fixed the two ruff findings it surfaced (unused `Path` import in
-  `endpoints/channels.py`; f-string-without-placeholder in `ffmpeg/command_builder.py`).
-  Local run: ruff clean, mypy clean (95 files), pytest 24 passed.
+  `files=["app"]`) and `[tool.setuptools.packages.find] include=["app*"]` so
+  `pip install -e ".[dev]"` works (setuptools otherwise trips over `app`/`tests`/`migrations`);
+  fixed the two ruff findings it surfaced (unused `Path` import in `endpoints/channels.py`;
+  f-string-without-placeholder in `ffmpeg/command_builder.py`). Verified in a clean
+  `python:3.12-slim` container: editable install OK, ruff clean, mypy clean (95 files),
+  pytest 24 passed.
 - **Frontend tooling set up**: added ESLint 9 flat config (`eslint.config.js`) with
   typescript-eslint + react-hooks/react-refresh plugins and the matching devDependencies;
   committed `frontend/package-lock.json` so `npm ci` is reproducible; added a `typecheck`

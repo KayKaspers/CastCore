@@ -43,6 +43,10 @@ files = ["app"]
 asyncio_mode = "auto"
 testpaths = ["tests"]
 
+[tool.setuptools.packages.find]
+# Only the application package is installable; tests/ and migrations/ are not packages.
+include = ["app*"]
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
