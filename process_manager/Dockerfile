@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12-slim-trixie
 
 # FFmpeg/ffprobe are required: this service spawns the actual stream processes.
 # See backend/Dockerfile for the FFMPEG_VARIANT=static option (CVE-2026-8461 / 8.1.2+).

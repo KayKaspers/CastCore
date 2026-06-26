@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12-slim-trixie
 
 # FFmpeg + ffprobe and mount tooling are present in the backend image so that
 # preflight/ffprobe and (optional) in-container mounts work. The Process Manager

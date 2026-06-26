@@ -5,10 +5,11 @@ import { useTranslation } from "react-i18next";
 import HelpLink from "../components/HelpLink";
 import { Badge, Panel } from "../components/ui";
 import { api } from "../lib/api";
-import type { JobHealth, JobHealthSummary, StreamJob, SystemHealth } from "../lib/types";
+import type { Diagnosis, JobDiagnostics, JobHealthSummary, StreamJob, SystemHealth } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
 const HEALTH_BADGE: Record<string, string> = { green: "running", yellow: "yellow", red: "failed", gray: "stopped" };
+const SEV_BADGE: Record<string, string> = { critical: "failed", warning: "yellow", info: "stopped" };
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -52,7 +53,7 @@ function StreamHealth() {
   const { t } = useTranslation();
   const list = useAsync<JobHealthSummary[]>(() => api.get("/monitoring/health"), []);
   const [open, setOpen] = useState<string | null>(null);
-  const [detail, setDetail] = useState<JobHealth | null>(null);
+  const [detail, setDetail] = useState<JobDiagnostics | null>(null);
 
   useEffect(() => {
     const id = setInterval(() => list.reload(), 4000);
@@ -63,7 +64,7 @@ function StreamHealth() {
   const toggle = async (jobId: string) => {
     if (open === jobId) { setOpen(null); setDetail(null); return; }
     setOpen(jobId); setDetail(null);
-    try { setDetail(await api.get<JobHealth>(`/monitoring/jobs/${jobId}/health`)); } catch { /* ignore */ }
+    try { setDetail(await api.get<JobDiagnostics>(`/monitoring/jobs/${jobId}/diagnostics`)); } catch { /* ignore */ }
   };
 
   return (
@@ -83,21 +84,49 @@ function StreamHealth() {
               </span>
             </button>
             {open === j.job_id && detail && (
-              <ul className="mt-1 ml-2 space-y-0.5">
-                {detail.reasons.map((r, i) => (
-                  <li key={i} className="text-xs flex items-start gap-2">
-                    <span className={r.level === "ok" ? "text-core-green" : r.level === "warn" ? "text-warning" : r.level === "error" ? "text-danger" : "text-slate"}>
-                      {r.level === "ok" ? "✓" : r.level === "info" ? "•" : "!"}
-                    </span>
-                    <span className="text-slate">{t(`health.reason.${r.code}`, r.params)}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="mt-2 ml-1 space-y-2">
+                {detail.diagnoses.length === 0 && <p className="text-xs text-core-green">{t("diag.noIssues")}</p>}
+                {detail.diagnoses.map((d, i) => <DiagnosisItem key={i} d={d} />)}
+              </div>
             )}
           </li>
         ))}
       </ul>
     </Panel>
+  );
+}
+
+function DiagnosisItem({ d }: { d: Diagnosis }) {
+  const { t } = useTranslation();
+  const [expanded, setExpanded] = useState(false);
+  const actions = t(`diag.${d.code}.actions`, { returnObjects: true, defaultValue: [] }) as unknown as string[];
+
+  return (
+    <div className="cc-panel p-2 text-xs space-y-1">
+      <button className="w-full flex items-center justify-between text-left" onClick={() => setExpanded((v) => !v)}>
+        <span className="flex items-center gap-2">
+          <Badge status={SEV_BADGE[d.severity] ?? "stopped"}>{t(`diag.severity.${d.severity}`)}</Badge>
+          <span className="text-mist">{t(`diag.${d.code}.title`, d.params)}</span>
+          {d.stale && <span className="text-slate">({t("diag.stale")})</span>}
+        </span>
+        <span className="text-slate">{expanded ? "▾" : "▸"}</span>
+      </button>
+      <p className="text-slate">{t(`diag.${d.code}.summary`, d.params)}</p>
+      {expanded && (
+        <div className="space-y-1 border-t border-slate/10 pt-1">
+          <p className="text-slate"><span className="text-mist">{t("diag.technical")}:</span> {t(`diag.${d.code}.technical`, d.params)}</p>
+          {Array.isArray(actions) && actions.length > 0 && (
+            <div>
+              <span className="text-mist">{t("diag.actions")}:</span>
+              <ul className="list-disc ml-4 text-slate">
+                {actions.map((a, i) => <li key={i}>{a}</li>)}
+              </ul>
+            </div>
+          )}
+          <HelpLink page={d.docs_url} />
+        </div>
+      )}
+    </div>
   );
 }
 

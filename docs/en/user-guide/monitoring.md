@@ -32,9 +32,15 @@ database.
 ## Stream health score
 
 On the **Dashboard**, the **Stream health** panel shows a score **0–100** per stream job with a
-traffic-light status: 🟢 healthy · 🟡 warning · 🔴 critical · ⚪ unknown (not running). Click a
-job to see the **reasons** (e.g. low encoding speed, reconnects, dropped frames, no throughput,
-crashed output).
+traffic-light status: 🟢 healthy · 🟡 warning · 🔴 critical · ⚪ unknown (not running).
+
+Click a job to open the **diagnostics assistant**: instead of just "score red" it shows
+**structured diagnoses** — with severity, a short explanation, an expandable technical cause,
+**recommended steps** and a link to the matching docs (e.g. "Encoding too slow → lower
+resolution/preset/bitrate, check hardware encoding"). Sources: health reasons, FFmpeg version,
+process status and — if previously run — **cached** preflight/readiness results (timestamped;
+older ones marked "stale"). API: `GET /api/v1/monitoring/jobs/{id}/diagnostics`. **No** secrets
+are returned.
 
 The score is computed from the **live process metrics** (state, speed, reconnects, dropped
 frames, FPS/bitrate) per output; the **weakest running output** drives the job score. API:

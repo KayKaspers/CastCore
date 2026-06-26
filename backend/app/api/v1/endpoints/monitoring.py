@@ -18,7 +18,7 @@ from app.core import ffmpeg_inspect
 from app.core.config import get_settings
 from app.core.errors import CastCoreError, ErrorCode
 from app.models.streaming import Destination, Output, ProcessStatus, StreamJob
-from app.services import health_service
+from app.services import diagnostics_service, health_service
 
 router = APIRouter(
     prefix="/monitoring",
@@ -159,6 +159,57 @@ async def all_job_health(db: DbDep, _user: CurrentUser) -> list[JobHealthSummary
     """Per-job health summary for the dashboard overview."""
     return [JobHealthSummary(job_id=h["job_id"], name=h["name"], score=h["score"], status=h["status"])
             for h in await _collect(db, None)]
+
+
+class Diagnosis(BaseModel):
+    code: str
+    category: str
+    severity: str  # info | warning | critical
+    confidence: str  # high | medium | low
+    affected_component: str
+    affected_output_id: str | None = None
+    docs_url: str
+    detected_at: str
+    stale: bool = False
+    params: dict = {}
+
+
+class JobDiagnostics(BaseModel):
+    job_id: uuid.UUID
+    name: str
+    score: int | None = None
+    status: str
+    diagnoses: list[Diagnosis] = []
+
+
+class JobDiagnosticsSummary(BaseModel):
+    job_id: uuid.UUID
+    name: str
+    status: str
+    critical: int = 0
+    warning: int = 0
+    info: int = 0
+
+
+@router.get("/jobs/{job_id}/diagnostics", response_model=JobDiagnostics)
+async def job_diagnostics(job_id: uuid.UUID, db: DbDep, _user: CurrentUser) -> JobDiagnostics:
+    """Structured diagnoses (Stream Health Assistant) for one job. No secrets are returned."""
+    job = await db.get(StreamJob, job_id)
+    if job is None:
+        raise CastCoreError(ErrorCode.VALIDATION_FAILED, params={"job": "not_found"}, http_status=404)
+    return JobDiagnostics(**await diagnostics_service.diagnose_job(db, job))
+
+
+@router.get("/diagnostics", response_model=list[JobDiagnosticsSummary])
+async def all_diagnostics(db: DbDep, _user: CurrentUser) -> list[JobDiagnosticsSummary]:
+    """Per-job diagnosis counts (worst-first) for the dashboard overview."""
+    jobs = (await db.execute(select(StreamJob).order_by(StreamJob.name))).scalars().all()
+    out = []
+    for job in jobs:
+        d = await diagnostics_service.diagnose_job(db, job)
+        s = diagnostics_service.summarise(d["diagnoses"])
+        out.append(JobDiagnosticsSummary(job_id=job.id, name=job.name, status=d["status"], **s))
+    return out
 
 
 @router.get("/outputs", response_model=list[OutputMetrics])

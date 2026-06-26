@@ -316,6 +316,27 @@ export interface JobHealth {
   outputs: OutputHealth[];
 }
 
+export interface Diagnosis {
+  code: string;
+  category: string;
+  severity: string; // info | warning | critical
+  confidence: string;
+  affected_component: string;
+  affected_output_id: string | null;
+  docs_url: string;
+  detected_at: string;
+  stale: boolean;
+  params?: Record<string, unknown>;
+}
+
+export interface JobDiagnostics {
+  job_id: string;
+  name: string;
+  score: number | null;
+  status: string;
+  diagnoses: Diagnosis[];
+}
+
 export interface FfmpegStatus {
   ffmpeg_version: string | null;
   ffprobe_version: string | null;

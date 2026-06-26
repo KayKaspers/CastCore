@@ -5,6 +5,44 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Stream Health Assistant / diagnostics engine (Phase 2, Step 9)
+- New `app/services/diagnostics_service.py` turns raw signals into **structured, actionable
+  diagnoses** per job (and per output). Each diagnosis is a translatable `code` + metadata:
+  `category`, `severity` (info/warning/critical), `confidence`, `affected_component`,
+  `affected_output_id`, `docs_url`, `detected_at`, `stale`, `params`. The human-readable
+  title/summary/technical_reason/recommended_actions are resolved in the UI from i18n
+  (`diag.<code>.*`), consistent with CastCore's code-based i18n.
+- Sources: the health score + health reasons, FFmpeg version (`ffmpeg_inspect`), live process
+  state, and a **cache** of the last preflight/readiness results (so the engine never re-calls
+  slow/rate-limited probes per poll; cached entries are timestamped and marked **stale** after
+  10 min). The preflight and readiness endpoints now populate that cache.
+- Recognized cases (21 codes): input unreachable / no video / no audio / risky codec, vulnerable
+  or unknown FFmpeg, encoding speed low/critical, dropped frames, reconnects, no throughput,
+  process crashed, not running, stream-key missing, low disk space, and platform
+  not-connected / token-invalid / missing-scope / invalid-category / no-broadcast /
+  api-unreachable. **No secrets/tokens/stream keys** are emitted.
+- Endpoints (viewer-readable): `GET /api/v1/monitoring/jobs/{id}/diagnostics` (full) and
+  `GET /api/v1/monitoring/diagnostics` (per-job severity counts).
+- **UI**: the Dashboard **Stream health** panel now expands into a **diagnostics assistant** —
+  severity badge + title + summary, expandable technical cause + recommended steps + docs link;
+  stale marker. DE/EN i18n for all 21 diagnoses.
+- **Tests**: `test_diagnostics_service.py` (healthy→no critical, encoding-critical, reconnects,
+  failed-output, vulnerable FFmpeg, risky codec & missing input via cached preflight, token/
+  scope & no-broadcast via cached readiness, **no secret/token leak**, endpoints). Full backend
+  suite **116 passed** (ruff/mypy clean).
+- **Base/FFmpeg audit + pin**: confirmed the Python images are `python:3.12-slim` →
+  **Debian 13 (trixie)** with **FFmpeg/ffprobe 7.1.5 from apt** (Debian's newest; still < 8.1.2
+  → the static-build path remains the fix); frontend `node:20-alpine` → `nginx:1.27-alpine`.
+  **Pinned** the Python base to `python:3.12-slim-trixie` for deterministic builds.
+- **README**: expanded into a full **installation guide** (prerequisites, `.env`, start,
+  browser/first-run admin, default paths/volumes, FFmpeg requirements, updates, backup/restore,
+  install troubleshooting, verified-vs-experimental); added the diagnostics assistant; noted the
+  Debian/FFmpeg base. `frontend/.dockerignore` added.
+- **Docs**: `user-guide/monitoring.md` (DE+EN) diagnostics assistant section; manifest updated;
+  check_docs green (77 pages).
+- **Caveat**: cases needing stored FFmpeg log lines (e.g. RTMP-rejected wording) are derived via
+  preflight where possible; CastCore does not persist raw log lines yet.
+
 ### Added — Stream health score (Phase 2, Step 8)
 - New `app/services/health_service.py` computes a **0–100 health score** per output and per
   stream job with a traffic-light **status** (green/yellow/red/gray) and **structured,

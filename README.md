@@ -29,8 +29,9 @@ the authoritative, chronological record of what landed.
 **Implemented (functional):** auth (JWT + rotating refresh, RBAC Admin/Operator/Viewer), 2FA
 (TOTP), API tokens, session management, **rate limiting** on sensitive auth endpoints;
 stream jobs with a shell-free FFmpeg command builder + multi-output, live logs (WebSocket/
-Redis), auto-restart; monitoring + Prometheus exporter; **FFmpeg version detection &
-safe-media mode** (CVE-2026-8461 mitigation); local + SMB/CIFS storage; media library,
+Redis), auto-restart; monitoring + Prometheus exporter; a **stream health score + diagnostics
+assistant**; **FFmpeg version detection & safe-media mode** (CVE-2026-8461 mitigation); local +
+SMB/CIFS storage; media library,
 playlists, channels (HLS/EPG), recording, scheduler, notifications, backup/restore; MediaMTX
 ingest (status + as a source); platform OAuth (YouTube/Twitch) with **metadata push** and a
 **readiness check**; a full
@@ -68,26 +69,98 @@ See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the milestone plan.
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full rationale.
 
-## Quick start (Docker)
+## Installation
+
+> **Verified path:** Docker / Docker Compose is the recommended and tested deployment.
+> The native install scripts exist but are **experimental / not fully verified** (see below).
+
+### Prerequisites
+
+- A Linux host (or Docker Desktop on Windows/macOS) with **Docker Engine 24+** and the
+  **Docker Compose v2** plugin.
+- ~2 GB RAM and a few GB of disk for the database, media and recordings.
+- Outbound internet for the initial image build (pulls base images + packages).
+- The bundled images run **Debian 13 (trixie)** with **FFmpeg 7.1.x from apt**. See
+  [FFmpeg requirements](docs/en/admin-guide/ffmpeg-requirements.md) — for a patched
+  **FFmpeg ≥ 8.1.2** build with `--build-arg FFMPEG_VARIANT=static`.
+
+### 1. Configure (`.env`)
 
 ```bash
 cp .env.example .env
-# edit .env — at minimum set the secret keys and the admin bootstrap values
-docker compose up -d
-# open https://localhost (or your configured DOMAIN) and complete the Setup Wizard
 ```
 
-Optional service profiles:
+Edit `.env` and set **at least**:
+
+- `SECRET_KEY` — `openssl rand -hex 32`
+- `ENCRYPTION_KEY` — a Fernet key:
+  `python -c "from cryptography.fernet import Fernet; print(Fernet.generate_key().decode())"`
+- `POSTGRES_PASSWORD` — any strong value
+- `DOMAIN` — `localhost` for local use, or your public hostname (Caddy gets a real cert via ACME)
+
+`.env` is git-ignored — never commit it. Keep the `ENCRYPTION_KEY` safe and backed up
+**separately**: without it, stored secrets (stream keys, platform tokens) cannot be decrypted.
+
+### 2. Start
+
+```bash
+docker compose up -d
+```
+
+The backend auto-runs database migrations on start. Optional service profiles:
 
 ```bash
 docker compose --profile mediamtx up -d     # add the MediaMTX media router
-docker compose --profile monitoring up -d   # add Prometheus exporters
+docker compose --profile monitoring up -d   # add Prometheus exporter
 ```
 
-## Native install (no Docker)
+### 3. Open & first-time setup
 
-> ⚠️ The native install path exists but is **not yet fully verified** — Docker is the
-> recommended and tested deployment.
+Open **`https://localhost`** (or your `DOMAIN`). On a fresh install the login screen offers a
+**first-run admin** form — create the admin account, then sign in and complete the Setup
+Wizard (language, system check, storage). Subsequent users are managed under **Users** (admin).
+
+### Default paths & volumes
+
+Data lives in the `castcore_data` Docker volume, mounted at `/data` inside the containers:
+
+| Path | Purpose |
+| --- | --- |
+| `/data/media` | media library sources |
+| `/data/recordings` | recordings/replay output |
+| `/data/logs`, `/data/backups`, `/data/mounts`, `/data/thumbnails` | logs, backups, mounts, assets |
+
+Postgres, Redis and Caddy use their own named volumes. **Storage:** local folders work out of
+the box; SMB/CIFS is supported (prefer host-side mounts; in-container mounting needs extra
+capabilities). NFS/SFTP/WebDAV/rclone/cloud are **not implemented yet**.
+
+### Updates
+
+```bash
+git pull
+docker compose up -d --build      # rebuilds images; migrations run automatically on start
+```
+
+### Backup & restore
+
+Use **Backup / Restore** in the UI (DB + config as gz-JSON; secrets stay encrypted). Keep the
+`ENCRYPTION_KEY` with your backups (stored separately). See
+[Deployment](docs/DEPLOYMENT.md) for details.
+
+### Troubleshooting (install)
+
+- **Can't reach `https://localhost`** — check `docker compose ps`; the `caddy` and `backend`
+  services must be healthy. With a self-signed localhost cert, accept the browser warning.
+- **Backend keeps restarting** — usually a missing/invalid `SECRET_KEY`/`ENCRYPTION_KEY` or
+  `POSTGRES_PASSWORD`; check `docker compose logs backend`.
+- **Can't log in on a fresh install** — the first-run admin form appears only while no user
+  exists; if you created one already, sign in with it.
+- **FFmpeg "vulnerable" warning** — expected with the apt build (7.1.x < 8.1.2); see
+  [FFmpeg requirements](docs/en/admin-guide/ffmpeg-requirements.md).
+
+### Native install (experimental)
+
+> ⚠️ The native scripts exist but are **not fully verified** — Docker is recommended.
 
 ```bash
 sudo ./scripts/install.sh      # Debian 12 / Ubuntu LTS

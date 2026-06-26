@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12-slim-trixie
 
 # FFmpeg/ffprobe for media analysis & thumbnail generation jobs. This service processes
 # media from (potentially untrusted) storage sources, so it also runs as a non-root user.

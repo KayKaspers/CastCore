@@ -175,6 +175,139 @@
   "ffmpeg": {
     "commandPreview": "Command preview"
   },
+  "diag": {
+    "noIssues": "No issues detected.",
+    "technical": "Technical cause",
+    "actions": "Recommended steps",
+    "stale": "stale",
+    "severity": { "info": "Info", "warning": "Warning", "critical": "Critical" },
+    "encoding_speed_critical": {
+      "title": "Encoding too slow (critical)",
+      "summary": "FFmpeg can't keep real time ({{speed}}×) – the stream stalls or drops.",
+      "technical": "Encoding speed well below 1.0× ({{speed}}×); CPU/GPU overloaded or profile too heavy.",
+      "actions": ["Lower the resolution", "Use a faster preset (veryfast/ultrafast)", "Reduce the bitrate", "Check hardware encoding", "Reduce parallel jobs"]
+    },
+    "encoding_speed_low": {
+      "title": "Encoding speed low",
+      "summary": "Encoding speed ({{speed}}×) is just below real time.",
+      "technical": "Speed < 1.0×; load spikes may cause stalls.",
+      "actions": ["Pick a slightly faster preset", "Lower bitrate/resolution a bit", "Watch CPU load"]
+    },
+    "dropped_frames": {
+      "title": "Dropped frames",
+      "summary": "Frames were dropped ({{frames}}).",
+      "technical": "Dropped frames indicate load or input problems.",
+      "actions": ["Check CPU load", "Check input source/network", "Simplify the profile"]
+    },
+    "reconnects": {
+      "title": "Reconnects",
+      "summary": "The output had to reconnect {{count}}×.",
+      "technical": "Reconnects indicate an unstable network or a flaky destination.",
+      "actions": ["Check network stability", "Check destination/platform status", "Reduce the bitrate"]
+    },
+    "process_crashed": {
+      "title": "FFmpeg process crashed",
+      "summary": "An output crashed or failed.",
+      "technical": "The FFmpeg process exited with an error – see the live logs.",
+      "actions": ["Review the job's live logs", "Check input/destination", "Restart the stream"]
+    },
+    "no_throughput": {
+      "title": "No throughput",
+      "summary": "FFmpeg emits no FPS/bitrate.",
+      "technical": "The output runs but with no measurable throughput – input or encoding is stuck.",
+      "actions": ["Check the input source", "Review the live logs", "Restart the stream"]
+    },
+    "not_running": {
+      "title": "Stream not running",
+      "summary": "The job is not currently running.",
+      "technical": "No active FFmpeg process for this job.",
+      "actions": ["Start the stream if intended", "Run preflight"]
+    },
+    "ffmpeg_vulnerable": {
+      "title": "FFmpeg vulnerable",
+      "summary": "Installed FFmpeg {{version}} < {{min}} (CVE-2026-8461).",
+      "technical": "The FFmpeg version is affected by a known decoder vulnerability (MagicYUV).",
+      "actions": ["Upgrade FFmpeg to ≥ 8.1.2", "Use a static build/backport", "Block risky codecs"]
+    },
+    "ffmpeg_version_unknown": {
+      "title": "FFmpeg version unknown",
+      "summary": "The FFmpeg version could not be determined.",
+      "technical": "`ffmpeg -version` returned an unparseable result.",
+      "actions": ["Check FFMPEG_PATH", "Verify the binary is reachable"]
+    },
+    "input_unreachable": {
+      "title": "Input unreachable",
+      "summary": "The source could not be read.",
+      "technical": "ffprobe failed: {{detail}}.",
+      "actions": ["Check the path/URL", "File present? Mount active?", "Check the network source/credentials"]
+    },
+    "no_video": {
+      "title": "No video stream",
+      "summary": "The input contains no video stream.",
+      "technical": "ffprobe found no video codec type.",
+      "actions": ["Pick the correct source", "Check the container/file"]
+    },
+    "no_audio": {
+      "title": "No audio stream",
+      "summary": "The input contains no audio stream.",
+      "technical": "ffprobe found no audio track (may be intentional).",
+      "actions": ["Ignore if intended", "Otherwise check source/profile"]
+    },
+    "risky_codec": {
+      "title": "Risky codec",
+      "summary": "The source uses a risky codec ({{detail}}).",
+      "technical": "Codec on the blocklist (e.g. MagicYUV / CVE-2026-8461).",
+      "actions": ["Use a different source", "Transcode the file beforehand", "Allow only with a trusted source & patched FFmpeg"]
+    },
+    "stream_key_missing": {
+      "title": "Stream key missing",
+      "summary": "No stream key is set for the destination.",
+      "technical": "RTMP/platform destination without a stream key (ok if embedded in the URL).",
+      "actions": ["Set a stream key", "Or verify the key in the output URL"]
+    },
+    "disk_space_low": {
+      "title": "Low disk space",
+      "summary": "Little free disk space for recording.",
+      "technical": "Free space below the threshold ({{detail}}).",
+      "actions": ["Free up space", "Check the recordings directory"]
+    },
+    "platform_not_connected": {
+      "title": "Platform not connected",
+      "summary": "No connected {{provider}} account.",
+      "technical": "No OAuth account exists for the platform.",
+      "actions": ["Connect an account under Platforms"]
+    },
+    "platform_token_invalid": {
+      "title": "Platform token invalid",
+      "summary": "The {{provider}} token is expired/invalid.",
+      "technical": "Token not refreshable or rejected by the platform.",
+      "actions": ["Reconnect the account"]
+    },
+    "platform_missing_scope": {
+      "title": "Missing platform permissions",
+      "summary": "The {{provider}} account is missing scopes.",
+      "technical": "Required OAuth scopes are not present.",
+      "actions": ["Reconnect with the required scopes"]
+    },
+    "platform_invalid_category": {
+      "title": "Invalid category",
+      "summary": "Category {{category}} not found on {{provider}}.",
+      "technical": "The category could not be resolved.",
+      "actions": ["Pick a valid category"]
+    },
+    "platform_no_broadcast": {
+      "title": "No live broadcast",
+      "summary": "No active/upcoming {{provider}} live broadcast.",
+      "technical": "A broadcast is required for the metadata push.",
+      "actions": ["Create a live broadcast in the platform studio"]
+    },
+    "platform_api_unreachable": {
+      "title": "Platform API unreachable",
+      "summary": "The {{provider}} API isn't responding as expected.",
+      "technical": "API error or network problem.",
+      "actions": ["Test again later", "Check the platform status"]
+    }
+  },
   "ffmpegSec": {
     "title": "FFmpeg security",
     "ok": "Up to date",

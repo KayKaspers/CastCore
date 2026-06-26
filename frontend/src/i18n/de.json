@@ -175,6 +175,139 @@
   "ffmpeg": {
     "commandPreview": "Command-Vorschau"
   },
+  "diag": {
+    "noIssues": "Keine Auffälligkeiten erkannt.",
+    "technical": "Technische Ursache",
+    "actions": "Empfohlene Schritte",
+    "stale": "veraltet",
+    "severity": { "info": "Info", "warning": "Warnung", "critical": "Kritisch" },
+    "encoding_speed_critical": {
+      "title": "Encoding zu langsam (kritisch)",
+      "summary": "FFmpeg hält die Echtzeit nicht ({{speed}}×) – der Stream stockt oder bricht ab.",
+      "technical": "Encoding-Speed deutlich unter 1.0× ({{speed}}×); CPU/GPU überlastet oder Profil zu schwer.",
+      "actions": ["Auflösung senken", "Schnelleres Preset wählen (veryfast/ultrafast)", "Bitrate reduzieren", "Hardware-Encoding prüfen", "Parallele Jobs reduzieren"]
+    },
+    "encoding_speed_low": {
+      "title": "Encoding-Speed niedrig",
+      "summary": "Der Encoding-Speed ({{speed}}×) liegt knapp unter Echtzeit.",
+      "technical": "Speed < 1.0×; bei Lastspitzen droht Stocken.",
+      "actions": ["Preset etwas schneller wählen", "Bitrate/Auflösung leicht senken", "CPU-Last beobachten"]
+    },
+    "dropped_frames": {
+      "title": "Verworfene Frames",
+      "summary": "Es wurden Frames verworfen ({{frames}}).",
+      "technical": "Dropped Frames deuten auf Last- oder Eingangsprobleme.",
+      "actions": ["CPU-Last prüfen", "Eingangsquelle/Netzwerk prüfen", "Profil vereinfachen"]
+    },
+    "reconnects": {
+      "title": "Wiederverbindungen",
+      "summary": "Der Output musste sich {{count}}× neu verbinden.",
+      "technical": "Reconnects deuten auf instabiles Netzwerk oder ein wackeliges Ziel.",
+      "actions": ["Netzwerkstabilität prüfen", "Ziel-/Plattformstatus prüfen", "Bitrate reduzieren"]
+    },
+    "process_crashed": {
+      "title": "FFmpeg-Prozess abgestürzt",
+      "summary": "Eine Ausgabe ist abgestürzt oder fehlgeschlagen.",
+      "technical": "Der FFmpeg-Prozess endete mit Fehler – siehe Live-Logs.",
+      "actions": ["Live-Logs des Jobs ansehen", "Eingang/Ziel prüfen", "Stream neu starten"]
+    },
+    "no_throughput": {
+      "title": "Kein Durchsatz",
+      "summary": "FFmpeg liefert keine FPS/Bitrate.",
+      "technical": "Output läuft, aber ohne messbaren Durchsatz – Eingang oder Encoding hängt.",
+      "actions": ["Eingangsquelle prüfen", "Live-Logs ansehen", "Stream neu starten"]
+    },
+    "not_running": {
+      "title": "Stream läuft nicht",
+      "summary": "Der Job läuft derzeit nicht.",
+      "technical": "Kein aktiver FFmpeg-Prozess für diesen Job.",
+      "actions": ["Stream starten, falls gewünscht", "Preflight ausführen"]
+    },
+    "ffmpeg_vulnerable": {
+      "title": "FFmpeg verwundbar",
+      "summary": "Installiertes FFmpeg {{version}} < {{min}} (CVE-2026-8461).",
+      "technical": "Die FFmpeg-Version unterliegt einer bekannten Decoder-Schwachstelle (MagicYUV).",
+      "actions": ["FFmpeg auf ≥ 8.1.2 aktualisieren", "Static-Build/Backport nutzen", "Riskante Codecs blockieren"]
+    },
+    "ffmpeg_version_unknown": {
+      "title": "FFmpeg-Version unbekannt",
+      "summary": "Die FFmpeg-Version konnte nicht ermittelt werden.",
+      "technical": "`ffmpeg -version` lieferte kein parsbares Ergebnis.",
+      "actions": ["FFMPEG_PATH prüfen", "Erreichbarkeit des Binaries prüfen"]
+    },
+    "input_unreachable": {
+      "title": "Eingang nicht erreichbar",
+      "summary": "Die Quelle konnte nicht gelesen werden.",
+      "technical": "ffprobe schlug fehl: {{detail}}.",
+      "actions": ["Pfad/URL prüfen", "Datei vorhanden? Mount aktiv?", "Netzwerkquelle/Zugangsdaten prüfen"]
+    },
+    "no_video": {
+      "title": "Kein Videostream",
+      "summary": "Die Eingabe enthält keinen Videostream.",
+      "technical": "ffprobe fand keinen Video-Codec-Typ.",
+      "actions": ["Korrekte Quelle wählen", "Container/Datei prüfen"]
+    },
+    "no_audio": {
+      "title": "Kein Audiostream",
+      "summary": "Die Eingabe enthält keinen Audiostream.",
+      "technical": "ffprobe fand keine Audiospur (ggf. gewollt).",
+      "actions": ["Falls gewünscht ignorieren", "Sonst Quelle/Profil prüfen"]
+    },
+    "risky_codec": {
+      "title": "Riskanter Codec",
+      "summary": "Die Quelle nutzt einen riskanten Codec ({{detail}}).",
+      "technical": "Codec auf der Blocklist (z. B. MagicYUV / CVE-2026-8461).",
+      "actions": ["Andere Quelle verwenden", "Datei vorab transkodieren", "Nur bei vertrauenswürdiger Quelle & gepatchtem FFmpeg zulassen"]
+    },
+    "stream_key_missing": {
+      "title": "Stream-Key fehlt",
+      "summary": "Für das Ziel ist kein Stream-Key gesetzt.",
+      "technical": "RTMP-/Plattform-Ziel ohne Stream-Key (ok, falls in der URL enthalten).",
+      "actions": ["Stream-Key hinterlegen", "Oder Key in der Output-URL prüfen"]
+    },
+    "disk_space_low": {
+      "title": "Speicherplatz knapp",
+      "summary": "Wenig freier Speicherplatz für Recording.",
+      "technical": "Freier Platz unter dem Schwellenwert ({{detail}}).",
+      "actions": ["Speicher freigeben", "Recording-Verzeichnis prüfen"]
+    },
+    "platform_not_connected": {
+      "title": "Plattform nicht verbunden",
+      "summary": "Kein verbundenes {{provider}}-Konto.",
+      "technical": "Für die Plattform existiert kein OAuth-Konto.",
+      "actions": ["Konto unter Plattformen verbinden"]
+    },
+    "platform_token_invalid": {
+      "title": "Plattform-Token ungültig",
+      "summary": "Der {{provider}}-Token ist abgelaufen/ungültig.",
+      "technical": "Token nicht erneuerbar oder von der Plattform abgelehnt.",
+      "actions": ["Konto neu verbinden"]
+    },
+    "platform_missing_scope": {
+      "title": "Fehlende Plattform-Berechtigungen",
+      "summary": "Dem {{provider}}-Konto fehlen Scopes.",
+      "technical": "Erforderliche OAuth-Scopes nicht vorhanden.",
+      "actions": ["Konto mit nötigen Scopes neu verbinden"]
+    },
+    "platform_invalid_category": {
+      "title": "Kategorie ungültig",
+      "summary": "Kategorie {{category}} bei {{provider}} nicht gefunden.",
+      "technical": "Die Kategorie konnte nicht aufgelöst werden.",
+      "actions": ["Gültige Kategorie wählen"]
+    },
+    "platform_no_broadcast": {
+      "title": "Kein Livestream",
+      "summary": "Kein aktiver/geplanter {{provider}}-Livestream.",
+      "technical": "Für den Metadaten-Push fehlt ein Broadcast.",
+      "actions": ["Livestream im Plattform-Studio anlegen"]
+    },
+    "platform_api_unreachable": {
+      "title": "Plattform-API nicht erreichbar",
+      "summary": "Die {{provider}}-API antwortet nicht erwartungsgemäß.",
+      "technical": "API-Fehler oder Netzwerkproblem.",
+      "actions": ["Später erneut testen", "Plattform-Status prüfen"]
+    }
+  },
   "ffmpegSec": {
     "title": "FFmpeg-Sicherheit",
     "ok": "Aktuell",

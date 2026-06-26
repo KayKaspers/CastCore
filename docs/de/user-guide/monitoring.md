@@ -32,9 +32,15 @@ Datenbank abgeglichen.
 ## Stream-Health-Score
 
 Im **Dashboard** zeigt das Panel **Stream-Health** pro Stream-Job einen Score **0–100** mit
-Ampelstatus: 🟢 gesund · 🟡 Warnung · 🔴 kritisch · ⚪ unbekannt (läuft nicht). Klick auf einen
-Job zeigt die **Gründe** (z. B. niedriger Encoding-Speed, Reconnects, verworfene Frames,
-fehlender Durchsatz, abgestürzte Ausgabe).
+Ampelstatus: 🟢 gesund · 🟡 Warnung · 🔴 kritisch · ⚪ unbekannt (läuft nicht).
+
+Klick auf einen Job öffnet den **Diagnose-Assistenten**: statt nur „Score rot" zeigt er
+**strukturierte Diagnosen** – mit Schweregrad, kurzer Erklärung, ausklappbarer technischer
+Ursache, **empfohlenen Schritten** und Link zur passenden Doku (z. B. „Encoding zu langsam →
+Auflösung/Preset/Bitrate senken, Hardware-Encoding prüfen"). Quellen: Health-Reasons,
+FFmpeg-Version, Prozessstatus und – sofern zuvor ausgeführt – **gecachte** Preflight-/
+Readiness-Ergebnisse (mit Zeitstempel; ältere als „veraltet" markiert).
+API: `GET /api/v1/monitoring/jobs/{id}/diagnostics`. Es werden **keine** Secrets ausgegeben.
 
 Der Score wird aus den **Live-Prozessmetriken** (Status, Speed, Reconnects, Dropped Frames,
 FPS/Bitrate) je Output berechnet; der **schwächste laufende Output** bestimmt den Job-Score.
