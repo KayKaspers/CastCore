@@ -48,6 +48,10 @@ class Settings(BaseSettings):
     ffmpeg_path: str = "/usr/bin/ffmpeg"
     ffprobe_path: str = "/usr/bin/ffprobe"
 
+    # MediaMTX (optional media router; compose profile "mediamtx")
+    mediamtx_enabled: bool = Field(default=False)
+    mediamtx_api_url: str = Field(default="http://mediamtx:9997")
+
     @property
     def database_url(self) -> str:
         return (

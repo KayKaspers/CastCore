@@ -131,6 +131,10 @@
           "title": "Logs"
         },
         {
+          "path": "admin-guide/mediamtx.md",
+          "title": "MediaMTX-Integration"
+        },
+        {
           "path": "admin-guide/nfs.md",
           "title": "NFS"
         },
@@ -475,6 +479,10 @@
         {
           "path": "admin-guide/logs.md",
           "title": "Logs"
+        },
+        {
+          "path": "admin-guide/mediamtx.md",
+          "title": "MediaMTX integration"
         },
         {
           "path": "admin-guide/nfs.md",

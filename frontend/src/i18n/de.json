@@ -133,6 +133,22 @@
     "yellow": "Warnungen",
     "red": "Blockierende Fehler"
   },
+  "monitoring": {
+    "ingest": {
+      "title": "Ingest (MediaMTX)",
+      "online": "Erreichbar",
+      "offline": "Nicht erreichbar",
+      "offlineHint": "MediaMTX ist aktiviert, aber die API ist nicht erreichbar. Läuft der Container (Profil mediamtx) und stimmt MEDIAMTX_API_URL?",
+      "none": "Aktuell keine aktiven Ingest-Verbindungen.",
+      "path": "Pfad",
+      "source": "Quelle",
+      "tracks": "Tracks",
+      "in": "Empfangen",
+      "readers": "Leser",
+      "live": "Live",
+      "idle": "Bereit"
+    }
+  },
   "ffmpeg": {
     "commandPreview": "Command-Vorschau"
   },

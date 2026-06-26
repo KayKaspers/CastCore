@@ -34,6 +34,8 @@ x-common-env: &common-env
   THUMBNAIL_DIR: ${THUMBNAIL_DIR:-/data/thumbnails}
   FFMPEG_PATH: ${FFMPEG_PATH:-/usr/bin/ffmpeg}
   FFPROBE_PATH: ${FFPROBE_PATH:-/usr/bin/ffprobe}
+  MEDIAMTX_ENABLED: ${MEDIAMTX_ENABLED:-false}
+  MEDIAMTX_API_URL: ${MEDIAMTX_API_URL:-http://mediamtx:9997}
 
 x-data-volume: &data-volume
   - castcore_data:/data

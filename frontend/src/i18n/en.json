@@ -133,6 +133,22 @@
     "yellow": "Warnings",
     "red": "Blocking errors"
   },
+  "monitoring": {
+    "ingest": {
+      "title": "Ingest (MediaMTX)",
+      "online": "Reachable",
+      "offline": "Unreachable",
+      "offlineHint": "MediaMTX is enabled but its API is unreachable. Is the container running (profile \"mediamtx\") and is MEDIAMTX_API_URL correct?",
+      "none": "No active ingest connections right now.",
+      "path": "Path",
+      "source": "Source",
+      "tracks": "Tracks",
+      "in": "Received",
+      "readers": "Readers",
+      "live": "Live",
+      "idle": "Ready"
+    }
+  },
   "ffmpeg": {
     "commandPreview": "Command preview"
   },

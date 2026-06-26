@@ -7,6 +7,20 @@ logLevel: info
 api: yes
 apiAddress: :9997
 
+# The API/metrics ports are only reachable on the internal "castcore" Docker network
+# (never published to the host), so the control plane is allowed to query them. Publishing
+# and playback remain open for ingest clients on the LAN. Tighten this with real users if
+# you expose MediaMTX beyond the host.
+authInternalUsers:
+  - user: any
+    pass:
+    permissions:
+      - action: publish
+      - action: read
+      - action: playback
+      - action: api
+      - action: metrics
+
 # Ingest / delivery endpoints
 rtsp: yes
 rtmp: yes

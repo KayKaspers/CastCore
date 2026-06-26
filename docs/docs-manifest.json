@@ -123,6 +123,16 @@
       "lastReviewed": "2026-06-24"
     },
     {
+      "id": "mediamtx",
+      "module": "ingest",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/admin-guide/mediamtx.md"], "en": ["docs/en/admin-guide/mediamtx.md"] },
+      "uiRoutes": ["/monitoring"],
+      "apiRoutes": ["/api/v1/mediamtx/status"],
+      "models": [],
+      "lastReviewed": "2026-06-25"
+    },
+    {
       "id": "notifications",
       "module": "notifications",
       "status": "implemented",

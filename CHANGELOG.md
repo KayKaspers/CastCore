@@ -5,6 +5,21 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — MediaMTX ingest status (read-only integration)
+- New optional integration with the **MediaMTX** media router: `GET /api/v1/mediamtx/status`
+  returns `{enabled, reachable, paths}` by querying the MediaMTX v3 API (`/v3/paths/list`),
+  normalizing each path (ready/source/tracks/bytes/readers). Never mutates MediaMTX; failures
+  degrade to `reachable:false` instead of erroring.
+- Config: `MEDIAMTX_ENABLED` / `MEDIAMTX_API_URL` (env + compose `x-common-env`).
+- `deploy/mediamtx/mediamtx.yml`: grant `api`/`metrics` to the internal-network user so the
+  control plane can read status (API port stays internal-only, never published to the host).
+- Monitoring page: an **Ingest (MediaMTX)** panel (reachability badge + live path table:
+  status/source/tracks/received/readers), shown only when enabled. DE/EN i18n.
+- Docs: new `admin-guide/mediamtx.md` (DE+EN) + ingest section in `monitoring.md`; manifest
+  gains a `mediamtx` feature. check_docs green (75 pages). Verified end-to-end in Docker
+  against a live MediaMTX container (3 assertions: disabled, enabled+reachable, enabled+
+  unreachable-no-crash).
+
 ### Added — Active session management
 - Users can see and manage their login sessions: `GET /api/v1/auth/sessions` (active,
   non-expired; the current one flagged), `DELETE /api/v1/auth/sessions/{id}` (sign out one),

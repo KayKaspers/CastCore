@@ -280,6 +280,23 @@ export interface AuthSession {
   current: boolean;
 }
 
+export interface MediamtxPath {
+  name: string;
+  ready: boolean;
+  source_type: string | null;
+  tracks: string[];
+  bytes_received: number;
+  bytes_sent: number;
+  readers: number;
+  ready_time: string | null;
+}
+
+export interface MediamtxStatus {
+  enabled: boolean;
+  reachable: boolean;
+  paths: MediamtxPath[];
+}
+
 export interface AuditEvent {
   id: string;
   actor: string | null;

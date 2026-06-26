@@ -4,7 +4,7 @@ description: "Live system and stream metrics: CPU, RAM, FPS, bitrate."
 lang: en
 audience: "Users / Operators"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-25
 ---
 
 # Monitoring
@@ -39,6 +39,13 @@ database.
 > 💡 FPS/bitrate appear once FFmpeg emits progress lines; CPU/RAM after a few seconds of
 > process runtime.
 
+## Ingest (MediaMTX)
+
+When the optional **MediaMTX** integration is enabled, an **Ingest (MediaMTX)** panel
+appears below the outputs table. It shows the router's reachability and every active ingest
+path (path name, live/ready, source, tracks, received bytes, readers). Setup:
+[MediaMTX integration](/docs/en/admin-guide/mediamtx.md).
+
 ## Prometheus / Grafana
 
 CastCore exposes a **Prometheus exporter** at `/api/v1/metrics` (standard text format).
@@ -60,6 +67,7 @@ docker compose --profile monitoring up -d
 - [Stream jobs](/docs/en/user-guide/streams.md)
 - [Performance](/docs/en/troubleshooting/performance.md)
 - [API: monitoring](/docs/en/api/monitoring.md)
+- [MediaMTX integration](/docs/en/admin-guide/mediamtx.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: stable_
+_Last reviewed: 2026-06-25 · Status: stable_
