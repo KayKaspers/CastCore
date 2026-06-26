@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-25",
+  "generated": "2026-06-26",
   "summary": {
     "pages": 74,
     "de": 74,
@@ -744,10 +744,10 @@
       "de": true,
       "en": true,
       "de_status": "stable",
-      "de_lastReviewed": "2026-06-24",
+      "de_lastReviewed": "2026-06-25",
       "de_placeholder": false,
       "en_status": "stable",
-      "en_lastReviewed": "2026-06-24",
+      "en_lastReviewed": "2026-06-25",
       "en_placeholder": false
     }
   }

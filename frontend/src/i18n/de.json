@@ -129,7 +129,10 @@
     "guide": "Update-Anleitung öffnen"
   },
   "users": {
-    "resetPw": "Passwort zurücksetzen"
+    "resetPw": "Passwort zurücksetzen",
+    "col2fa": "2FA",
+    "reset2fa": "2FA zurücksetzen",
+    "reset2faConfirm": "2FA für {{user}} wirklich zurücksetzen? Der Benutzer meldet sich danach wieder nur mit Passwort an und muss 2FA bei Bedarf neu einrichten."
   },
   "backup": {
     "create": "Backup erstellen",

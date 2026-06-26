@@ -4,7 +4,7 @@ description: "Manage users and assign roles (Admin/Operator/Viewer)."
 lang: en
 audience: "Administrators"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-25
 ---
 
 # Users & roles
@@ -35,9 +35,17 @@ in.
 
 **Reset password** → enter a new password (min. 8 chars).
 
+## Reset 2FA
+
+The **2FA** column shows whether a user has two-factor authentication enabled. If a user
+has lost their second factor, click **Reset 2FA**. The user then signs in with a password
+only again and can set up 2FA anew if needed. More on 2FA:
+[Settings](/docs/en/user-guide/settings.md) and
+[Security best practices](/docs/en/admin-guide/security.md#two-factor-authentication-2fa).
+
 ## Notes
 
-> 🔐 Actions like create/delete are recorded in the
+> 🔐 Actions like create/delete and **2FA reset** are recorded in the
 > [audit log](/docs/en/admin-guide/security.md). You cannot disable or delete your **own**
 > account.
 
@@ -50,4 +58,4 @@ in.
 - [Security best practices](/docs/en/admin-guide/security.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: stable_
+_Last reviewed: 2026-06-25 · Status: stable_

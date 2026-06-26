@@ -44,8 +44,9 @@ das verhindert versehentliches Abschalten durch Dritte.
 > (Fernet, `ENCRYPTION_KEY`) und nie im Klartext zurückgegeben.
 >
 > ⚠️ Geht der zweite Faktor verloren, kann ein **Admin** 2FA für den betroffenen
-> Benutzer zurücksetzen (Benutzer löschen/neu anlegen bzw. Datensatz bereinigen).
-> Bewahre Backup-Codes deiner App sicher auf.
+> Benutzer zurücksetzen: **Benutzerverwaltung** (`/users`) → Zeile des Benutzers →
+> **2FA zurücksetzen**. Danach meldet sich der Benutzer wieder nur mit Passwort an und
+> kann 2FA bei Bedarf neu einrichten. Bewahre zusätzlich Backup-Codes deiner App sicher auf.
 
 Siehe auch: [Einstellungen](/docs/de/user-guide/settings.md).
 

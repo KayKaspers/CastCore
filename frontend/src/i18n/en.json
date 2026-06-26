@@ -129,7 +129,10 @@
     "guide": "Open update guide"
   },
   "users": {
-    "resetPw": "Reset password"
+    "resetPw": "Reset password",
+    "col2fa": "2FA",
+    "reset2fa": "Reset 2FA",
+    "reset2faConfirm": "Really reset 2FA for \"{{user}}\"? The user will then sign in with a password only and must set up 2FA again if needed."
   },
   "backup": {
     "create": "Create backup",

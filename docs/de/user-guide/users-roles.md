@@ -4,7 +4,7 @@ description: "Benutzer verwalten und Rollen (Admin/Operator/Viewer) vergeben."
 lang: de
 audience: "Administratoren"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-25
 ---
 
 # Benutzer & Rollen
@@ -36,10 +36,19 @@ Benutzer kann sich nicht anmelden.
 
 **Passwort zurücksetzen** → neues Passwort (mind. 8 Zeichen) eingeben.
 
+## 2FA zurücksetzen
+
+Die Spalte **2FA** zeigt, ob ein Benutzer die Zwei-Faktor-Authentifizierung aktiviert hat.
+Hat ein Benutzer den zweiten Faktor verloren, klickst du **2FA zurücksetzen**. Danach
+meldet sich der Benutzer wieder nur mit Passwort an und kann 2FA bei Bedarf neu einrichten.
+Mehr zu 2FA: [Einstellungen](/docs/de/user-guide/settings.md) und
+[Security Best Practices](/docs/de/admin-guide/security.md#zwei-faktor-authentifizierung-2fa).
+
 ## Hinweise
 
-> 🔐 Aktionen wie Anlegen/Löschen werden im [Audit-Log](/docs/de/admin-guide/security.md)
-> protokolliert. Das **eigene** Konto kann nicht deaktiviert oder gelöscht werden.
+> 🔐 Aktionen wie Anlegen/Löschen und **2FA-Reset** werden im
+> [Audit-Log](/docs/de/admin-guide/security.md) protokolliert. Das **eigene** Konto kann
+> nicht deaktiviert oder gelöscht werden.
 
 > ⚠️ Passwörter werden mit **argon2id** gehasht und niemals im Klartext gespeichert.
 
@@ -50,4 +59,4 @@ Benutzer kann sich nicht anmelden.
 - [Security Best Practices](/docs/de/admin-guide/security.md)
 
 ---
-_Stand: 2026-06-24 · Status: Stabil_
+_Stand: 2026-06-25 · Status: Stabil_

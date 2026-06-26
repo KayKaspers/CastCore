@@ -5,6 +5,16 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Admin 2FA reset (recovery)
+- `POST /api/v1/users/{id}/2fa/reset` (admin only) clears a user's 2FA when the second
+  factor is lost; the secret is wiped and `totp_enabled` set false. Audited as
+  `user.2fa_reset`.
+- Users page (`/users`): a **2FA** column shows each user's status; **Reset 2FA** (with
+  confirm) appears for users who have it enabled. DE/EN i18n.
+- Docs: recovery now points at the real action in `security.md` and `users-roles.md`
+  (DE+EN); manifest updated; check_docs green. Verified end-to-end in Docker (4 assertions:
+  victim gated → reset → password-only login → 404 on unknown id; secret wiped in DB).
+
 ### Added — Phase 4: Two-factor authentication (2FA / TOTP)
 - Per-user **TOTP** 2FA (RFC 6238), implemented with the standard library only
   (`backend/app/core/totp.py`) — compatible with Google Authenticator, Aegis, 1Password.

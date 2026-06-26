@@ -42,8 +42,10 @@ accidental or unauthorized shutdown of 2FA.
 > 🔐 The TOTP secret is stored **encrypted at-rest** like all secrets (Fernet,
 > `ENCRYPTION_KEY`) and never returned in clear text.
 >
-> ⚠️ If the second factor is lost, an **admin** can reset 2FA for the affected user
-> (delete/recreate the user or clear the record). Keep your app's backup codes safe.
+> ⚠️ If the second factor is lost, an **admin** can reset 2FA for the affected user:
+> **User management** (`/users`) → the user's row → **Reset 2FA**. The user then signs in
+> with a password only again and can set up 2FA anew if needed. Also keep your app's
+> backup codes safe.
 
 See also: [Settings](/docs/en/user-guide/settings.md).
 

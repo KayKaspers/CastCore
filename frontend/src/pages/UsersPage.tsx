@@ -35,6 +35,12 @@ export default function UsersPage() {
     else if (pw) setError(t("error.validation.failed"));
   };
 
+  const reset2fa = async (u: ManagedUser) => {
+    if (!window.confirm(t("users.reset2faConfirm", { user: u.username }))) return;
+    setError(null);
+    try { await api.post(`/users/${u.id}/2fa/reset`); users.reload(); } catch (e) { onErr(e); }
+  };
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold text-mist flex items-center gap-2">
@@ -51,6 +57,7 @@ export default function UsersPage() {
               <th className="px-4 py-3">Benutzer</th>
               <th className="px-4 py-3">Rollen</th>
               <th className="px-4 py-3">Aktiv</th>
+              <th className="px-4 py-3">{t("users.col2fa")}</th>
               <th className="px-4 py-3 text-right">{t("common.actions")}</th>
             </tr>
           </thead>
@@ -75,7 +82,15 @@ export default function UsersPage() {
                          onChange={(e) => patch(u.id, { is_active: e.target.checked })} />
                 </td>
                 <td className="px-4 py-3">
+                  <Badge status={u.totp_enabled ? "running" : "stopped"}>
+                    {u.totp_enabled ? t("settings.twofa.on") : t("settings.twofa.off")}
+                  </Badge>
+                </td>
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2 justify-end">
+                    {u.totp_enabled && (
+                      <Button variant="ghost" onClick={() => reset2fa(u)}>{t("users.reset2fa")}</Button>
+                    )}
                     <Button variant="ghost" onClick={() => resetPw(u)}>{t("users.resetPw")}</Button>
                     <Button variant="danger" disabled={u.id === me?.id}
                             onClick={() => api.del(`/users/${u.id}`).then(() => users.reload())}>✕</Button>
@@ -83,7 +98,7 @@ export default function UsersPage() {
                 </td>
               </tr>
             ))}
-            {users.data?.length === 0 && <tr><td colSpan={4} className="px-4 py-6 text-center text-slate">—</td></tr>}
+            {users.data?.length === 0 && <tr><td colSpan={5} className="px-4 py-6 text-center text-slate">—</td></tr>}
           </tbody>
         </table>
       </Panel>

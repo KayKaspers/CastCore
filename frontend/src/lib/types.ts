@@ -254,6 +254,7 @@ export interface ManagedUser {
   language: string;
   is_active: boolean;
   roles: string[];
+  totp_enabled: boolean;
   last_login_at: string | null;
   created_at: string;
 }

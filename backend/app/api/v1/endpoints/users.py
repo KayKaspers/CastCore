@@ -63,6 +63,20 @@ async def update_user(user_id: uuid.UUID, payload: UserUpdate, db: DbDep) -> Use
     return user_to_out(user)
 
 
+@router.post("/{user_id}/2fa/reset", response_model=UserOut)
+async def reset_2fa(user_id: uuid.UUID, db: DbDep, actor: CurrentUser) -> UserOut:
+    """Clear a user's 2FA (recovery for a lost second factor)."""
+    user = await db.get(User, user_id)
+    if user is None:
+        raise CastCoreError(ErrorCode.VALIDATION_FAILED, params={"user_id": "not_found"}, http_status=404)
+    user.totp_enabled = False
+    user.totp_secret = None
+    await db.flush()
+    await audit_service.record(db, actor_id=actor.id, action="user.2fa_reset", target_type="user",
+                               target_id=str(user.id), meta={"username": user.username})
+    return user_to_out(user)
+
+
 @router.delete("/{user_id}", status_code=204)
 async def delete_user(user_id: uuid.UUID, db: DbDep, actor: CurrentUser) -> None:
     user = await db.get(User, user_id)
