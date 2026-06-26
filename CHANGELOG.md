@@ -5,6 +5,31 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Platform readiness check (Phase 1, Step 7)
+- A **traffic-light readiness check** per platform before going live:
+  `POST /api/v1/stream-jobs/{id}/platforms/{provider}/readiness` → `{provider, level
+  (green/yellow/red), checks[]}`. Audited as `platform.readiness_check`.
+- Generic checks (account connected, token valid/refreshable via `ensure_access_token`,
+  metadata complete, output/URL set) are combined with **provider-specific probes** added to
+  the existing adapters (`check_readiness`):
+  - **Twitch** — token validate (`id.twitch.tv/oauth2/validate`): API reachable, **scopes**
+    (`channel:manage:broadcast`), **broadcaster** identifiable, **category** valid (if set).
+  - **YouTube** — `tokeninfo` (scopes) + `channels.list` (account) + `liveBroadcasts` (an
+    active/upcoming **broadcast** exists).
+- Structured, translatable checks (`platform.*` codes incl. new `metadata_incomplete`,
+  `output_missing`); **no token material** is logged or returned.
+- **UI**: a **Test connection** button per platform in the metadata panel, showing the
+  traffic-light status + per-check rows (green/yellow/red) with concrete messages and a help
+  link. DE/EN i18n (`platformReady.*` + the new codes).
+- **Tests**: `test_platform_readiness.py` — Twitch ready/missing-scope/invalid-category/
+  token-invalid, YouTube ready/no-broadcast/missing-scope/token-invalid (mocked APIs), plus
+  orchestration tests (not-connected, **token refresh**, **API error**, **no token leak** via
+  the endpoint). Full backend suite **89 passed** (ruff/mypy clean).
+- **Docs**: `admin-guide/platform-oauth.md` (DE+EN) readiness section + troubleshooting;
+  manifest + README updated; check_docs green (77 pages).
+- **Caveat**: probes are tested with mocked platform APIs; not yet run against live
+  YouTube/Twitch.
+
 ### Added — YouTube/Twitch metadata push (Phase 1, Step 6)
 - Connected platform accounts can now **set stream metadata on the platform**. Provider
   **adapters** (`app/services/platform/{twitch,youtube}.py`) implement the real API calls;

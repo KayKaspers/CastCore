@@ -78,6 +78,20 @@ checked and **refreshed automatically** if needed; tokens are never logged or re
 | `platform.thumbnail_failed` | YouTube thumbnail upload failed (warning). |
 | `platform.api_error` | Other platform API error. |
 
+## Readiness check (test connection)
+
+In the metadata panel, **Test connection** checks per-platform readiness and returns a
+**traffic-light status** (🟢 ready / 🟡 warnings / 🔴 not ready). It checks, among others:
+
+- **account connected**, **token valid/refreshable** (uses the automatic refresh)
+- **permissions/scopes** present, **API reachable**, **account info** retrievable
+- **output/URL** set, **metadata** complete (title)
+- **Twitch**: broadcaster identifiable, **category** valid (if set)
+- **YouTube**: an active/upcoming **live broadcast** exists
+
+🔴 results from hard failures (no account, invalid token, missing scopes), 🟡 from warnings
+(e.g. missing output, unknown category, no broadcast). Tokens are **never** shown or returned.
+
 ## Security
 
 > 🔐 Access and refresh tokens are stored **Fernet-encrypted** (`ENCRYPTION_KEY`) and are
@@ -94,6 +108,8 @@ checked and **refreshed automatically** if needed; tokens are never logged or re
   disconnect under **Platforms** and reconnect.
 - **`invalid_broadcast` (YouTube)**: an **active or upcoming** live broadcast must exist in the
   YouTube account before metadata can be set.
+- **Readiness is 🟡 yellow**: usually `output_missing` (no output destination with a URL) or
+  `metadata_incomplete` (title missing) — both are warnings only; the stream can still start.
 
 ## Related pages
 

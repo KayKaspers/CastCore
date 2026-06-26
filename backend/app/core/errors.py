@@ -51,6 +51,8 @@ class ErrorCode:
     PLATFORM_INVALID_BROADCAST = "platform.invalid_broadcast"
     PLATFORM_THUMBNAIL_FAILED = "platform.thumbnail_failed"
     PLATFORM_API_ERROR = "platform.api_error"
+    PLATFORM_METADATA_INCOMPLETE = "platform.metadata_incomplete"
+    PLATFORM_OUTPUT_MISSING = "platform.output_missing"
 
     SETUP_ALREADY_COMPLETED = "setup.already_completed"
     SETUP_FFMPEG_NOT_FOUND = "setup.ffmpeg_not_found"

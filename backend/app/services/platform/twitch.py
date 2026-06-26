@@ -8,9 +8,11 @@ to a game id via ``GET /helix/games``; the broadcaster id via ``GET /helix/users
 from __future__ import annotations
 
 from app.core.errors import ErrorCode
-from app.services.platform.base import PlatformAdapter, PushOutcome, map_http_error
+from app.services.platform.base import Check, PlatformAdapter, PushOutcome, map_http_error
 
 _API = "https://api.twitch.tv/helix"
+_VALIDATE = "https://id.twitch.tv/oauth2/validate"
+_REQUIRED_SCOPE = "channel:manage:broadcast"
 
 
 class TwitchAdapter(PlatformAdapter):
@@ -66,3 +68,35 @@ class TwitchAdapter(PlatformAdapter):
             return out.fail(ErrorCode.PLATFORM_MISSING_SCOPE, provider="twitch")
         out.error = map_http_error(r.status_code, provider="twitch")
         return out
+
+    async def check_readiness(self, http, access_token, client_id, meta) -> list[Check]:
+        checks: list[Check] = []
+        # Token validate → API reachable + scopes + account (broadcaster) info.
+        r = await http.get(_VALIDATE, headers={"Authorization": f"OAuth {access_token}"})
+        if r.status_code != 200:
+            checks.append(Check("api", "ok"))
+            checks.append(Check("token", "error", ErrorCode.PLATFORM_TOKEN_EXPIRED, {"provider": "twitch"}))
+            return checks
+        data = r.json()
+        checks.append(Check("api", "ok"))
+        checks.append(Check("token", "ok"))
+        scopes = data.get("scopes") or []
+        checks.append(
+            Check("scopes", "ok") if _REQUIRED_SCOPE in scopes
+            else Check("scopes", "error", ErrorCode.PLATFORM_MISSING_SCOPE, {"provider": "twitch"})
+        )
+        checks.append(
+            Check("account_info", "ok") if data.get("user_id")
+            else Check("account_info", "warn", ErrorCode.PLATFORM_API_ERROR, {"provider": "twitch"})
+        )
+        # Category validity (only if one is configured).
+        if meta.get("category"):
+            rg = await http.get(f"{_API}/games", headers={"Authorization": f"Bearer {access_token}", "Client-Id": client_id},
+                                params={"name": meta["category"]})
+            games = rg.json().get("data") or [] if rg.status_code == 200 else []
+            checks.append(
+                Check("category", "ok") if games
+                else Check("category", "warn", ErrorCode.PLATFORM_INVALID_CATEGORY,
+                           {"provider": "twitch", "category": meta["category"]})
+            )
+        return checks

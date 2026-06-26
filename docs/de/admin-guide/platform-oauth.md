@@ -80,6 +80,21 @@ geloggt oder zurückgegeben.
 | `platform.thumbnail_failed` | YouTube-Thumbnail-Upload fehlgeschlagen (Warnung). |
 | `platform.api_error` | Sonstiger Plattform-API-Fehler. |
 
+## Readiness Check (Verbindung testen)
+
+Im Metadaten-Panel prüft **Verbindung testen** pro Plattform die Startklarheit und liefert
+einen **Ampelstatus** (🟢 startklar / 🟡 Warnungen / 🔴 nicht startklar). Geprüft werden u. a.:
+
+- **Konto verbunden**, **Token gültig/erneuerbar** (nutzt automatischen Refresh)
+- **Berechtigungen/Scopes** vorhanden, **API erreichbar**, **Kontoinformationen** abrufbar
+- **Ausgabeziel/URL** gesetzt, **Metadaten** vollständig (Titel)
+- **Twitch**: Broadcaster ermittelbar, **Kategorie** gültig (falls gesetzt)
+- **YouTube**: aktiver/geplanter **Livestream** vorhanden
+
+🔴 entsteht bei harten Fehlern (kein Konto, ungültiger Token, fehlende Scopes), 🟡 bei
+Warnungen (z. B. fehlendes Ausgabeziel, unbekannte Kategorie, kein Broadcast). Tokens werden
+dabei **nie** angezeigt oder zurückgegeben.
+
 ## Sicherheit
 
 > 🔐 Access- und Refresh-Tokens werden mit **Fernet** verschlüsselt gespeichert
@@ -97,6 +112,9 @@ geloggt oder zurückgegeben.
   **Plattformen** trennen und neu verbinden.
 - **`invalid_broadcast` (YouTube)**: Es muss ein **aktiver oder geplanter** Livestream im
   YouTube-Konto existieren, bevor Metadaten gesetzt werden können.
+- **Readiness ist 🟡 gelb**: meist `output_missing` (kein Ausgabeziel mit URL) oder
+  `metadata_incomplete` (Titel fehlt) – beides nur Warnungen, der Stream lässt sich trotzdem
+  starten.
 
 ## Verwandte Seiten
 

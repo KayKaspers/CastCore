@@ -14,7 +14,7 @@ from app.api.deps import CurrentUser, DbDep, require_roles
 from app.core.errors import CastCoreError, ErrorCode
 from app.models.platform import PlatformMetadata
 from app.models.streaming import StreamJob
-from app.services import audit_service, metadata_service, platform_push
+from app.services import audit_service, metadata_service, platform_push, platform_readiness
 
 router = APIRouter(prefix="/stream-jobs", tags=["metadata"], dependencies=[Depends(require_roles("operator"))])
 generic = APIRouter(prefix="/metadata", tags=["metadata"], dependencies=[Depends(require_roles("operator"))])
@@ -48,6 +48,12 @@ class PushResultOut(BaseModel):
     applied: list[str] = Field(default_factory=list)
     warnings: list[dict] = Field(default_factory=list)
     error: dict | None = None
+
+
+class ReadinessOut(BaseModel):
+    provider: str
+    level: str  # green | yellow | red
+    checks: list[dict] = Field(default_factory=list)
 
 
 def _out(m: PlatformMetadata) -> MetadataOut:
@@ -122,6 +128,18 @@ async def push_metadata(job_id: uuid.UUID, provider: str, db: DbDep, user: Curre
                                      "applied": result["applied"]},
     )
     return PushResultOut(**result)
+
+
+@router.post("/{job_id}/platforms/{provider}/readiness", response_model=ReadinessOut)
+async def platform_readiness_check(job_id: uuid.UUID, provider: str, db: DbDep, user: CurrentUser) -> ReadinessOut:
+    """Traffic-light readiness check for a platform (connection, token, scopes, broadcast, …)."""
+    job = await _job(db, job_id)
+    result = await platform_readiness.check(db, job, provider)
+    await audit_service.record(
+        db, actor_id=user.id, action="platform.readiness_check", target_type="stream_job",
+        target_id=str(job.id), meta={"provider": provider, "level": result["level"]},
+    )
+    return ReadinessOut(**result)
 
 
 @generic.get("/placeholders", response_model=list[str])

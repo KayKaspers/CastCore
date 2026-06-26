@@ -18,6 +18,9 @@ interface PushResult {
   warnings: PushRef[];
   error: PushRef | null;
 }
+
+interface ReadinessCheck { key: string; level: string; code: string | null; params?: Record<string, unknown> }
+interface Readiness { provider: string; level: string; checks: ReadinessCheck[] }
 const PLACEHOLDERS = "{stream_title} {date} {time} {platform} {category} {tags} {source_name} {server_name} {channel_name}";
 
 interface Meta {
@@ -49,6 +52,8 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
   const [assets, setAssets] = useState<Asset[]>([]);
   const [pushing, setPushing] = useState(false);
   const [push, setPush] = useState<PushResult | null>(null);
+  const [testing, setTesting] = useState(false);
+  const [ready, setReady] = useState<Readiness | null>(null);
 
   useEffect(() => { api.get<Asset[]>("/assets").then(setAssets).catch(() => undefined); }, []);
 
@@ -86,8 +91,16 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
     catch (e) { if (e instanceof ApiException) setError(e.localized); }
   };
 
-  // Reset the push result when switching platform.
-  useEffect(() => { setPush(null); }, [platform]);
+  // Reset push/readiness results when switching platform.
+  useEffect(() => { setPush(null); setReady(null); }, [platform]);
+
+  const testConnection = async () => {
+    setError(null); setReady(null); setTesting(true);
+    try {
+      setReady(await api.post<Readiness>(`/stream-jobs/${jobId}/platforms/${platform}/readiness`));
+    } catch (e) { if (e instanceof ApiException) setError(e.localized); }
+    finally { setTesting(false); }
+  };
 
   const pushMeta = async () => {
     setError(null); setPush(null); setPushing(true);
@@ -147,6 +160,14 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
         <Button onClick={save}>{t("common.save")}</Button>
         <Button variant="ghost" onClick={resolve}>Vorschau auflösen</Button>
         <Button
+          variant="ghost"
+          onClick={testConnection}
+          disabled={testing || !PUSH_PROVIDERS.includes(platform)}
+          title={PUSH_PROVIDERS.includes(platform) ? "" : t("platformPush.unsupported")}
+        >
+          {testing ? t("common.loading") : t("platformReady.button")}
+        </Button>
+        <Button
           onClick={pushMeta}
           disabled={pushing || !PUSH_PROVIDERS.includes(platform)}
           title={PUSH_PROVIDERS.includes(platform) ? "" : t("platformPush.unsupported")}
@@ -154,6 +175,29 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
           {pushing ? t("common.loading") : t("platformPush.button")}
         </Button>
       </div>
+
+      {ready && (
+        <div className="mt-4 cc-panel p-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <Badge status={ready.level === "green" ? "running" : ready.level === "yellow" ? "yellow" : "failed"}>
+              {t(`platformReady.${ready.level}`)}
+            </Badge>
+            <span className="text-xs text-slate">{ready.provider}</span>
+            <HelpLink page="admin-guide/platform-oauth.md" />
+          </div>
+          <ul className="space-y-1">
+            {ready.checks.map((c) => (
+              <li key={c.key} className="text-xs flex items-start gap-2">
+                <span className={c.level === "ok" ? "text-core-green" : c.level === "warn" ? "text-warning" : "text-danger"}>
+                  {c.level === "ok" ? "✓" : c.level === "warn" ? "!" : "✗"}
+                </span>
+                <span className="text-mist">{t(`platformReady.check.${c.key}`, c.key)}</span>
+                {c.code && <span className="text-slate">— {t(`error.${c.code}`, c.params)}</span>}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {push && (
         <div className="mt-4 cc-panel p-3 space-y-2">

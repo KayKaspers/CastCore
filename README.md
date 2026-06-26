@@ -32,7 +32,8 @@ stream jobs with a shell-free FFmpeg command builder + multi-output, live logs (
 Redis), auto-restart; monitoring + Prometheus exporter; **FFmpeg version detection &
 safe-media mode** (CVE-2026-8461 mitigation); local + SMB/CIFS storage; media library,
 playlists, channels (HLS/EPG), recording, scheduler, notifications, backup/restore; MediaMTX
-ingest (status + as a source); platform OAuth (YouTube/Twitch) with **metadata push**; a full
+ingest (status + as a source); platform OAuth (YouTube/Twitch) with **metadata push** and a
+**readiness check**; a full
 bilingual docs/help system; and CI for backend (ruff/mypy/pytest incl. API integration
 tests), frontend (eslint/build), docs and compose, plus a manual full-stack E2E workflow.
 

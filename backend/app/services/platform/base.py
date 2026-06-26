@@ -53,6 +53,19 @@ def map_http_error(status_code: int, *, provider: str) -> FieldRef:
     return FieldRef(ErrorCode.PLATFORM_API_ERROR, {"provider": provider, "status": status_code})
 
 
+@dataclass
+class Check:
+    """One readiness check: a key plus a traffic-light level and an optional code+params."""
+
+    key: str
+    level: str  # ok | warn | error
+    code: str | None = None
+    params: dict = field(default_factory=dict)
+
+    def as_dict(self) -> dict:
+        return {"key": self.key, "level": self.level, "code": self.code, "params": self.params}
+
+
 class PlatformAdapter:
     """Base class. Subclasses set ``provider`` and implement ``push``."""
 
@@ -67,4 +80,10 @@ class PlatformAdapter:
         *,
         thumbnail: tuple[bytes, str] | None = None,
     ) -> PushOutcome:  # pragma: no cover - interface
+        raise NotImplementedError
+
+    async def check_readiness(
+        self, http: httpx.AsyncClient, access_token: str, client_id: str, meta: dict,
+    ) -> list[Check]:  # pragma: no cover - interface
+        """Provider-specific readiness probes (API reachable, scopes, account info, …)."""
         raise NotImplementedError

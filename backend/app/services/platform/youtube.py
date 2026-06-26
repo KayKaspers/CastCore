@@ -8,10 +8,12 @@ via ``liveBroadcasts.update`` and, optionally, uploads a thumbnail via ``thumbna
 from __future__ import annotations
 
 from app.core.errors import ErrorCode
-from app.services.platform.base import PlatformAdapter, PushOutcome, map_http_error
+from app.services.platform.base import Check, PlatformAdapter, PushOutcome, map_http_error
 
 _API = "https://www.googleapis.com/youtube/v3"
 _UPLOAD = "https://www.googleapis.com/upload/youtube/v3"
+_TOKENINFO = "https://oauth2.googleapis.com/tokeninfo"
+_REQUIRED_SCOPE = "https://www.googleapis.com/auth/youtube"
 _PRIVACY = {"public", "unlisted", "private"}
 
 
@@ -84,3 +86,38 @@ class YouTubeAdapter(PlatformAdapter):
                 out.warn(ErrorCode.PLATFORM_THUMBNAIL_FAILED, provider="youtube", status=rt.status_code)
 
         return out
+
+    async def check_readiness(self, http, access_token, client_id, meta) -> list[Check]:
+        checks: list[Check] = []
+        headers = {"Authorization": f"Bearer {access_token}"}
+
+        # Token info → scopes (and implicitly token validity / API reachability).
+        ti = await http.get(_TOKENINFO, params={"access_token": access_token})
+        checks.append(Check("api", "ok"))
+        if ti.status_code != 200:
+            checks.append(Check("token", "error", ErrorCode.PLATFORM_TOKEN_EXPIRED, {"provider": "youtube"}))
+            return checks
+        checks.append(Check("token", "ok"))
+        scope = ti.json().get("scope") or ""
+        checks.append(
+            Check("scopes", "ok") if _REQUIRED_SCOPE in scope
+            else Check("scopes", "error", ErrorCode.PLATFORM_MISSING_SCOPE, {"provider": "youtube"})
+        )
+
+        # Channel (account info).
+        rc = await http.get(f"{_API}/channels", headers=headers, params={"part": "snippet", "mine": "true"})
+        if rc.status_code in (401, 403):
+            checks.append(Check("account_info", "error", ErrorCode.PLATFORM_MISSING_SCOPE, {"provider": "youtube"}))
+        elif rc.status_code == 200 and (rc.json().get("items") or []):
+            checks.append(Check("account_info", "ok"))
+        else:
+            checks.append(Check("account_info", "warn", ErrorCode.PLATFORM_API_ERROR,
+                                {"provider": "youtube", "status": rc.status_code}))
+
+        # Live broadcast presence (needed for a metadata push).
+        broadcast, err = await self._find_broadcast(http, headers)
+        checks.append(
+            Check("broadcast", "ok") if broadcast is not None
+            else Check("broadcast", "warn", ErrorCode.PLATFORM_INVALID_BROADCAST, {"provider": "youtube"})
+        )
+        return checks

@@ -176,6 +176,23 @@
     "error": "Fehler",
     "applied": "Übernommen"
   },
+  "platformReady": {
+    "button": "Verbindung testen",
+    "green": "Startklar",
+    "yellow": "Warnungen",
+    "red": "Nicht startklar",
+    "check": {
+      "account_connected": "Konto verbunden",
+      "token": "Token gültig",
+      "scopes": "Berechtigungen",
+      "api": "API erreichbar",
+      "account_info": "Kontoinformationen",
+      "output": "Ausgabeziel",
+      "metadata": "Metadaten",
+      "category": "Kategorie",
+      "broadcast": "Livestream"
+    }
+  },
   "dryRun": {
     "button": "Dry-Run",
     "title": "Dry-Run / Teststream"
@@ -284,7 +301,9 @@
       "invalid_category": "Kategorie {{category}} bei {{provider}} nicht gefunden – Kategorie wurde nicht gesetzt.",
       "invalid_broadcast": "Kein aktiver oder geplanter {{provider}}-Livestream gefunden.",
       "thumbnail_failed": "Thumbnail-Upload zu {{provider}} fehlgeschlagen (Status {{status}}).",
-      "api_error": "{{provider}}-API-Fehler (Status {{status}})."
+      "api_error": "{{provider}}-API-Fehler (Status {{status}}).",
+      "metadata_incomplete": "Metadaten unvollständig (z. B. Titel fehlt).",
+      "output_missing": "Kein Ausgabeziel mit URL gesetzt."
     }
   }
 }

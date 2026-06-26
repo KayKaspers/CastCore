@@ -176,6 +176,23 @@
     "error": "Error",
     "applied": "Applied"
   },
+  "platformReady": {
+    "button": "Test connection",
+    "green": "Ready",
+    "yellow": "Warnings",
+    "red": "Not ready",
+    "check": {
+      "account_connected": "Account connected",
+      "token": "Token valid",
+      "scopes": "Permissions",
+      "api": "API reachable",
+      "account_info": "Account info",
+      "output": "Output destination",
+      "metadata": "Metadata",
+      "category": "Category",
+      "broadcast": "Live broadcast"
+    }
+  },
   "dryRun": {
     "button": "Dry-run",
     "title": "Dry-run / test stream"
@@ -284,7 +301,9 @@
       "invalid_category": "Category {{category}} not found on {{provider}} – category was not set.",
       "invalid_broadcast": "No active or scheduled {{provider}} live broadcast found.",
       "thumbnail_failed": "Thumbnail upload to {{provider}} failed (status {{status}}).",
-      "api_error": "{{provider}} API error (status {{status}})."
+      "api_error": "{{provider}} API error (status {{status}}).",
+      "metadata_incomplete": "Metadata incomplete (e.g. title missing).",
+      "output_missing": "No output destination with a URL is set."
     }
   }
 }
