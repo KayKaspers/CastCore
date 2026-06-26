@@ -271,6 +271,15 @@ export interface ApiTokenCreated extends ApiToken {
   token: string;
 }
 
+export interface AuthSession {
+  id: string;
+  user_agent: string | null;
+  ip: string | null;
+  created_at: string;
+  expires_at: string;
+  current: boolean;
+}
+
 export interface AuditEvent {
   id: string;
   actor: string | null;

@@ -40,6 +40,13 @@ is shown **only once** – copy it immediately and store it safely. Tokens act w
 permissions and can be **revoked** any time. Usage and examples:
 [API: auth](/docs/en/api/auth.md).
 
+## Active sessions
+
+Under **Settings → Active sessions** you see all devices/browsers currently signed in to
+your account (with device/browser, IP and sign-in time). The current session is flagged as
+**This device**. You can **sign out** individual sessions or use **Sign out all others** to
+disconnect every other device in one step – handy after losing a device.
+
 ## Instance settings (admin)
 
 Administrators set the **instance name** and the **default language** for new users.

@@ -27,6 +27,9 @@ lastReviewed: 2026-06-25
 | `GET` | `/api/v1/tokens` | List your API tokens |
 | `POST` | `/api/v1/tokens` | Create an API token → `token` (once only) |
 | `DELETE` | `/api/v1/tokens/{id}` | Revoke an API token |
+| `GET` | `/api/v1/auth/sessions` | Your active sessions (`current` flags this one) |
+| `DELETE` | `/api/v1/auth/sessions/{id}` | Sign out a single session |
+| `POST` | `/api/v1/auth/sessions/revoke-others` | Sign out all sessions except the current one |
 
 ## Example: login
 
@@ -77,6 +80,20 @@ curl -k https://<host>/api/v1/auth/me -H 'authorization: Bearer cc_…'
 - They are stored **hashed only**; the plaintext is not recoverable.
 - `expires_in_days` is optional (omit for non-expiring). Revoke any time via
   `DELETE /api/v1/tokens/{id}`.
+
+## Sessions
+
+Each sign-in creates a **session** (bound to the refresh token, with user-agent/IP). The
+access token carries the session id (`sid`) so the current session can be flagged. In the
+UI: **Settings → Active sessions**.
+
+```bash
+curl -k https://<host>/api/v1/auth/sessions -H 'authorization: Bearer <access_token>'
+```
+
+Sign out a single session with `DELETE /api/v1/auth/sessions/{id}`; all but the current one
+with `POST /api/v1/auth/sessions/revoke-others`. (API tokens have no `sid`, so none counts as
+the "current" session.)
 
 ## Notes
 

@@ -42,6 +42,14 @@ Der Klartext-Token wird **nur einmal** angezeigt – sofort kopieren und sicher 
 Tokens handeln mit **deinen** Rechten und lassen sich jederzeit **widerrufen**. Nutzung und
 Beispiele: [API: Auth](/docs/de/api/auth.md).
 
+## Aktive Sitzungen
+
+Unter **Einstellungen → Aktive Sitzungen** siehst du alle Geräte/Browser, die aktuell bei
+deinem Konto angemeldet sind (mit Gerät/Browser, IP und Anmeldezeit). Die aktuelle Sitzung
+ist als **Dieses Gerät** markiert. Du kannst einzelne Sitzungen **abmelden** oder mit **Alle
+anderen abmelden** alle übrigen Geräte in einem Schritt trennen – nützlich nach dem Verlust
+eines Geräts.
+
 ## Instanz-Einstellungen (Admin)
 
 Administratoren setzen **Instanzname** und **Standardsprache** für neue Benutzer.

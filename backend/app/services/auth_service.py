@@ -105,7 +105,7 @@ async def issue_token_pair(
     )
     db.add(session)
     await db.flush()
-    access = create_access_token(str(user.id), extra={"roles": user.role_names})
+    access = create_access_token(str(user.id), extra={"roles": user.role_names, "sid": str(session.id)})
     return access, refresh
 
 
@@ -135,3 +135,41 @@ async def revoke_all_sessions(db: AsyncSession, user_id: uuid.UUID) -> None:
     now = dt.datetime.now(dt.timezone.utc)
     for session in res.scalars().all():
         session.revoked_at = now
+
+
+async def list_active_sessions(db: AsyncSession, user_id: uuid.UUID) -> list[Session]:
+    """Non-revoked, non-expired sessions for a user, newest first."""
+    now = dt.datetime.now(dt.timezone.utc)
+    res = await db.execute(
+        select(Session)
+        .where(Session.user_id == user_id, Session.revoked_at.is_(None), Session.expires_at > now)
+        .order_by(Session.created_at.desc())
+    )
+    return list(res.scalars().all())
+
+
+async def revoke_session(db: AsyncSession, user_id: uuid.UUID, session_id: uuid.UUID) -> bool:
+    """Revoke a single session if it belongs to the user. Returns True if found."""
+    session = await db.get(Session, session_id)
+    if session is None or session.user_id != user_id:
+        return False
+    if session.revoked_at is None:
+        session.revoked_at = dt.datetime.now(dt.timezone.utc)
+    return True
+
+
+async def revoke_other_sessions(
+    db: AsyncSession, user_id: uuid.UUID, keep_session_id: uuid.UUID | None
+) -> int:
+    """Revoke all of the user's active sessions except ``keep_session_id``. Returns count."""
+    res = await db.execute(
+        select(Session).where(Session.user_id == user_id, Session.revoked_at.is_(None))
+    )
+    now = dt.datetime.now(dt.timezone.utc)
+    count = 0
+    for session in res.scalars().all():
+        if session.id == keep_session_id:
+            continue
+        session.revoked_at = now
+        count += 1
+    return count

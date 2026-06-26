@@ -27,6 +27,9 @@ lastReviewed: 2026-06-25
 | `GET` | `/api/v1/tokens` | Eigene API-Tokens auflisten |
 | `POST` | `/api/v1/tokens` | API-Token erstellen → `token` (nur einmalig) |
 | `DELETE` | `/api/v1/tokens/{id}` | API-Token widerrufen |
+| `GET` | `/api/v1/auth/sessions` | Eigene aktive Sitzungen (`current` markiert die aktuelle) |
+| `DELETE` | `/api/v1/auth/sessions/{id}` | Einzelne Sitzung abmelden |
+| `POST` | `/api/v1/auth/sessions/revoke-others` | Alle Sitzungen außer der aktuellen abmelden |
 
 ## Beispiel: Login
 
@@ -77,6 +80,20 @@ curl -k https://<host>/api/v1/auth/me -H 'authorization: Bearer cc_…'
 - Sie werden **nur als Hash** gespeichert; der Klartext ist nicht wiederherstellbar.
 - `expires_in_days` ist optional (ohne Angabe laufen sie nicht ab). Widerrufen jederzeit per
   `DELETE /api/v1/tokens/{id}`.
+
+## Sitzungen
+
+Jede Anmeldung legt eine **Sitzung** an (an den Refresh-Token gebunden, mit User-Agent/IP).
+Der Access-Token trägt die Sitzungs-ID (`sid`), sodass die aktuelle Sitzung markiert werden
+kann. In der UI: **Einstellungen → Aktive Sitzungen**.
+
+```bash
+curl -k https://<host>/api/v1/auth/sessions -H 'authorization: Bearer <access_token>'
+```
+
+Einzelne Sitzung abmelden mit `DELETE /api/v1/auth/sessions/{id}`; alle außer der aktuellen
+mit `POST /api/v1/auth/sessions/revoke-others`. (API-Tokens haben keine `sid` – darüber ist
+keine Sitzung „aktuell".)
 
 ## Hinweise
 

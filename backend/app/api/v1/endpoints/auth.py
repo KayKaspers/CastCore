@@ -2,16 +2,18 @@
 
 from __future__ import annotations
 
+import uuid
 from typing import Annotated
 
 from fastapi import APIRouter, Header, Request
 from pydantic import BaseModel, Field
 
-from app.api.deps import CurrentUser, DbDep
+from app.api.deps import CurrentSessionId, CurrentUser, DbDep
 from app.core import totp
 from app.core.errors import CastCoreError, ErrorCode
 from app.core.security import decrypt_secret, encrypt_secret
 from app.schemas.auth import LoginRequest, LoginResponse, RefreshRequest, TokenPair
+from app.schemas.session import SessionOut
 from app.schemas.user import UserOut, user_to_out
 from app.services import audit_service, auth_service
 
@@ -101,3 +103,32 @@ async def totp_disable(payload: TotpCodeRequest, user: CurrentUser, db: DbDep) -
     await db.flush()
     await audit_service.record(db, actor_id=user.id, action="auth.2fa_disabled")
     return TotpStatusResponse(enabled=False)
+
+
+@router.get("/sessions", response_model=list[SessionOut])
+async def list_sessions(user: CurrentUser, db: DbDep, sid: CurrentSessionId) -> list[SessionOut]:
+    """List the caller's active login sessions; the current one is flagged."""
+    sessions = await auth_service.list_active_sessions(db, user.id)
+    out: list[SessionOut] = []
+    for s in sessions:
+        item = SessionOut.model_validate(s)
+        item.current = sid is not None and s.id == sid
+        out.append(item)
+    return out
+
+
+@router.delete("/sessions/{session_id}", status_code=204)
+async def revoke_session(session_id: uuid.UUID, user: CurrentUser, db: DbDep) -> None:
+    """Revoke one of the caller's sessions (logs that device out on next refresh)."""
+    if not await auth_service.revoke_session(db, user.id, session_id):
+        raise CastCoreError(ErrorCode.VALIDATION_FAILED, params={"session_id": "not_found"}, http_status=404)
+    await audit_service.record(db, actor_id=user.id, action="auth.session_revoke",
+                               target_type="session", target_id=str(session_id))
+
+
+@router.post("/sessions/revoke-others", status_code=204)
+async def revoke_other_sessions(user: CurrentUser, db: DbDep, sid: CurrentSessionId) -> None:
+    """Revoke all of the caller's sessions except the current one."""
+    count = await auth_service.revoke_other_sessions(db, user.id, sid)
+    await audit_service.record(db, actor_id=user.id, action="auth.sessions_revoke_others",
+                               meta={"count": count})

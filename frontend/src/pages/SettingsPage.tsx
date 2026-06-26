@@ -7,7 +7,7 @@ import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { setLanguage } from "../i18n";
 import { api, ApiException } from "../lib/api";
 import { useAuthStore } from "../lib/auth";
-import type { ApiToken, ApiTokenCreated } from "../lib/types";
+import type { ApiToken, ApiTokenCreated, AuthSession } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
 interface GlobalSettings {
@@ -58,6 +58,8 @@ export default function SettingsPage() {
       <TwoFactorSettings onError={onErr} onSaved={(m) => setMsg(m)} />
 
       <ApiTokensSettings onError={onErr} />
+
+      <SessionsSettings onError={onErr} />
 
       {isAdmin && <InstanceSettings onError={onErr} onSaved={() => setMsg(t("settings.saved"))} />}
 
@@ -239,6 +241,53 @@ function ApiTokensSettings({ onError }: { onError: (e: unknown) => void }) {
         ))}
         {tokens.data?.length === 0 && <p className="text-xs text-slate">{t("settings.tokens.none")}</p>}
       </div>
+    </Panel>
+  );
+}
+
+function SessionsSettings({ onError }: { onError: (e: unknown) => void }) {
+  const { t, i18n } = useTranslation();
+  const sessions = useAsync<AuthSession[]>(() => api.get("/auth/sessions"), []);
+  const fmt = (s: string) => new Date(s).toLocaleString(i18n.language);
+  const others = (sessions.data ?? []).filter((s) => !s.current).length;
+
+  const revoke = async (id: string) => {
+    try { await api.del(`/auth/sessions/${id}`); sessions.reload(); } catch (e) { onError(e); }
+  };
+
+  const revokeOthers = async () => {
+    if (!window.confirm(t("settings.sessions.revokeOthersConfirm"))) return;
+    try { await api.post("/auth/sessions/revoke-others"); sessions.reload(); } catch (e) { onError(e); }
+  };
+
+  return (
+    <Panel className="space-y-4 max-w-xl">
+      <h2 className="text-mist">{t("settings.sessions.title")}</h2>
+      <p className="text-xs text-slate">{t("settings.sessions.intro")}</p>
+
+      <div className="space-y-2">
+        {(sessions.data ?? []).map((s) => (
+          <div key={s.id} className="flex items-center justify-between border-b border-slate/10 pb-2">
+            <div>
+              <div className="text-sm text-mist flex items-center gap-2">
+                {s.user_agent || t("settings.sessions.unknownDevice")}
+                {s.current && <Badge status="running">{t("settings.sessions.current")}</Badge>}
+              </div>
+              <div className="text-xs text-slate">
+                {s.ip ?? "—"} · {t("settings.sessions.since")}: {fmt(s.created_at)}
+              </div>
+            </div>
+            {!s.current && (
+              <Button variant="danger" onClick={() => revoke(s.id)}>{t("settings.sessions.revoke")}</Button>
+            )}
+          </div>
+        ))}
+        {sessions.data?.length === 0 && <p className="text-xs text-slate">—</p>}
+      </div>
+
+      {others > 0 && (
+        <Button variant="ghost" onClick={revokeOthers}>{t("settings.sessions.revokeOthers")}</Button>
+      )}
     </Panel>
   );
 }

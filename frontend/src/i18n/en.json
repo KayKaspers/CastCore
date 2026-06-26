@@ -86,6 +86,16 @@
       "revoke": "Revoke",
       "revokeConfirm": "Revoke this token? Applications using it lose access immediately.",
       "none": "No tokens yet."
+    },
+    "sessions": {
+      "title": "Active sessions",
+      "intro": "Devices and browsers currently signed in to your account. You can sign out individual sessions.",
+      "current": "This device",
+      "unknownDevice": "Unknown device",
+      "since": "Signed in since",
+      "revoke": "Sign out",
+      "revokeOthers": "Sign out all others",
+      "revokeOthersConfirm": "Sign out all other sessions? Those devices will have to sign in again."
     }
   },
   "docs": {

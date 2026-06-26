@@ -86,6 +86,16 @@
       "revoke": "Widerrufen",
       "revokeConfirm": "Diesen Token widerrufen? Anwendungen, die ihn nutzen, verlieren sofort den Zugriff.",
       "none": "Noch keine Tokens."
+    },
+    "sessions": {
+      "title": "Aktive Sitzungen",
+      "intro": "Geräte und Browser, die aktuell bei deinem Konto angemeldet sind. Du kannst einzelne Sitzungen abmelden.",
+      "current": "Dieses Gerät",
+      "unknownDevice": "Unbekanntes Gerät",
+      "since": "Angemeldet seit",
+      "revoke": "Abmelden",
+      "revokeOthers": "Alle anderen abmelden",
+      "revokeOthersConfirm": "Alle anderen Sitzungen abmelden? Diese Geräte müssen sich danach neu anmelden."
     }
   },
   "docs": {

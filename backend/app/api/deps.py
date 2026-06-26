@@ -58,6 +58,25 @@ async def get_current_user(
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
+async def get_current_session_id(
+    authorization: Annotated[str | None, Header()] = None,
+) -> uuid.UUID | None:
+    """Best-effort session id (``sid``) from the access token; None for API tokens."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        return None
+    token = authorization.split(" ", 1)[1]
+    if token.startswith(API_TOKEN_PREFIX):
+        return None
+    try:
+        sid = decode_token(token).get("sid")
+        return uuid.UUID(str(sid)) if sid else None
+    except (jwt.PyJWTError, ValueError, TypeError):
+        return None
+
+
+CurrentSessionId = Annotated["uuid.UUID | None", Depends(get_current_session_id)]
+
+
 def require_roles(*roles: str) -> Callable[[User], Coroutine[Any, Any, User]]:
     """Dependency factory: allow access only to users holding one of ``roles``.
 

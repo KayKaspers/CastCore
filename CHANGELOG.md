@@ -5,6 +5,19 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Active session management
+- Users can see and manage their login sessions: `GET /api/v1/auth/sessions` (active,
+  non-expired; the current one flagged), `DELETE /api/v1/auth/sessions/{id}` (sign out one),
+  `POST /api/v1/auth/sessions/revoke-others` (keep current, drop the rest). Audited.
+- Access tokens now carry a `sid` claim (the session id) so the UI/API can mark "this
+  device"; a new `get_current_session_id` dependency reads it (None for API tokens).
+- Settings → Active sessions UI: list (device/IP/since), "This device" badge, per-session
+  sign-out, "sign out all others". DE/EN i18n.
+- Docs: sessions sections in `api/auth.md` and `settings.md` (DE+EN); manifest updated;
+  check_docs green. Verified end-to-end in Docker (6 assertions: 3 logins, exactly one
+  current, revoke one 3→2, revoke-others leaves only current, revoked device sees no
+  current, unknown id → 404).
+
 ### Added — Personal access tokens (API tokens)
 - Programmatic API auth via long-lived **personal access tokens** (`cc_`-prefixed),
   stored hashed only. Bearer auth now accepts either a JWT or an API token — the prefix
