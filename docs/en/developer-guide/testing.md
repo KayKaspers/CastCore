@@ -62,6 +62,28 @@ Locally with CI parity (the container can reach the compose Postgres):
 docker compose exec backend sh -c "pip install -q '.[dev]' && cd /app && pytest -q"
 ```
 
+## End-to-end stream test (full stack)
+
+`backend/e2e_stream.py` tests the **complete stream lifecycle** against the real stack
+(backend + Redis + Process Manager + status consumer): create job → **command preview** →
+**start** → **process status** (`running`) → **receive logs** (Redis log channel) →
+**check output** (local file grows) → **stop** → **final status** (`stopped`).
+
+It uses only **safe, local** sources/outputs (lavfi `testsrc`, H.264, no audio, MPEG-TS to a
+file) — **no external services, no risky codecs**. An FFmpeg version < 8.1.2 (CVE-2026-8461)
+does **not** fail the test, since only the version *warning* is affected and no risky codec is
+used.
+
+```bash
+docker compose up -d --build           # start the stack (the script ships in the backend image)
+docker compose exec backend python /app/e2e_stream.py
+```
+
+The script creates a throwaway admin in the live DB, drives the lifecycle over the HTTP API,
+then cleans everything up (job, destination, profile, user, file). In CI there is a separate
+workflow **`.github/workflows/e2e.yml`** (run manually via *Actions → e2e → Run workflow*;
+deliberately not part of the per-PR `ci` workflow because it builds the whole stack).
+
 ## Linting & types
 
 - Backend: **ruff** (lint) and **mypy** (types, configured in `pyproject.toml`).

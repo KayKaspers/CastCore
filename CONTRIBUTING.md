@@ -74,6 +74,11 @@ before merge. It runs four jobs — reproduce them locally with the same command
 - `docker compose config --quiet` — validates `docker-compose.yml` (needs `SECRET_KEY`,
   `ENCRYPTION_KEY`, `POSTGRES_PASSWORD` set; any value works for validation).
 
+**End-to-end** (separate, manual — `.github/workflows/e2e.yml`, run from the Actions tab):
+- `docker compose up -d --build && docker compose exec backend python /app/e2e_stream.py`
+  drives the full stream lifecycle (create → preview → start → status → logs → output → stop)
+  with a safe local source. Not part of the per-PR `ci` gate (it boots the whole stack).
+
 > No Python/Node on your host? Run the backend checks inside the `backend` container and the
 > frontend checks in a throwaway `node:20` container — see [`docs/LOCAL_DEV.md`](docs/LOCAL_DEV.md).
 

@@ -64,6 +64,28 @@ Lokal in CI-Parität (Container erreicht den Compose-Postgres):
 docker compose exec backend sh -c "pip install -q '.[dev]' && cd /app && pytest -q"
 ```
 
+## End-to-End-Stream-Test (voller Stack)
+
+`backend/e2e_stream.py` testet den **kompletten Stream-Lebenszyklus** über den echten Stack
+(Backend + Redis + Process Manager + Status-Consumer): Job anlegen → **Command-Preview** →
+**Start** → **Prozessstatus** (`running`) → **Logs empfangen** (Redis-Log-Kanal) →
+**Output prüfen** (lokale Datei wächst) → **Stop** → **Endstatus** (`stopped`).
+
+Es nutzt ausschließlich **sichere, lokale** Quellen/Outputs (lavfi `testsrc`, H.264, kein
+Audio, MPEG-TS in eine Datei) – **keine externen Dienste, keine riskanten Codecs**. Eine
+FFmpeg-Version < 8.1.2 (CVE-2026-8461) lässt den Test **nicht** scheitern, da nur die
+Versions-*Warnung* betroffen ist und kein riskanter Codec verwendet wird.
+
+```bash
+docker compose up -d --build           # Stack starten (Skript liegt im Backend-Image)
+docker compose exec backend python /app/e2e_stream.py
+```
+
+Das Skript legt einen Wegwerf-Admin in der laufenden DB an, fährt den Lebenszyklus über die
+HTTP-API und räumt anschließend alles auf (Job, Ziel, Profil, Benutzer, Datei). In CI gibt es
+dafür den separaten Workflow **`.github/workflows/e2e.yml`** (manuell über *Actions →
+e2e → Run workflow*; bewusst nicht im PR-`ci`-Workflow, da er den ganzen Stack baut).
+
 ## Linting & Typen
 
 - Backend: **ruff** (Lint) und **mypy** (Typen, Konfiguration in `pyproject.toml`).

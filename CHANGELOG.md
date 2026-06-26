@@ -5,6 +5,22 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — End-to-end stream lifecycle test (Phase 0, Step 4)
+- `backend/e2e_stream.py`: a full-stack E2E driving the real lifecycle via the live API +
+  Redis (backend + Process Manager + status consumer): create job → command preview → start →
+  process status `running` → receive logs (Redis log channel) → output file grows → stop →
+  final status `stopped`, with full cleanup afterwards.
+- Uses only **safe local** media (lavfi `testsrc`, H.264, audio disabled, MPEG-TS to a file) —
+  no external services, no risky codecs. A vulnerable FFmpeg (< 8.1.2) does **not** fail the
+  test (only the non-blocking version warning is affected).
+- CI: new manual `.github/workflows/e2e.yml` (`workflow_dispatch`) that builds/boots the core
+  stack and runs the script; kept out of the per-PR `ci` gate because it boots the whole stack.
+  The script ships in the backend image (`/app/e2e_stream.py`).
+- Verified locally against the running stack: status reached `running`, 22 log lines received,
+  output grew 12.8 MB → 25.7 MB, stopped cleanly.
+- Docs: developer-guide `testing.md` (DE+EN) gains an E2E section; CONTRIBUTING notes it;
+  check_docs green (77 pages).
+
 ### Security — FFmpeg PixelSmash / CVE-2026-8461 hardening
 - **Audit**: all images (backend/process-manager/worker) ran FFmpeg/ffprobe **7.1.5 (< 8.1.2,
   vulnerable)**; real untrusted-decode paths are the media scan (ffprobe, incl. SMB), dry-run

@@ -1,0 +1,54 @@
+name: e2e
+
+# End-to-end stream-lifecycle test against the full stack (backend + Redis + Process Manager).
+# It builds and runs the real services and drives a short, local-only stream (lavfi testsrc,
+# H.264, MPEG-TS to a file — no external services, no risky codecs).
+#
+# Run manually from the Actions tab. It is intentionally NOT part of the per-PR `ci` workflow
+# because it builds and boots the whole stack (slow) — `ci` stays the fast required gate.
+on:
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    name: Stream lifecycle (full stack)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate .env with throwaway secrets
+        run: |
+          # A Fernet key is url-safe base64 of 32 random bytes — no extra deps needed.
+          python3 - <<'PY' > .env
+          import base64, os, secrets
+          print("DOMAIN=localhost")
+          print("CASTCORE_ENV=development")
+          print(f"SECRET_KEY={secrets.token_hex(32)}")
+          print(f"ENCRYPTION_KEY={base64.urlsafe_b64encode(os.urandom(32)).decode()}")
+          print("POSTGRES_PASSWORD=castcore_ci")
+          PY
+
+      - name: Build & start the core stack
+        run: docker compose up -d --build postgres redis backend process-manager
+
+      - name: Wait for the backend to be healthy
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:8000/api/v1/health >/dev/null 2>&1 \
+               || docker compose exec -T backend curl -fsS http://localhost:8000/api/v1/health >/dev/null 2>&1; then
+              echo "backend healthy"; exit 0
+            fi
+            sleep 3
+          done
+          echo "backend did not become healthy"; docker compose logs backend; exit 1
+
+      - name: Run the E2E stream lifecycle (ships in the backend image at /app/e2e_stream.py)
+        run: docker compose exec -T backend python /app/e2e_stream.py
+
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs --tail=200 backend process-manager
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
