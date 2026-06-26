@@ -5,6 +5,19 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — MediaMTX ingest as a stream source
+- Active ingest paths can now feed a stream job: `GET /api/v1/mediamtx/sources` returns each
+  **ready** path with a `pull_url` (internal RTSP), derived from the new `MEDIAMTX_RTSP_URL`
+  base (env + compose + .env.example).
+- Stream-job create form: a "Use from MediaMTX ingest…" selector appears next to Input URI
+  when ≥1 path is live; picking one fills the URI with the pull URL and creates a `url` input
+  with `reconnect` + `rtsp_transport=tcp`. DE/EN i18n.
+- Docs: "use ingest as a source" sections in `mediamtx.md` (DE+EN) + env-variables reference;
+  manifest updated. check_docs green (75 pages).
+- Verified end-to-end in Docker by publishing a real RTMP test stream into MediaMTX
+  (5 assertions: pull_url derivation, empty without publisher, listed with correct pull_url
+  while publishing, source_type=rtmpConn, removed after publisher stops).
+
 ### Added — MediaMTX ingest status (read-only integration)
 - New optional integration with the **MediaMTX** media router: `GET /api/v1/mediamtx/status`
   returns `{enabled, reachable, paths}` by querying the MediaMTX v3 API (`/v3/paths/list`),

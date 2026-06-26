@@ -161,7 +161,8 @@
   },
   "streamForm": {
     "autoRestart": "Auto-restart on failure",
-    "maxRetry": "Max. retries"
+    "maxRetry": "Max. retries",
+    "fromIngest": "Use from MediaMTX ingest…"
   },
   "updates": {
     "howto": "How to update?",

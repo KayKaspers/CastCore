@@ -6,7 +6,7 @@ import LogsPanel from "../components/LogsPanel";
 import MetadataPanel from "../components/MetadataPanel";
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { api, ApiException } from "../lib/api";
-import type { CommandPreview, Destination, DryRunReport, FFmpegProfile, PreflightReport, StreamJob } from "../lib/types";
+import type { CommandPreview, Destination, DryRunReport, FFmpegProfile, MediamtxSource, PreflightReport, StreamJob } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
 export default function StreamJobsPage() {
@@ -206,22 +206,36 @@ function CreateJobForm({
   const [destId, setDestId] = useState("");
   const [uri, setUri] = useState("");
   const [lavfi, setLavfi] = useState(false);
+  const [fromIngest, setFromIngest] = useState(false);
   const [format, setFormat] = useState("flv");
   const [recording, setRecording] = useState(false);
   const [autoRestart, setAutoRestart] = useState(false);
   const [maxRetry, setMaxRetry] = useState(3);
   const [busy, setBusy] = useState(false);
+  const ingest = useAsync<MediamtxSource[]>(() => api.get("/mediamtx/sources"), []);
+
+  const pickIngest = (url: string) => {
+    if (!url) return;
+    setUri(url);
+    setLavfi(false);
+    setFromIngest(true);
+  };
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
+      const input = lavfi
+        ? { kind: "url", uri, options: { f: "lavfi" } }
+        : fromIngest
+        ? { kind: "url", uri, options: { rtsp_transport: "tcp" }, reconnect: true }
+        : { kind: "file", uri, options: {} };
       await api.post("/stream-jobs", {
         name,
         ffmpeg_profile_id: profileId || null,
         recording_enabled: recording,
         fallback_policy: autoRestart ? { auto_restart: true, max_retry: maxRetry, retry_delay_s: 5 } : {},
-        inputs: [{ kind: lavfi ? "url" : "file", uri, options: lavfi ? { f: "lavfi" } : {} }],
+        inputs: [input],
         outputs: [{ destination_id: destId || null, format }],
       });
       onCreated();
@@ -245,7 +259,17 @@ function CreateJobForm({
           </Select>
         </Field>
         <Field label="Input URI">
-          <Input value={uri} onChange={(e) => setUri(e.target.value)} placeholder="testsrc=size=640x480:rate=25" required />
+          <Input value={uri} onChange={(e) => { setUri(e.target.value); setFromIngest(false); }} placeholder="testsrc=size=640x480:rate=25" required />
+          {(ingest.data?.length ?? 0) > 0 && (
+            <Select className="mt-2" value="" onChange={(e) => pickIngest(e.target.value)}>
+              <option value="">{t("streamForm.fromIngest")}</option>
+              {ingest.data!.map((s) => (
+                <option key={s.name} value={s.pull_url}>
+                  {s.name}{s.source_type ? ` (${s.source_type})` : ""}
+                </option>
+              ))}
+            </Select>
+          )}
         </Field>
         <Field label="Destination">
           <Select value={destId} onChange={(e) => setDestId(e.target.value)}>

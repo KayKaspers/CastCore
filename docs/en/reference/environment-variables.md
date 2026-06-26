@@ -56,7 +56,7 @@ lastReviewed: 2026-06-24
 | --- | --- |
 | `FFMPEG_PATH` / `FFPROBE_PATH` | paths to FFmpeg/ffprobe |
 | `ACME_EMAIL` | email for automatic HTTPS certificates (Caddy) |
-| `MEDIAMTX_ENABLED` / `MEDIAMTX_API_URL` | optional MediaMTX integration |
+| `MEDIAMTX_ENABLED` / `MEDIAMTX_API_URL` / `MEDIAMTX_RTSP_URL` | optional MediaMTX integration (enable, API address, RTSP pull base) |
 
 ## Notes
 

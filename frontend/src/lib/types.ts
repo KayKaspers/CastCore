@@ -297,6 +297,12 @@ export interface MediamtxStatus {
   paths: MediamtxPath[];
 }
 
+export interface MediamtxSource {
+  name: string;
+  source_type: string | null;
+  pull_url: string;
+}
+
 export interface AuditEvent {
   id: string;
   actor: string | null;

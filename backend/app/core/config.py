@@ -51,6 +51,8 @@ class Settings(BaseSettings):
     # MediaMTX (optional media router; compose profile "mediamtx")
     mediamtx_enabled: bool = Field(default=False)
     mediamtx_api_url: str = Field(default="http://mediamtx:9997")
+    # Base URL CastCore/FFmpeg uses to pull an ingest path back in as a source.
+    mediamtx_rtsp_url: str = Field(default="rtsp://mediamtx:8554")
 
     @property
     def database_url(self) -> str:

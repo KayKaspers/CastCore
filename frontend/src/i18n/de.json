@@ -161,7 +161,8 @@
   },
   "streamForm": {
     "autoRestart": "Auto-Restart bei Absturz",
-    "maxRetry": "Max. Versuche"
+    "maxRetry": "Max. Versuche",
+    "fromIngest": "Aus MediaMTX-Ingest übernehmen…"
   },
   "updates": {
     "howto": "Wie aktualisieren?",

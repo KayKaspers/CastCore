@@ -41,6 +41,22 @@ Das Panel zeigt pro Pfad: **Status** (Live/Bereit), **Quelle** (z. B. `rtmpConn`
 `srtConn`), **Tracks**, **empfangene Daten** und **Anzahl Leser**. Ohne aktive Publisher
 ist die Liste leer – das ist normal.
 
+## Ingest als Quelle nutzen
+
+Aktive Ingest-Pfade lassen sich direkt als **Eingang für einen Stream-Job** verwenden –
+CastCore pullt den Stream über RTSP wieder ein und verteilt ihn an deine Ziele.
+
+1. In der `.env` optional die Pull-Basis setzen (Standard genügt meist):
+   ```ini
+   MEDIAMTX_RTSP_URL=rtsp://mediamtx:8554
+   ```
+2. Beim Anlegen eines Stream-Jobs erscheint neben **Input URI** die Auswahl
+   **Aus MediaMTX-Ingest übernehmen…**, sobald mindestens ein Pfad live ist. Die Auswahl
+   füllt die URI mit der internen Pull-URL (`rtsp://…/<pfad>`) und aktiviert Reconnect.
+
+Die verfügbaren Quellen liefert die API unter `GET /api/v1/mediamtx/sources` (nur Pfade mit
+aktivem Publisher, jeweils mit `pull_url`).
+
 ## Ports
 
 | Protokoll | Standard-Port |

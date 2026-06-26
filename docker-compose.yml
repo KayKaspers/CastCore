@@ -36,6 +36,7 @@ x-common-env: &common-env
   FFPROBE_PATH: ${FFPROBE_PATH:-/usr/bin/ffprobe}
   MEDIAMTX_ENABLED: ${MEDIAMTX_ENABLED:-false}
   MEDIAMTX_API_URL: ${MEDIAMTX_API_URL:-http://mediamtx:9997}
+  MEDIAMTX_RTSP_URL: ${MEDIAMTX_RTSP_URL:-rtsp://mediamtx:8554}
 
 x-data-volume: &data-volume
   - castcore_data:/data

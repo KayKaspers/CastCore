@@ -41,6 +41,22 @@ For each path the panel shows: **status** (live/ready), **source** (e.g. `rtmpCo
 `srtConn`), **tracks**, **received bytes** and **reader count**. With no active publishers
 the list is empty – that is normal.
 
+## Use ingest as a source
+
+Active ingest paths can be used directly as the **input of a stream job** – CastCore pulls
+the stream back in over RTSP and distributes it to your destinations.
+
+1. Optionally set the pull base in `.env` (the default is usually fine):
+   ```ini
+   MEDIAMTX_RTSP_URL=rtsp://mediamtx:8554
+   ```
+2. When creating a stream job, a **Use from MediaMTX ingest…** selector appears next to
+   **Input URI** as soon as at least one path is live. Picking one fills the URI with the
+   internal pull URL (`rtsp://…/<path>`) and enables reconnect.
+
+Available sources are served by the API at `GET /api/v1/mediamtx/sources` (only paths with an
+active publisher, each with a `pull_url`).
+
 ## Ports
 
 | Protocol | Default port |

@@ -64,3 +64,28 @@ async def get_status() -> dict:
     items = data.get("items") if isinstance(data, dict) else None
     paths = [IngestPath(item).as_dict() for item in (items or [])]
     return {"enabled": True, "reachable": True, "paths": paths}
+
+
+def pull_url(path_name: str) -> str:
+    """Internal RTSP URL FFmpeg uses to pull a MediaMTX path back in as a source."""
+    return get_settings().mediamtx_rtsp_url.rstrip("/") + "/" + path_name.lstrip("/")
+
+
+async def list_sources() -> list[dict]:
+    """Active ingest paths usable as stream-job inputs, each with a pull URL.
+
+    Only paths that are **ready** (a publisher is connected) are returned — those are the
+    streams you can actually pull from right now.
+    """
+    status = await get_status()
+    if not status["reachable"]:
+        return []
+    return [
+        {
+            "name": p["name"],
+            "source_type": p["source_type"],
+            "pull_url": pull_url(p["name"]),
+        }
+        for p in status["paths"]
+        if p["ready"]
+    ]
