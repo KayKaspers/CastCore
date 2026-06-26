@@ -47,9 +47,32 @@ relevant. (Full list in the documentation rules page.)
 ## Development
 
 - Local stack & tests: see [`docs/LOCAL_DEV.md`](docs/LOCAL_DEV.md).
-- Backend tests: `pytest` (in the backend container or a local venv).
-- Frontend type check + build: `npm run build` (runs `tsc` then `vite build`).
-- Docs check: `python scripts/check_docs.py` (or `--strict` to fail on warnings).
+
+### Continuous integration
+
+CI (`.github/workflows/ci.yml`) runs on every push and pull request and must be green
+before merge. It runs four jobs — reproduce them locally with the same commands:
+
+**Backend** (`cd backend`, install dev extras once with `pip install -e ".[dev]"`):
+- `ruff check app` — lint
+- `mypy` — type check (config in `pyproject.toml`)
+- `pytest -q` — unit tests
+
+**Frontend** (`cd frontend`):
+- `npm ci` — install from the committed `package-lock.json`
+- `npm run lint` — ESLint (flat config in `eslint.config.js`)
+- `npm run build` — `tsc` type check + Vite build (`npm run typecheck` for types only)
+
+**Docs**:
+- `python scripts/check_docs.py` — structure, DE/EN parity, manifest, links; regenerates
+  `docs-status.json` + `nav.json` (commit the result).
+
+**Compose**:
+- `docker compose config --quiet` — validates `docker-compose.yml` (needs `SECRET_KEY`,
+  `ENCRYPTION_KEY`, `POSTGRES_PASSWORD` set; any value works for validation).
+
+> No Python/Node on your host? Run the backend checks inside the `backend` container and the
+> frontend checks in a throwaway `node:20` container — see [`docs/LOCAL_DEV.md`](docs/LOCAL_DEV.md).
 
 ## Git
 

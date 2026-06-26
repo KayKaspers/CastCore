@@ -5,6 +5,27 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Full CI for backend, frontend and docs (Phase 0, Step 2)
+- New consolidated GitHub Actions workflow `.github/workflows/ci.yml` with four jobs, all
+  blocking on push/PR:
+  - **backend**: `ruff check app`, `mypy`, `pytest` (installs `.[dev]`).
+  - **frontend**: `npm ci`, `npm run lint` (ESLint), `npm run build` (`tsc` + Vite).
+  - **docs**: `scripts/check_docs.py` + out-of-date guard + internal-link check.
+  - **compose**: `docker compose config` validation.
+- Replaced the docs-only `docs-check.yml` (its checks now live in `ci.yml`).
+- **Backend tooling made green**: added `[tool.mypy]` config (`ignore_missing_imports`,
+  `files=["app"]`); fixed the two ruff findings it surfaced (unused `Path` import in
+  `endpoints/channels.py`; f-string-without-placeholder in `ffmpeg/command_builder.py`).
+  Local run: ruff clean, mypy clean (95 files), pytest 24 passed.
+- **Frontend tooling set up**: added ESLint 9 flat config (`eslint.config.js`) with
+  typescript-eslint + react-hooks/react-refresh plugins and the matching devDependencies;
+  committed `frontend/package-lock.json` so `npm ci` is reproducible; added a `typecheck`
+  script. Verified in a Node 20 container: `npm ci` + lint (0 errors, 3 warnings) + build OK.
+- Docs: README gains a **Continuous integration** section; `CONTRIBUTING.md` and
+  `docs/LOCAL_DEV.md` document the exact local commands (incl. container-only paths);
+  developer-guide `testing.md` (DE+EN) rewritten to describe the four CI jobs. check_docs
+  green (76 pages).
+
 ### Added — Rate limiting for sensitive auth endpoints (Phase 0, Step 1)
 - Redis-backed fixed-window rate limiter (`core/ratelimit.py`) on `POST /auth/login`,
   `/auth/refresh`, `/auth/2fa/verify`, `/tokens` (create) and `/setup/admin`. Over the limit

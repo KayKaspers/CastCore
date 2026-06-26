@@ -8,7 +8,6 @@ should put these behind signed URLs or the reverse proxy's auth).
 from __future__ import annotations
 
 import uuid
-from pathlib import Path
 
 from fastapi import APIRouter, Depends, Request, Response
 from fastapi.responses import FileResponse

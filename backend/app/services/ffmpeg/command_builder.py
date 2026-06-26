@@ -89,7 +89,7 @@ class Input:
                 "-reconnect_delay_max", "5",
             ]
         for key, val in self.options.items():
-            _check_value(key, f"input option key")
+            _check_value(key, "input option key")
             args.append(f"-{key}")
             if val != "":
                 args.append(_check_value(val, f"input option '{key}'"))

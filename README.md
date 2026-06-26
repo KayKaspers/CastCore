@@ -81,6 +81,18 @@ CastCore is fully bilingual (Deutsch / English) from day one. Language is chosen
 Setup Wizard and per user; no UI strings are hard-coded. Translations live in
 `frontend/src/i18n/{de,en}.json`; the backend returns translatable error **codes**.
 
+## Continuous integration
+
+GitHub Actions (`.github/workflows/ci.yml`) runs on every push and pull request:
+
+- **Backend** — `ruff` (lint), `mypy` (type check), `pytest` (unit tests).
+- **Frontend** — `npm ci`, ESLint, and the `tsc` + Vite build.
+- **Docs** — `scripts/check_docs.py` (structure, DE/EN parity, manifest, internal links).
+- **Compose** — `docker compose config` validation.
+
+Run the same checks locally; the commands are listed in
+[`CONTRIBUTING.md`](CONTRIBUTING.md#continuous-integration).
+
 ## License
 
 See [LICENSE](LICENSE). Branding assets in `branding/` follow the CastCore brand guide.

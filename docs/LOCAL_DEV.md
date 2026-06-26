@@ -52,18 +52,40 @@ curl -k -X POST https://localhost/api/v1/auth/login \
   -d '{"username":"admin","password":"changeme123"}'
 ```
 
-## 3. Running the test suite
+## 3. Running CI checks locally
 
-Unit tests (Command Builder, security, stream-service argv) need no DB/Redis:
+CI (`.github/workflows/ci.yml`) runs four jobs. You can reproduce all of them — even with no
+Python/Node on the host — using throwaway containers.
+
+**Backend** (ruff · mypy · pytest) — needs no DB/Redis:
 
 ```bash
-docker compose run --rm --no-deps backend sh -c "pip install -q '.[dev]' && pytest -q"
+docker compose run --rm --no-deps backend sh -c "pip install -q '.[dev]' && ruff check app && mypy && pytest -q"
 ```
 
-Or, if you have a real local Python 3.12:
+**Frontend** (lint · build) in a throwaway Node container:
 
 ```bash
-cd backend && python -m pip install -e ".[dev]" && pytest
+docker run --rm -v "$PWD/frontend":/app -w /app node:20-alpine sh -c "npm ci && npm run lint && npm run build"
+```
+
+**Docs**:
+
+```bash
+python scripts/check_docs.py            # or run inside the backend container
+```
+
+**Compose config**:
+
+```bash
+SECRET_KEY=x ENCRYPTION_KEY=x POSTGRES_PASSWORD=x docker compose config --quiet
+```
+
+Or, with a real local toolchain:
+
+```bash
+cd backend && python -m pip install -e ".[dev]" && ruff check app && mypy && pytest
+cd frontend && npm ci && npm run lint && npm run build
 ```
 
 ## 4. Frontend dev server (optional, needs Node 20 locally)
