@@ -32,7 +32,7 @@ stream jobs with a shell-free FFmpeg command builder + multi-output, live logs (
 Redis), auto-restart; monitoring + Prometheus exporter; **FFmpeg version detection &
 safe-media mode** (CVE-2026-8461 mitigation); local + SMB/CIFS storage; media library,
 playlists, channels (HLS/EPG), recording, scheduler, notifications, backup/restore; MediaMTX
-ingest (status + as a source); platform-account OAuth **linking** (YouTube/Twitch); a full
+ingest (status + as a source); platform OAuth (YouTube/Twitch) with **metadata push**; a full
 bilingual docs/help system; and CI for backend (ruff/mypy/pytest incl. API integration
 tests), frontend (eslint/build), docs and compose, plus a manual full-stack E2E workflow.
 
@@ -40,7 +40,9 @@ tests), frontend (eslint/build), docs and compose, plus a manual full-stack E2E 
 - A patched **FFmpeg ≥ 8.1.2** is not yet the verified default binary (images ship Debian's
   build; a static-build path + runtime warnings are in place — see
   [FFmpeg requirements](docs/en/admin-guide/ffmpeg-requirements.md)).
-- **OAuth** links accounts but does **not** yet push metadata to YouTube/Twitch.
+- **OAuth metadata push** is implemented for YouTube/Twitch but **not yet verified against the
+  live platform APIs** (CastCore-side logic is tested with mocked APIs; real push needs client
+  credentials + a connected account).
 - **Storage**: only local + SMB/CIFS; NFS/SFTP/WebDAV/rclone/cloud are not implemented.
 - **Hardening**: worker runs non-root + `cap_drop`; backend/process-manager still run as root
   (only `no-new-privileges`). No **CSP** header yet.

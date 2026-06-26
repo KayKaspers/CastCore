@@ -4,9 +4,20 @@ import { useTranslation } from "react-i18next";
 import { api, ApiException } from "../lib/api";
 import type { Asset } from "../lib/types";
 import AuthImg from "./AuthImg";
+import HelpLink from "./HelpLink";
 import { Badge, Button, Field, Input, Panel, Select } from "./ui";
 
 const PLATFORMS = ["twitch", "youtube", "kick", "facebook", "custom"];
+const PUSH_PROVIDERS = ["twitch", "youtube"];
+
+interface PushRef { code: string; params?: Record<string, unknown> }
+interface PushResult {
+  provider: string;
+  status: string; // success | warning | error
+  applied: string[];
+  warnings: PushRef[];
+  error: PushRef | null;
+}
 const PLACEHOLDERS = "{stream_title} {date} {time} {platform} {category} {tags} {source_name} {server_name} {channel_name}";
 
 interface Meta {
@@ -36,6 +47,8 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
   const [tagsStr, setTagsStr] = useState("");
   const [thumbId, setThumbId] = useState("");
   const [assets, setAssets] = useState<Asset[]>([]);
+  const [pushing, setPushing] = useState(false);
+  const [push, setPush] = useState<PushResult | null>(null);
 
   useEffect(() => { api.get<Asset[]>("/assets").then(setAssets).catch(() => undefined); }, []);
 
@@ -71,6 +84,19 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
     setError(null);
     try { setResolved(await api.get<Resolved>(`/stream-jobs/${jobId}/metadata/${platform}/resolved`)); }
     catch (e) { if (e instanceof ApiException) setError(e.localized); }
+  };
+
+  // Reset the push result when switching platform.
+  useEffect(() => { setPush(null); }, [platform]);
+
+  const pushMeta = async () => {
+    setError(null); setPush(null); setPushing(true);
+    try {
+      // save first so the platform gets the current form values
+      await save();
+      setPush(await api.post<PushResult>(`/stream-jobs/${jobId}/platforms/${platform}/push-metadata`));
+    } catch (e) { if (e instanceof ApiException) setError(e.localized); }
+    finally { setPushing(false); }
   };
 
   return (
@@ -120,7 +146,35 @@ export default function MetadataPanel({ jobId, jobName, onClose }: { jobId: stri
       <div className="flex items-center gap-2 mt-4">
         <Button onClick={save}>{t("common.save")}</Button>
         <Button variant="ghost" onClick={resolve}>Vorschau auflösen</Button>
+        <Button
+          onClick={pushMeta}
+          disabled={pushing || !PUSH_PROVIDERS.includes(platform)}
+          title={PUSH_PROVIDERS.includes(platform) ? "" : t("platformPush.unsupported")}
+        >
+          {pushing ? t("common.loading") : t("platformPush.button")}
+        </Button>
       </div>
+
+      {push && (
+        <div className="mt-4 cc-panel p-3 space-y-2">
+          <div className="flex items-center gap-2">
+            <Badge status={push.status === "success" ? "running" : push.status === "warning" ? "yellow" : "failed"}>
+              {t(`platformPush.${push.status}`)}
+            </Badge>
+            <span className="text-xs text-slate">{push.provider}</span>
+            <HelpLink page="admin-guide/platform-oauth.md" />
+          </div>
+          {push.applied.length > 0 && (
+            <div className="text-xs text-slate">
+              {t("platformPush.applied")}: <span className="text-mist">{push.applied.join(", ")}</span>
+            </div>
+          )}
+          {push.warnings.map((w, i) => (
+            <p key={i} className="text-warning text-xs">{t(`error.${w.code}`, w.params)}</p>
+          ))}
+          {push.error && <p className="text-danger text-sm">{t(`error.${push.error.code}`, push.error.params)}</p>}
+        </div>
+      )}
 
       {resolved && (
         <div className="mt-4 cc-panel p-3 space-y-2">

@@ -5,6 +5,33 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — YouTube/Twitch metadata push (Phase 1, Step 6)
+- Connected platform accounts can now **set stream metadata on the platform**. Provider
+  **adapters** (`app/services/platform/{twitch,youtube}.py`) implement the real API calls;
+  orchestration lives in `app/services/platform_push.py` (not hard-wired into the stream
+  service). New endpoint `POST /api/v1/stream-jobs/{id}/platforms/{provider}/push-metadata`.
+  - **Twitch** (Helix): title, category/game (resolved by name), language, tags.
+  - **YouTube** (Data API v3): title, description, visibility, scheduled start, and an optional
+    thumbnail upload — on the active/upcoming live broadcast.
+- **Token handling**: `oauth_service.ensure_access_token` checks expiry and **auto-refreshes**
+  before each action; tokens are never logged and **never returned** (push result carries no
+  token material).
+- **Structured, translatable results**: `success` / `with warnings` / `error` with codes
+  `platform.{not_connected,token_expired,missing_scope,invalid_category,invalid_broadcast,
+  thumbnail_failed,api_error}`. Audited as `platform.metadata_push`.
+- **UI**: an **Update metadata** button per platform in the metadata panel (enabled for
+  Twitch/YouTube), showing status + applied fields + warnings/error with a help link. DE/EN
+  i18n (incl. the new error codes).
+- **Tests**: `test_platform_push.py` — Twitch success/invalid-category/api-error/missing-scope,
+  YouTube success/thumbnail/missing-scope/invalid-broadcast (all with mocked platform APIs via
+  httpx `MockTransport`), token refresh, and an API test asserting **no token leakage**. Full
+  backend suite **77 passed** (ruff/mypy clean).
+- **Docs**: `admin-guide/platform-oauth.md` (DE+EN) gains a metadata-push section + error table
+  + troubleshooting; manifest updated; README/SECURITY "known gaps" reconciled. check_docs
+  green (77 pages).
+- **Caveat**: the CastCore-side logic is fully tested with mocked APIs; a **real** push needs
+  client credentials + a connected account and has not been run against live YouTube/Twitch.
+
 ### Docs — README & security documentation audit (Phase 0, Step 5)
 - **README**: replaced the stale "Early scaffold / Phase 1" status with an honest
   **"early beta / advanced alpha"** section listing what is implemented and the **known gaps**

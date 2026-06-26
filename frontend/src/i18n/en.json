@@ -168,6 +168,14 @@
   "media": {
     "riskyCodec": "Risky codec"
   },
+  "platformPush": {
+    "button": "Update metadata",
+    "unsupported": "Metadata push is not available for this platform.",
+    "success": "Success",
+    "warning": "With warnings",
+    "error": "Error",
+    "applied": "Applied"
+  },
   "dryRun": {
     "button": "Dry-run",
     "title": "Dry-run / test stream"
@@ -268,6 +276,15 @@
       "unsupported_type": "File type not supported (allowed: PNG, JPEG, WebP, GIF).",
       "too_large": "File too large (max. 10 MB).",
       "empty": "File is empty."
+    },
+    "platform": {
+      "not_connected": "No connected {{provider}} account. Please connect one under Platforms first.",
+      "token_expired": "{{provider}} access has expired and could not be refreshed. Please reconnect the account.",
+      "missing_scope": "Missing permissions for {{provider}}. Please reconnect the account with the required scopes.",
+      "invalid_category": "Category {{category}} not found on {{provider}} – category was not set.",
+      "invalid_broadcast": "No active or scheduled {{provider}} live broadcast found.",
+      "thumbnail_failed": "Thumbnail upload to {{provider}} failed (status {{status}}).",
+      "api_error": "{{provider}} API error (status {{status}})."
     }
   }
 }

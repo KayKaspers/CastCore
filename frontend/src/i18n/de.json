@@ -168,6 +168,14 @@
   "media": {
     "riskyCodec": "Riskanter Codec"
   },
+  "platformPush": {
+    "button": "Metadaten aktualisieren",
+    "unsupported": "Für diese Plattform ist kein Metadaten-Push verfügbar.",
+    "success": "Erfolgreich",
+    "warning": "Mit Warnungen",
+    "error": "Fehler",
+    "applied": "Übernommen"
+  },
   "dryRun": {
     "button": "Dry-Run",
     "title": "Dry-Run / Teststream"
@@ -268,6 +276,15 @@
       "unsupported_type": "Dateityp nicht unterstützt (erlaubt: PNG, JPEG, WebP, GIF).",
       "too_large": "Datei zu groß (max. 10 MB).",
       "empty": "Datei ist leer."
+    },
+    "platform": {
+      "not_connected": "Kein verbundenes {{provider}}-Konto. Bitte zuerst unter Plattformen verbinden.",
+      "token_expired": "Der {{provider}}-Zugriff ist abgelaufen und konnte nicht erneuert werden. Bitte das Konto neu verbinden.",
+      "missing_scope": "Fehlende Berechtigungen für {{provider}}. Bitte das Konto mit den nötigen Scopes neu verbinden.",
+      "invalid_category": "Kategorie {{category}} bei {{provider}} nicht gefunden – Kategorie wurde nicht gesetzt.",
+      "invalid_broadcast": "Kein aktiver oder geplanter {{provider}}-Livestream gefunden.",
+      "thumbnail_failed": "Thumbnail-Upload zu {{provider}} fehlgeschlagen (Status {{status}}).",
+      "api_error": "{{provider}}-API-Fehler (Status {{status}})."
     }
   }
 }

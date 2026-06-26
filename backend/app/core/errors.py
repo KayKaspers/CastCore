@@ -43,6 +43,15 @@ class ErrorCode:
     AUTH_TOTP_INVALID = "auth.totp_invalid"
     AUTH_RATE_LIMITED = "auth.rate_limited"
 
+    # Platform metadata push (YouTube/Twitch)
+    PLATFORM_NOT_CONNECTED = "platform.not_connected"
+    PLATFORM_TOKEN_EXPIRED = "platform.token_expired"
+    PLATFORM_MISSING_SCOPE = "platform.missing_scope"
+    PLATFORM_INVALID_CATEGORY = "platform.invalid_category"
+    PLATFORM_INVALID_BROADCAST = "platform.invalid_broadcast"
+    PLATFORM_THUMBNAIL_FAILED = "platform.thumbnail_failed"
+    PLATFORM_API_ERROR = "platform.api_error"
+
     SETUP_ALREADY_COMPLETED = "setup.already_completed"
     SETUP_FFMPEG_NOT_FOUND = "setup.ffmpeg_not_found"
 

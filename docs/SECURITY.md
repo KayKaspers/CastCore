@@ -74,4 +74,5 @@ validation · audit log · restrictive file perms · FFmpeg version detection + 
 
 Known gaps: **CSP** header not set (CSRF N/A — Bearer API); broader (non-auth) rate limits;
 patched **FFmpeg ≥ 8.1.2** not yet the verified default; backend/process-manager not yet
-non-root; OAuth **metadata push** not implemented; no frontend/migration tests.
+non-root; OAuth **metadata push** implemented but not yet verified against the live platform
+APIs; no frontend/migration tests.

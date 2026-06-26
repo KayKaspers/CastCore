@@ -4,7 +4,7 @@ description: "YouTube-/Twitch-Konten per OAuth verbinden, Tokens sicher speicher
 lang: de
 audience: "Administratoren"
 status: stable
-lastReviewed: 2026-06-25
+lastReviewed: 2026-06-26
 ---
 
 # Plattform-OAuth (YouTube/Twitch)
@@ -52,18 +52,51 @@ Eine Plattform ist **aktiviert**, sobald ihre Client-ID konfiguriert ist **und**
 3. CastCore tauscht den Code gegen Tokens, speichert sie verschlüsselt und zeigt das Konto
    unter **Verbundene Konten**. Trennen ist jederzeit möglich.
 
+## Metadaten-Push (YouTube/Twitch)
+
+Ist ein Konto verbunden, kann CastCore die **Stream-Metadaten direkt auf der Plattform
+setzen**. Pro Stream-Job pflegst du die Metadaten (Titel, Beschreibung, Kategorie, Tags,
+Sprache, Sichtbarkeit, Thumbnail) und klickst im Metadaten-Panel auf **Metadaten
+aktualisieren**.
+
+- **Twitch**: setzt **Titel**, **Kategorie/Spiel** (per Name aufgelöst), **Sprache** und
+  **Tags** (`channel:manage:broadcast`).
+- **YouTube**: aktualisiert den **aktiven/geplanten Livestream** – **Titel**, **Beschreibung**,
+  **Sichtbarkeit**, optional **geplante Startzeit** und **Thumbnail-Upload**
+  (`…/auth/youtube`).
+
+Das Ergebnis ist **strukturiert**: `Erfolgreich`, `Mit Warnungen` (z. B. unbekannte Kategorie
+oder fehlgeschlagener Thumbnail-Upload – der Rest wird trotzdem gesetzt) oder `Fehler`. Vor
+jeder Aktion wird der Token geprüft und bei Bedarf **automatisch erneuert**; Tokens werden nie
+geloggt oder zurückgegeben.
+
+| Meldung | Bedeutung |
+| --- | --- |
+| `platform.not_connected` | Kein verbundenes Konto für die Plattform. |
+| `platform.token_expired` | Token abgelaufen und nicht erneuerbar – Konto neu verbinden. |
+| `platform.missing_scope` | Fehlende Berechtigungen – Konto mit den nötigen Scopes neu verbinden. |
+| `platform.invalid_category` | Twitch-Kategorie nicht gefunden (Warnung). |
+| `platform.invalid_broadcast` | Kein aktiver/geplanter YouTube-Livestream. |
+| `platform.thumbnail_failed` | YouTube-Thumbnail-Upload fehlgeschlagen (Warnung). |
+| `platform.api_error` | Sonstiger Plattform-API-Fehler. |
+
 ## Sicherheit
 
 > 🔐 Access- und Refresh-Tokens werden mit **Fernet** verschlüsselt gespeichert
-> (`ENCRYPTION_KEY`) und **nie** über die API zurückgegeben. Der OAuth-`state` ist ein
-> kurzlebiges signiertes Token (10 min), das den initiierenden Benutzer trägt und CSRF
-> verhindert. Client-Secrets gehören in die `.env`, nicht ins Repository.
+> (`ENCRYPTION_KEY`) und **nie** über die API zurückgegeben (auch nicht im Push-Ergebnis).
+> Der OAuth-`state` ist ein kurzlebiges signiertes Token (10 min), das den initiierenden
+> Benutzer trägt und CSRF verhindert. Client-Secrets gehören in die `.env`, nicht ins
+> Repository.
 
 ## Fehlerbehebung
 
 - **Kein „Verbinden"-Button**: `PUBLIC_BASE_URL` und Client-ID gesetzt? Backend neu gestartet?
 - **„Verbindung fehlgeschlagen"** nach Rücksprung: Redirect-URI beim Provider muss exakt
   passen (Schema, Host, Pfad). Stimmt das Secret? Ist die Zeit synchron (State-TTL)?
+- **`missing_scope` beim Push**: Das Konto wurde ohne die nötigen Scopes verbunden – unter
+  **Plattformen** trennen und neu verbinden.
+- **`invalid_broadcast` (YouTube)**: Es muss ein **aktiver oder geplanter** Livestream im
+  YouTube-Konto existieren, bevor Metadaten gesetzt werden können.
 
 ## Verwandte Seiten
 
@@ -72,4 +105,4 @@ Eine Plattform ist **aktiviert**, sobald ihre Client-ID konfiguriert ist **und**
 - [Umgebungsvariablen](/docs/de/reference/environment-variables.md)
 
 ---
-_Stand: 2026-06-25 · Status: Stabil_
+_Stand: 2026-06-26 · Status: Stabil_

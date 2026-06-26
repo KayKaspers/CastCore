@@ -10,11 +10,11 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 
-from app.api.deps import DbDep, require_roles
+from app.api.deps import CurrentUser, DbDep, require_roles
 from app.core.errors import CastCoreError, ErrorCode
 from app.models.platform import PlatformMetadata
 from app.models.streaming import StreamJob
-from app.services import metadata_service
+from app.services import audit_service, metadata_service, platform_push
 
 router = APIRouter(prefix="/stream-jobs", tags=["metadata"], dependencies=[Depends(require_roles("operator"))])
 generic = APIRouter(prefix="/metadata", tags=["metadata"], dependencies=[Depends(require_roles("operator"))])
@@ -40,6 +40,14 @@ class MetadataOut(MetadataIn):
 class ResolveIn(BaseModel):
     template: str
     context: dict = Field(default_factory=dict)
+
+
+class PushResultOut(BaseModel):
+    provider: str
+    status: str  # success | warning | error
+    applied: list[str] = Field(default_factory=list)
+    warnings: list[dict] = Field(default_factory=list)
+    error: dict | None = None
 
 
 def _out(m: PlatformMetadata) -> MetadataOut:
@@ -101,6 +109,19 @@ async def resolved_metadata(job_id: uuid.UUID, platform: str, db: DbDep) -> dict
     if m is None:
         raise CastCoreError(ErrorCode.VALIDATION_FAILED, params={"metadata": "not_found"}, http_status=404)
     return await metadata_service.resolve_metadata(db, job, m)
+
+
+@router.post("/{job_id}/platforms/{provider}/push-metadata", response_model=PushResultOut)
+async def push_metadata(job_id: uuid.UUID, provider: str, db: DbDep, user: CurrentUser) -> PushResultOut:
+    """Push the job's metadata to a connected platform account (YouTube/Twitch)."""
+    job = await _job(db, job_id)
+    result = await platform_push.push_metadata(db, job, provider)
+    await audit_service.record(
+        db, actor_id=user.id, action="platform.metadata_push", target_type="stream_job",
+        target_id=str(job.id), meta={"provider": provider, "status": result["status"],
+                                     "applied": result["applied"]},
+    )
+    return PushResultOut(**result)
 
 
 @generic.get("/placeholders", response_model=list[str])

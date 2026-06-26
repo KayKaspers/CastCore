@@ -94,10 +94,10 @@
       "de": true,
       "en": true,
       "de_status": "stable",
-      "de_lastReviewed": "2026-06-25",
+      "de_lastReviewed": "2026-06-26",
       "de_placeholder": false,
       "en_status": "stable",
-      "en_lastReviewed": "2026-06-25",
+      "en_lastReviewed": "2026-06-26",
       "en_placeholder": false
     },
     "admin-guide/reverse-proxy.md": {

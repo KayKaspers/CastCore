@@ -186,6 +186,26 @@ async def exchange_code(db: AsyncSession, provider: str, code: str, user_id: uui
     return account
 
 
+async def ensure_access_token(db: AsyncSession, account: PlatformAccount) -> str:
+    """Return a valid decrypted access token, refreshing it first if it is (near) expired.
+
+    Raises ``platform.token_expired`` if the token is expired and cannot be refreshed.
+    """
+    now = dt.datetime.now(dt.timezone.utc)
+    expires = account.token_expires_at
+    needs_refresh = expires is not None and expires <= now + dt.timedelta(seconds=60)
+    if needs_refresh:
+        if not account.refresh_token:
+            raise CastCoreError(ErrorCode.PLATFORM_TOKEN_EXPIRED, http_status=400,
+                                params={"provider": account.provider})
+        try:
+            await refresh_account(db, account)
+        except (httpx.HTTPError, KeyError) as exc:
+            raise CastCoreError(ErrorCode.PLATFORM_TOKEN_EXPIRED, http_status=400,
+                                params={"provider": account.provider}) from exc
+    return decrypt_secret(account.access_token)
+
+
 async def refresh_account(db: AsyncSession, account: PlatformAccount) -> PlatformAccount:
     """Use the stored refresh token to obtain a fresh access token."""
     cfg = _require_provider(account.provider)
