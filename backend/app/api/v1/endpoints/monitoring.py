@@ -53,7 +53,12 @@ class OutputMetrics(BaseModel):
 async def system_metrics(_user: CurrentUser) -> SystemMetrics:
     settings = get_settings()
     mem = psutil.virtual_memory()
-    disk = psutil.disk_usage(str(settings.data_dir))
+    # Fall back to the filesystem root if the data dir is not present yet (e.g. before the
+    # volume is mounted) so the endpoint never 500s on a misconfigured/early environment.
+    try:
+        disk = psutil.disk_usage(str(settings.data_dir))
+    except OSError:
+        disk = psutil.disk_usage("/")
     ffmpeg = sum(1 for p in psutil.process_iter(["name"]) if (p.info.get("name") or "").startswith("ffmpeg"))
     return SystemMetrics(
         cpu_percent=psutil.cpu_percent(interval=0.0),

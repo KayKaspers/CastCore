@@ -24,6 +24,9 @@ All notable changes to CastCore are documented here. Format loosely follows
   from `POSTGRES_*`; DB name `TEST_DB_NAME` (default `castcore_test`); rate limiting disabled.
 - **CI**: the `backend` job now runs a `postgres:16` service and the integration tests as part
   of `pytest`. Full suite **46 passed** locally (24 unit + 22 integration).
+- **Fixed** a robustness bug surfaced by the new tests: `GET /monitoring/system` 500'd when
+  `DATA_DIR` did not exist (e.g. before the volume is mounted) because
+  `psutil.disk_usage(data_dir)` raised; it now falls back to `/`.
 - Docs: developer-guide `testing.md` (DE+EN) gains an "API integration tests" section;
   CONTRIBUTING + README note the test DB; check_docs green (76 pages).
 
