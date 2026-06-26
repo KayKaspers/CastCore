@@ -57,6 +57,9 @@ lastReviewed: 2026-06-24
 | `FFMPEG_PATH` / `FFPROBE_PATH` | paths to FFmpeg/ffprobe |
 | `ACME_EMAIL` | email for automatic HTTPS certificates (Caddy) |
 | `MEDIAMTX_ENABLED` / `MEDIAMTX_API_URL` / `MEDIAMTX_RTSP_URL` | optional MediaMTX integration (enable, API address, RTSP pull base) |
+| `PUBLIC_BASE_URL` | public URL of the instance (for OAuth redirects); e.g. `https://stream.example.com` |
+| `YOUTUBE_CLIENT_ID` / `YOUTUBE_CLIENT_SECRET` | YouTube OAuth (empty = disabled) |
+| `TWITCH_CLIENT_ID` / `TWITCH_CLIENT_SECRET` | Twitch OAuth (empty = disabled) |
 
 ## Notes
 

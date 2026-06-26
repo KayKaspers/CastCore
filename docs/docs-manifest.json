@@ -123,6 +123,16 @@
       "lastReviewed": "2026-06-24"
     },
     {
+      "id": "platform-oauth",
+      "module": "platforms",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/admin-guide/platform-oauth.md"], "en": ["docs/en/admin-guide/platform-oauth.md"] },
+      "uiRoutes": ["/resources"],
+      "apiRoutes": ["/api/v1/oauth/providers", "/api/v1/oauth/{provider}/authorize", "/api/v1/oauth/{provider}/callback", "/api/v1/platform-accounts", "/api/v1/platform-accounts/{id}/refresh"],
+      "models": ["PlatformAccount"],
+      "lastReviewed": "2026-06-25"
+    },
+    {
       "id": "mediamtx",
       "module": "ingest",
       "status": "implemented",

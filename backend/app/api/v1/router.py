@@ -25,6 +25,8 @@ from app.api.v1.endpoints import (
     metrics,
     monitoring,
     notifications,
+    oauth,
+    platform_accounts,
     playlists,
     recordings,
     scheduler,
@@ -44,6 +46,8 @@ api_router.include_router(setup.router)
 api_router.include_router(app_settings.router)
 api_router.include_router(users.router)
 api_router.include_router(tokens.router)
+api_router.include_router(oauth.router)
+api_router.include_router(platform_accounts.router)
 api_router.include_router(ffmpeg_profiles.router)
 api_router.include_router(destinations.router)
 api_router.include_router(storage_sources.router)

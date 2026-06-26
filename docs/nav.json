@@ -139,6 +139,10 @@
           "title": "NFS"
         },
         {
+          "path": "admin-guide/platform-oauth.md",
+          "title": "Plattform-OAuth (YouTube/Twitch)"
+        },
+        {
           "path": "admin-guide/reverse-proxy.md",
           "title": "Reverse Proxy"
         },
@@ -487,6 +491,10 @@
         {
           "path": "admin-guide/nfs.md",
           "title": "NFS"
+        },
+        {
+          "path": "admin-guide/platform-oauth.md",
+          "title": "Platform OAuth (YouTube/Twitch)"
         },
         {
           "path": "admin-guide/reverse-proxy.md",

@@ -54,6 +54,7 @@ CastCore trennt bewusst:
 
 - [Metadaten & Thumbnails](/docs/de/user-guide/metadata-thumbnails.md)
 - [Stream-Editor](/docs/de/user-guide/stream-editor.md)
+- [Plattform-OAuth (YouTube/Twitch)](/docs/de/admin-guide/platform-oauth.md)
 
 ---
 _Stand: 2026-06-24 · Status: Stabil_

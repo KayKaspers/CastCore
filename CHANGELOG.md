@@ -5,6 +5,29 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Platform OAuth account linking (YouTube/Twitch)
+- New provider-agnostic OAuth integration to link real platform accounts. `PlatformAccount`
+  model (migration `0015`) stores access/refresh tokens **Fernet-encrypted**, never returned
+  by the API. Provider registry (YouTube/Google, Twitch) with env-configured client creds;
+  a provider is enabled only when its client id + `PUBLIC_BASE_URL` are set.
+- Flow: `POST /api/v1/oauth/{provider}/authorize` mints a signed, short-lived `state`
+  (carries the initiating user, prevents CSRF) and returns the authorize URL;
+  `GET /api/v1/oauth/{provider}/callback` (public browser redirect) verifies state, exchanges
+  the code, links the account, and 303-redirects back to the UI. Account mgmt:
+  `GET /platform-accounts`, `POST /platform-accounts/{id}/refresh`, `DELETE …/{id}`. Audited
+  (connect/disconnect/token_refresh). External provider HTTP is isolated in
+  `_post_token`/`fetch_account_name`.
+- Config/compose/.env.example: `PUBLIC_BASE_URL`, `{YOUTUBE,TWITCH}_CLIENT_ID/SECRET`.
+- Platforms page (`/resources`): "Connected platforms" — connect buttons (per enabled
+  provider), linked-accounts list, disconnect, and OAuth-return notice; disabled providers
+  show a config hint. DE/EN i18n.
+- Docs: new `admin-guide/platform-oauth.md` (DE+EN) + env-vars reference + platforms
+  cross-links; manifest gains a `platform-oauth` feature. check_docs green (76 pages).
+- Verified in Docker with the provider HTTP boundary stubbed (9 assertions: provider gating,
+  authorize URL, state roundtrip + mismatch rejection, providers/authorize endpoints,
+  callback exchange + 303, tokens encrypted-at-rest + masked in API, refresh, bad-state error
+  redirect, disconnect). Live end-to-end needs real YouTube/Twitch client credentials.
+
 ### Added — MediaMTX ingest as a stream source
 - Active ingest paths can now feed a stream job: `GET /api/v1/mediamtx/sources` returns each
   **ready** path with a `pull_url` (internal RTSP), derived from the new `MEDIAMTX_RTSP_URL`

@@ -1,11 +1,11 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Link } from "react-router-dom";
 
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { api, ApiException } from "../lib/api";
-import type { Destination } from "../lib/types";
+import type { Destination, PlatformAccount, PlatformProvider } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
 export default function ResourcesPage() {
@@ -19,6 +19,8 @@ export default function ResourcesPage() {
     <div className="space-y-8">
       <h1 className="text-2xl font-semibold text-mist">{t("nav.platforms")}</h1>
       {error && <p className="text-danger text-sm">{error}</p>}
+
+      <ConnectedPlatforms onError={onErr} />
 
       <p className="text-sm text-slate">
         FFmpeg-Profile findest du jetzt unter <Link to="/profiles" className="text-signal-cyan hover:underline">FFmpeg-Profile</Link>.
@@ -42,6 +44,79 @@ export default function ResourcesPage() {
         </Panel>
       </section>
     </div>
+  );
+}
+
+function ConnectedPlatforms({ onError }: { onError: (e: unknown) => void }) {
+  const { t } = useTranslation();
+  const providers = useAsync<PlatformProvider[]>(() => api.get("/oauth/providers"), []);
+  const accounts = useAsync<PlatformAccount[]>(() => api.get("/platform-accounts"), []);
+  const [notice, setNotice] = useState<string | null>(null);
+
+  // Surface the result of the OAuth redirect (?connected=… / ?error=oauth).
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search);
+    if (q.get("connected")) setNotice(t("platforms.connected", { provider: q.get("connected") }));
+    else if (q.get("error") === "oauth") setNotice(t("platforms.connectError"));
+    if (q.get("connected") || q.get("error")) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const connect = async (provider: string) => {
+    try {
+      const { authorize_url } = await api.post<{ authorize_url: string }>(`/oauth/${provider}/authorize`);
+      window.location.href = authorize_url; // full-page redirect to the provider
+    } catch (e) { onError(e); }
+  };
+
+  const disconnect = async (id: string) => {
+    if (!window.confirm(t("platforms.disconnectConfirm"))) return;
+    try { await api.del(`/platform-accounts/${id}`); accounts.reload(); } catch (e) { onError(e); }
+  };
+
+  const enabled = (providers.data ?? []).filter((p) => p.enabled);
+  const disabled = (providers.data ?? []).filter((p) => !p.enabled);
+
+  return (
+    <section className="space-y-3">
+      <h2 className="text-mist">{t("platforms.connectedTitle")}</h2>
+      {notice && <p className="text-core-green text-sm">{notice}</p>}
+      <p className="text-xs text-slate">{t("platforms.intro")}</p>
+
+      <div className="flex flex-wrap gap-2">
+        {enabled.map((p) => (
+          <Button key={p.provider} variant="ghost" onClick={() => connect(p.provider)}>
+            + {t("platforms.connect", { provider: p.provider })}
+          </Button>
+        ))}
+        {enabled.length === 0 && <p className="text-xs text-slate">{t("platforms.noneEnabled")}</p>}
+      </div>
+
+      {disabled.length > 0 && (
+        <p className="text-xs text-slate">
+          {t("platforms.disabledHint", { providers: disabled.map((p) => p.provider).join(", ") })}
+        </p>
+      )}
+
+      <Panel className="!p-0 overflow-hidden">
+        <ul>
+          {(accounts.data ?? []).map((a) => (
+            <li key={a.id} className="flex items-center justify-between px-4 py-3 border-b border-slate/10">
+              <span className="text-mist text-sm">
+                {a.account_name || a.provider} <span className="text-slate">· {a.provider}</span>
+                {a.has_refresh && <Badge status="running">{t("platforms.linked")}</Badge>}
+              </span>
+              <Button variant="danger" onClick={() => disconnect(a.id)}>{t("platforms.disconnect")}</Button>
+            </li>
+          ))}
+          {accounts.data?.length === 0 && (
+            <li className="px-4 py-3 text-xs text-slate">{t("platforms.noAccounts")}</li>
+          )}
+        </ul>
+      </Panel>
+    </section>
   );
 }
 

@@ -303,6 +303,21 @@ export interface MediamtxSource {
   pull_url: string;
 }
 
+export interface PlatformProvider {
+  provider: string;
+  enabled: boolean;
+}
+
+export interface PlatformAccount {
+  id: string;
+  provider: string;
+  account_name: string | null;
+  scope: string | null;
+  token_expires_at: string | null;
+  has_refresh: boolean;
+  created_at: string;
+}
+
 export interface AuditEvent {
   id: string;
   actor: string | null;

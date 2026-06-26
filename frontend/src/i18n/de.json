@@ -159,6 +159,21 @@
   "channels": {
     "preview": "Vorschau"
   },
+  "platforms": {
+    "connectedTitle": "Verbundene Plattformen",
+    "intro": "Verbinde dein YouTube-/Twitch-Konto per OAuth, damit CastCore Stream-Metadaten in deinem Namen setzen kann. Tokens werden verschlüsselt gespeichert.",
+    "connect": "{{provider}} verbinden",
+    "connected": "{{provider}} wurde verbunden.",
+    "connectError": "Verbindung fehlgeschlagen. Bitte erneut versuchen.",
+    "disconnect": "Trennen",
+    "disconnectConfirm": "Dieses Konto wirklich trennen? Die gespeicherten Tokens werden gelöscht.",
+    "linked": "Verbunden",
+    "linkedAccounts": "Verbundene Konten",
+    "noAccounts": "Noch keine Konten verbunden.",
+    "noneEnabled": "Kein Plattform-Provider konfiguriert.",
+    "disabledHint": "Nicht konfiguriert: {{providers}}. Ein Admin hinterlegt Client-ID/Secret und PUBLIC_BASE_URL in der .env.",
+    "linkedTitle": "Verbundene Konten"
+  },
   "streamForm": {
     "autoRestart": "Auto-Restart bei Absturz",
     "maxRetry": "Max. Versuche",

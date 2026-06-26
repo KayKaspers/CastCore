@@ -159,6 +159,21 @@
   "channels": {
     "preview": "Preview"
   },
+  "platforms": {
+    "connectedTitle": "Connected platforms",
+    "intro": "Connect your YouTube/Twitch account via OAuth so CastCore can set stream metadata on your behalf. Tokens are stored encrypted.",
+    "connect": "Connect {{provider}}",
+    "connected": "{{provider}} was connected.",
+    "connectError": "Connection failed. Please try again.",
+    "disconnect": "Disconnect",
+    "disconnectConfirm": "Really disconnect this account? The stored tokens will be deleted.",
+    "linked": "Linked",
+    "linkedAccounts": "Linked accounts",
+    "noAccounts": "No accounts connected yet.",
+    "noneEnabled": "No platform provider configured.",
+    "disabledHint": "Not configured: {{providers}}. An admin sets the client id/secret and PUBLIC_BASE_URL in .env.",
+    "linkedTitle": "Linked accounts"
+  },
   "streamForm": {
     "autoRestart": "Auto-restart on failure",
     "maxRetry": "Max. retries",

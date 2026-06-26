@@ -54,6 +54,16 @@ class Settings(BaseSettings):
     # Base URL CastCore/FFmpeg uses to pull an ingest path back in as a source.
     mediamtx_rtsp_url: str = Field(default="rtsp://mediamtx:8554")
 
+    # Public base URL of this instance (scheme + host, no trailing slash), e.g.
+    # https://stream.example.com — used to build OAuth redirect URIs. Required for OAuth.
+    public_base_url: str = Field(default="")
+
+    # Platform OAuth client credentials (empty disables the provider).
+    youtube_client_id: str = Field(default="")
+    youtube_client_secret: str = Field(default="")
+    twitch_client_id: str = Field(default="")
+    twitch_client_secret: str = Field(default="")
+
     @property
     def database_url(self) -> str:
         return (
