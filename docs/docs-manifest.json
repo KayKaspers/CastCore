@@ -117,10 +117,10 @@
       "module": "monitoring",
       "status": "implemented",
       "docs": { "de": ["docs/de/user-guide/monitoring.md"], "en": ["docs/en/user-guide/monitoring.md"] },
-      "uiRoutes": ["/monitoring"],
-      "apiRoutes": ["/api/v1/monitoring/system", "/api/v1/monitoring/outputs", "/api/v1/metrics"],
+      "uiRoutes": ["/monitoring", "/"],
+      "apiRoutes": ["/api/v1/monitoring/system", "/api/v1/monitoring/outputs", "/api/v1/metrics", "/api/v1/monitoring/health", "/api/v1/monitoring/jobs/{id}/health"],
       "models": ["ProcessStatus"],
-      "lastReviewed": "2026-06-24"
+      "lastReviewed": "2026-06-26"
     },
     {
       "id": "ffmpeg-security",

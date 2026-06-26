@@ -5,6 +5,31 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Stream health score (Phase 2, Step 8)
+- New `app/services/health_service.py` computes a **0–100 health score** per output and per
+  stream job with a traffic-light **status** (green/yellow/red/gray) and **structured,
+  translatable reasons**. Derived from live process metrics (state, encoding speed, reconnects,
+  dropped frames, FPS/bitrate); the **weakest running output** drives the job score. Optional
+  `preflight_level`/`readiness_level` can be folded in. No secrets/stream keys are emitted.
+- Endpoints on the (viewer-readable) monitoring router: `GET /api/v1/monitoring/jobs/{id}/health`
+  (full, with per-output breakdown + reasons) and `GET /api/v1/monitoring/health` (per-job
+  summary for the dashboard).
+- **UI**: a **Stream health** panel on the Dashboard — per-job score + traffic-light badge,
+  click to expand reasons; auto-refresh; help link. DE/EN i18n (`health.status.*`,
+  `health.reason.*`).
+- **Tests**: `test_health_service.py` — healthy/green, encoding-speed penalties, reconnects,
+  failed output (red/0), stopped (gray), weakest-output-drives-job, missing preflight/readiness
+  (no penalty), preflight-red forces red, readiness-yellow downgrade, plus endpoint tests
+  (running green, failed red, 404, summary) asserting **no stream-key/secret leakage**. Full
+  backend suite **104 passed** (ruff/mypy clean).
+- Added `frontend/.dockerignore` (excludes `node_modules`/`dist`) so local image builds don't
+  choke on a polluted build context.
+- **Docs**: `user-guide/monitoring.md` (DE+EN) health-score section; `troubleshooting/
+  performance.md` (DE+EN) health red/yellow guidance; manifest updated; check_docs green
+  (77 pages).
+- **Caveat**: the live score is computed from process metrics only; preflight/readiness are
+  surfaced separately (not re-fetched per poll) to avoid slow/rate-limited calls.
+
 ### Added — Platform readiness check (Phase 1, Step 7)
 - A **traffic-light readiness check** per platform before going live:
   `POST /api/v1/stream-jobs/{id}/platforms/{provider}/readiness` → `{provider, level

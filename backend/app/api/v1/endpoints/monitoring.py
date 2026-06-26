@@ -16,7 +16,9 @@ from sqlalchemy import select
 from app.api.deps import CurrentUser, DbDep, get_current_user
 from app.core import ffmpeg_inspect
 from app.core.config import get_settings
+from app.core.errors import CastCoreError, ErrorCode
 from app.models.streaming import Destination, Output, ProcessStatus, StreamJob
+from app.services import health_service
 
 router = APIRouter(
     prefix="/monitoring",
@@ -76,6 +78,87 @@ async def system_metrics(_user: CurrentUser) -> SystemMetrics:
 async def ffmpeg_status(_user: CurrentUser) -> dict:
     """FFmpeg/ffprobe version, vulnerability flag and safe-media settings."""
     return await ffmpeg_inspect.get_info()
+
+
+class HealthReason(BaseModel):
+    code: str
+    level: str
+    params: dict = {}
+
+
+class OutputHealth(BaseModel):
+    output_id: uuid.UUID | None = None
+    score: int | None = None
+    status: str
+    reasons: list[HealthReason] = []
+
+
+class JobHealth(BaseModel):
+    job_id: uuid.UUID
+    name: str
+    score: int | None = None
+    status: str  # green | yellow | red | gray
+    reasons: list[HealthReason] = []
+    outputs: list[OutputHealth] = []
+
+
+class JobHealthSummary(BaseModel):
+    job_id: uuid.UUID
+    name: str
+    score: int | None = None
+    status: str
+
+
+def _metrics(status: ProcessStatus | None) -> dict:
+    if status is None:
+        return {"state": None}
+    return {
+        "state": status.state,
+        "speed": status.speed,
+        "reconnect_count": status.reconnect_count,
+        "dropped_frames": status.dropped_frames,
+        "fps": status.fps,
+        "bitrate_kbps": status.bitrate_kbps,
+    }
+
+
+async def _collect(db: DbDep, job_id: uuid.UUID | None):
+    stmt = (
+        select(StreamJob, Output, ProcessStatus)
+        .outerjoin(Output, (Output.job_id == StreamJob.id) & (Output.enabled.is_(True)))
+        .outerjoin(ProcessStatus, ProcessStatus.output_id == Output.id)
+        .order_by(StreamJob.name)
+    )
+    if job_id is not None:
+        stmt = stmt.where(StreamJob.id == job_id)
+    rows = (await db.execute(stmt)).all()
+    jobs: dict = {}
+    for job, output, status in rows:
+        entry = jobs.setdefault(job.id, {"name": job.name, "outputs": []})
+        if output is not None:
+            m = _metrics(status)
+            m["output_id"] = str(output.id)
+            entry["outputs"].append(m)
+    return [
+        health_service.compute_job_health(str(jid), data["name"], data["outputs"])
+        for jid, data in jobs.items()
+    ]
+
+
+@router.get("/jobs/{job_id}/health", response_model=JobHealth)
+async def job_health(job_id: uuid.UUID, db: DbDep, _user: CurrentUser) -> JobHealth:
+    """Health score (0–100) + traffic-light status + reasons for one stream job."""
+    healths = await _collect(db, job_id)
+    if not healths:
+        raise CastCoreError(ErrorCode.VALIDATION_FAILED, params={"job": "not_found"}, http_status=404)
+    return JobHealth(**healths[0])
+
+
+@router.get("/health", response_model=list[JobHealthSummary])
+async def all_job_health(db: DbDep, _user: CurrentUser) -> list[JobHealthSummary]:
+    """Per-job health summary for the dashboard overview."""
+    return [JobHealthSummary(job_id=h["job_id"], name=h["name"], score=h["score"], status=h["status"])
+            for h in await _collect(db, None)]
 
 
 @router.get("/outputs", response_model=list[OutputMetrics])

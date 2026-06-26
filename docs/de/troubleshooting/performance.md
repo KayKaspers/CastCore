@@ -4,7 +4,7 @@ description: "Encoding-Speed < 1.0x, hohe CPU, Engpässe."
 lang: de
 audience: "Operatoren / Administratoren"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-26
 ---
 
 # Performance
@@ -35,6 +35,17 @@ mehrere parallele Streams.
 Mit dem [Dry-Run](/docs/de/user-guide/preflight-checks.md) schätzt du die Encoding-Speed,
 **bevor** du live gehst.
 
+## Health-Score 🔴 rot / 🟡 gelb
+
+Der **Stream-Health-Score** (Dashboard) fasst die Live-Metriken zusammen. Klick auf den Job
+zeigt die Gründe:
+
+- **Encoding-Speed kritisch/niedrig** → CPU-Last/Profil prüfen (siehe oben).
+- **Reconnects / Output abgestürzt** → Netzwerk/Ziel prüfen, Logs ansehen
+  ([Stream startet nicht](/docs/de/troubleshooting/stream-not-starting.md)).
+- **Kein Durchsatz** → FFmpeg liefert keine FPS/Bitrate – Eingang/Quelle prüfen.
+- **Unbekannt (grau)** → der Job läuft nicht; Score erscheint erst im Betrieb.
+
 ## Relevante Werte
 
 - **speed** (×), **fps**, **CPU%**, **RAM** pro Output im Monitoring.
@@ -47,4 +58,4 @@ Mit dem [Dry-Run](/docs/de/user-guide/preflight-checks.md) schätzt du die Encod
 - [Systemanforderungen](/docs/de/admin-guide/system-requirements.md)
 
 ---
-_Stand: 2026-06-24 · Status: Stabil_
+_Stand: 2026-06-26 · Status: Stabil_

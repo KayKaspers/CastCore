@@ -1,10 +1,14 @@
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
+import HelpLink from "../components/HelpLink";
 import { Badge, Panel } from "../components/ui";
 import { api } from "../lib/api";
-import type { StreamJob, SystemHealth } from "../lib/types";
+import type { JobHealth, JobHealthSummary, StreamJob, SystemHealth } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
+
+const HEALTH_BADGE: Record<string, string> = { green: "running", yellow: "yellow", red: "failed", gray: "stopped" };
 
 export default function DashboardPage() {
   const { t } = useTranslation();
@@ -27,6 +31,8 @@ export default function DashboardPage() {
         <Stat label="Version" value={health.data?.version ?? "…"} />
       </div>
 
+      <StreamHealth />
+
       <Panel>
         <h2 className="text-mist mb-3">{t("common.status")}</h2>
         {health.error && <p className="text-danger text-sm">{health.error}</p>}
@@ -39,6 +45,59 @@ export default function DashboardPage() {
         )}
       </Panel>
     </div>
+  );
+}
+
+function StreamHealth() {
+  const { t } = useTranslation();
+  const list = useAsync<JobHealthSummary[]>(() => api.get("/monitoring/health"), []);
+  const [open, setOpen] = useState<string | null>(null);
+  const [detail, setDetail] = useState<JobHealth | null>(null);
+
+  useEffect(() => {
+    const id = setInterval(() => list.reload(), 4000);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const toggle = async (jobId: string) => {
+    if (open === jobId) { setOpen(null); setDetail(null); return; }
+    setOpen(jobId); setDetail(null);
+    try { setDetail(await api.get<JobHealth>(`/monitoring/jobs/${jobId}/health`)); } catch { /* ignore */ }
+  };
+
+  return (
+    <Panel className="space-y-2">
+      <h2 className="text-mist mb-1 flex items-center gap-2">
+        {t("health.title")} <HelpLink page="user-guide/monitoring.md" />
+      </h2>
+      {(list.data?.length ?? 0) === 0 && <p className="text-xs text-slate">{t("health.noJobs")}</p>}
+      <ul className="space-y-1">
+        {(list.data ?? []).map((j) => (
+          <li key={j.job_id} className="border-b border-slate/10 pb-1">
+            <button className="w-full flex items-center justify-between text-left" onClick={() => toggle(j.job_id)}>
+              <span className="text-mist text-sm">{j.name}</span>
+              <span className="flex items-center gap-2">
+                <span className="text-slate text-xs">{j.score == null ? "—" : `${j.score}/100`}</span>
+                <Badge status={HEALTH_BADGE[j.status] ?? "stopped"}>{t(`health.status.${j.status}`)}</Badge>
+              </span>
+            </button>
+            {open === j.job_id && detail && (
+              <ul className="mt-1 ml-2 space-y-0.5">
+                {detail.reasons.map((r, i) => (
+                  <li key={i} className="text-xs flex items-start gap-2">
+                    <span className={r.level === "ok" ? "text-core-green" : r.level === "warn" ? "text-warning" : r.level === "error" ? "text-danger" : "text-slate"}>
+                      {r.level === "ok" ? "✓" : r.level === "info" ? "•" : "!"}
+                    </span>
+                    <span className="text-slate">{t(`health.reason.${r.code}`, r.params)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Panel>
   );
 }
 

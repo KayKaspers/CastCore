@@ -131,7 +131,30 @@
   "health": {
     "green": "Startklar",
     "yellow": "Warnungen",
-    "red": "Blockierende Fehler"
+    "red": "Blockierende Fehler",
+    "title": "Stream-Health",
+    "noJobs": "Keine Stream-Jobs vorhanden.",
+    "status": {
+      "green": "Gesund",
+      "yellow": "Warnung",
+      "red": "Kritisch",
+      "gray": "Unbekannt"
+    },
+    "reason": {
+      "healthy": "Stream läuft stabil.",
+      "not_running": "Stream läuft nicht.",
+      "starting": "Stream startet…",
+      "output_failed": "Ausgabe abgestürzt/fehlgeschlagen.",
+      "encoding_speed_low": "Encoding-Speed niedrig ({{speed}}×).",
+      "encoding_speed_critical": "Encoding-Speed kritisch ({{speed}}×) – Echtzeit nicht gehalten.",
+      "reconnects": "Wiederverbindungen erkannt ({{count}}).",
+      "dropped_frames": "Verworfene Frames ({{frames}}).",
+      "no_throughput": "Kein Durchsatz (FPS/Bitrate fehlen).",
+      "preflight_failed": "Preflight blockierend (rot).",
+      "preflight_warning": "Preflight mit Warnungen.",
+      "readiness_failed": "Plattform nicht startklar.",
+      "readiness_warning": "Plattform mit Warnungen."
+    }
   },
   "monitoring": {
     "ingest": {

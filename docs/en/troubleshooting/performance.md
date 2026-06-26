@@ -4,7 +4,7 @@ description: "Encoding speed < 1.0x, high CPU, bottlenecks."
 lang: en
 audience: "Operators / Administrators"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-26
 ---
 
 # Performance
@@ -35,6 +35,17 @@ parallel streams.
 Use the [dry-run](/docs/en/user-guide/preflight-checks.md) to estimate encoding speed
 **before** going live.
 
+## Health score 🔴 red / 🟡 yellow
+
+The **stream health score** (dashboard) summarizes the live metrics. Click a job to see the
+reasons:
+
+- **Encoding speed critical/low** → check CPU load/profile (see above).
+- **Reconnects / output crashed** → check network/destination, review logs
+  ([Stream not starting](/docs/en/troubleshooting/stream-not-starting.md)).
+- **No throughput** → FFmpeg emits no FPS/bitrate – check the input/source.
+- **Unknown (gray)** → the job is not running; the score appears once it is live.
+
 ## Relevant values
 
 - **speed** (×), **fps**, **CPU%**, **RAM** per output in monitoring.
@@ -47,4 +58,4 @@ Use the [dry-run](/docs/en/user-guide/preflight-checks.md) to estimate encoding 
 - [System requirements](/docs/en/admin-guide/system-requirements.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: stable_
+_Last reviewed: 2026-06-26 · Status: stable_

@@ -304,6 +304,18 @@ export interface MediamtxSource {
   pull_url: string;
 }
 
+export interface HealthReason { code: string; level: string; params?: Record<string, unknown> }
+export interface JobHealthSummary { job_id: string; name: string; score: number | null; status: string }
+export interface OutputHealth { output_id: string | null; score: number | null; status: string; reasons: HealthReason[] }
+export interface JobHealth {
+  job_id: string;
+  name: string;
+  score: number | null;
+  status: string;
+  reasons: HealthReason[];
+  outputs: OutputHealth[];
+}
+
 export interface FfmpegStatus {
   ffmpeg_version: string | null;
   ffprobe_version: string | null;

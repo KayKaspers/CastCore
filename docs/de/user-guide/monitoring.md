@@ -4,7 +4,7 @@ description: "System- und Stream-Metriken live: CPU, RAM, FPS, Bitrate."
 lang: de
 audience: "Anwender / Operatoren"
 status: stable
-lastReviewed: 2026-06-25
+lastReviewed: 2026-06-26
 ---
 
 # Monitoring
@@ -28,6 +28,22 @@ lastReviewed: 2026-06-25
 Pro aktivem Output: **Status**, **FPS**, **kbit/s**, **Speed**, **CPU%**, **RAM**.
 Die Werte stammen aus dem Process Manager (psutil + FFmpeg-Progress) und werden in der
 Datenbank abgeglichen.
+
+## Stream-Health-Score
+
+Im **Dashboard** zeigt das Panel **Stream-Health** pro Stream-Job einen Score **0–100** mit
+Ampelstatus: 🟢 gesund · 🟡 Warnung · 🔴 kritisch · ⚪ unbekannt (läuft nicht). Klick auf einen
+Job zeigt die **Gründe** (z. B. niedriger Encoding-Speed, Reconnects, verworfene Frames,
+fehlender Durchsatz, abgestürzte Ausgabe).
+
+Der Score wird aus den **Live-Prozessmetriken** (Status, Speed, Reconnects, Dropped Frames,
+FPS/Bitrate) je Output berechnet; der **schwächste laufende Output** bestimmt den Job-Score.
+API: `GET /api/v1/monitoring/jobs/{id}/health` und `GET /api/v1/monitoring/health` (Übersicht).
+Es werden **keine** Stream-Keys oder Secrets ausgegeben.
+
+> ℹ️ Preflight- und Readiness-Ergebnisse fließen optional ein, werden für den Live-Score aber
+> nicht bei jedem Abruf neu erhoben (das wäre zu teuer/rate-limitiert) – sie sind separat über
+> Preflight bzw. **Verbindung testen** abrufbar.
 
 ## Wichtige Signale
 
@@ -70,4 +86,4 @@ docker compose --profile monitoring up -d
 - [MediaMTX-Integration](/docs/de/admin-guide/mediamtx.md)
 
 ---
-_Stand: 2026-06-25 · Status: Stabil_
+_Stand: 2026-06-26 · Status: Stabil_
