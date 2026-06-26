@@ -4,7 +4,7 @@
 - **Transport:** REST (JSON) for CRUD; **WebSocket** (`/api/v1/ws/...`) and **SSE** for
   live logs and status streams.
 - **Auth:** `Authorization: Bearer <access_jwt>`; refresh via `/auth/refresh`.
-  API tokens for automation via `X-API-Key`.
+  Personal API tokens for automation are also sent as `Authorization: Bearer cc_…`.
 - **Errors:** machine-readable **translatable codes**, not English prose:
   ```json
   { "error": { "code": "preflight.source_unreachable",

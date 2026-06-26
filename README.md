@@ -22,9 +22,33 @@ in plain language and offers automatic fallbacks.
 
 ## Status
 
-🚧 **Early scaffold / Phase 1 in progress.** This repository currently contains the
-architecture, project skeleton and the foundations of the backend, frontend, worker and
-deployment tooling. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the milestone plan.
+🟡 **Early beta / advanced alpha.** The core is built and runs on Docker; it is suitable for
+self-hosted early use, **not yet production-hardened**. See [`CHANGELOG.md`](CHANGELOG.md) for
+the authoritative, chronological record of what landed.
+
+**Implemented (functional):** auth (JWT + rotating refresh, RBAC Admin/Operator/Viewer), 2FA
+(TOTP), API tokens, session management, **rate limiting** on sensitive auth endpoints;
+stream jobs with a shell-free FFmpeg command builder + multi-output, live logs (WebSocket/
+Redis), auto-restart; monitoring + Prometheus exporter; **FFmpeg version detection &
+safe-media mode** (CVE-2026-8461 mitigation); local + SMB/CIFS storage; media library,
+playlists, channels (HLS/EPG), recording, scheduler, notifications, backup/restore; MediaMTX
+ingest (status + as a source); platform-account OAuth **linking** (YouTube/Twitch); a full
+bilingual docs/help system; and CI for backend (ruff/mypy/pytest incl. API integration
+tests), frontend (eslint/build), docs and compose, plus a manual full-stack E2E workflow.
+
+**Known gaps / not yet:**
+- A patched **FFmpeg ≥ 8.1.2** is not yet the verified default binary (images ship Debian's
+  build; a static-build path + runtime warnings are in place — see
+  [FFmpeg requirements](docs/en/admin-guide/ffmpeg-requirements.md)).
+- **OAuth** links accounts but does **not** yet push metadata to YouTube/Twitch.
+- **Storage**: only local + SMB/CIFS; NFS/SFTP/WebDAV/rclone/cloud are not implemented.
+- **Hardening**: worker runs non-root + `cap_drop`; backend/process-manager still run as root
+  (only `no-new-privileges`). No **CSP** header yet.
+- **Tests**: no frontend tests and no migration tests yet. The E2E workflow is **manual**
+  (`workflow_dispatch`).
+- Native `install.sh`/`update.sh`/`uninstall.sh` exist but are **not fully verified**.
+
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the milestone plan.
 
 ## Tech stack
 
@@ -35,7 +59,7 @@ deployment tooling. See [`docs/ROADMAP.md`](docs/ROADMAP.md) for the milestone p
 | Worker           | arq (Redis) for scans, ffprobe, thumbnails, backups               |
 | Database         | PostgreSQL 16                                                     |
 | Cache / Queue / PubSub | Redis 7                                                     |
-| Frontend         | React 18 · TypeScript · Vite · Tailwind · i18next · TanStack Query |
+| Frontend         | React 18 · TypeScript · Vite · Tailwind · i18next · zustand (+ a custom data hook) |
 | Reverse proxy    | Caddy (automatic HTTPS)                                           |
 | Optional router  | MediaMTX (RTSP/RTMP/SRT/WebRTC/HLS routing)                       |
 
@@ -58,6 +82,9 @@ docker compose --profile monitoring up -d   # add Prometheus exporters
 ```
 
 ## Native install (no Docker)
+
+> ⚠️ The native install path exists but is **not yet fully verified** — Docker is the
+> recommended and tested deployment.
 
 ```bash
 sudo ./scripts/install.sh      # Debian 12 / Ubuntu LTS
@@ -91,7 +118,9 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every push and pull request:
 - **Docs** — `scripts/check_docs.py` (structure, DE/EN parity, manifest, internal links).
 - **Compose** — `docker compose config` validation.
 
-Run the same checks locally; the commands are listed in
+A separate **manual** workflow (`.github/workflows/e2e.yml`, `workflow_dispatch`) runs a
+full-stack end-to-end stream-lifecycle test; it is not part of the per-PR gate because it
+boots the whole stack. Run the same checks locally; the commands are listed in
 [`CONTRIBUTING.md`](CONTRIBUTING.md#continuous-integration).
 
 ## License

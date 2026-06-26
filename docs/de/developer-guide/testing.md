@@ -99,6 +99,15 @@ python scripts/check_docs.py        # Struktur, DE/EN-Parität, Manifest, leere 
 ```
 Erzeugt `docs-status.json` + `nav.json`; ist Teil der CI (Job **docs** in `ci.yml`).
 
+## Noch nicht abgedeckt
+
+Ehrliche Lücken (Stand der Testbasis):
+
+- **Keine Frontend-Tests** (nur ESLint + `tsc`/Vite-Build).
+- **Keine Migrationstests** – Integrationstests bauen das Schema via `create_all`, prüfen also
+  nicht die Alembic-Migrationskette.
+- Der **E2E-Stream-Test ist manuell** (`workflow_dispatch`), nicht Teil des PR-Gates.
+
 ## Lokaler Stack
 
 Siehe [Lokales Testen](https://github.com/KayKaspers/CastCore/blob/main/docs/LOCAL_DEV.md).

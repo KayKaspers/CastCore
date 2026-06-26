@@ -5,9 +5,12 @@ Security is built in from the start, not bolted on.
 ## Authentication & sessions
 - Username/password login; passwords hashed with **argon2id**.
 - **JWT** access tokens (short TTL) + **refresh** tokens (rotating, stored hashed in
-  `sessions`, revocable). Logout revokes the refresh token.
-- **API tokens** for automation (`X-API-Key`), scoped, hashed at rest.
-- Optional **2FA (TOTP)** — Phase 4; `users.totp_secret` stored encrypted.
+  `sessions`, revocable). Logout revokes the refresh token. Active sessions are listable and
+  individually revocable; the current device is flagged via a session-id (`sid`) claim.
+- **API tokens** for automation — sent as `Authorization: Bearer cc_…`, hashed at rest,
+  authenticate as their owner; the `cc_` prefix disambiguates them from JWTs.
+- **2FA (TOTP)** — implemented: per-user setup/verify/disable, enforced at login, with an
+  admin reset. The TOTP secret is stored encrypted.
 
 ## Authorization (RBAC)
 | Role | Capabilities |
@@ -39,6 +42,13 @@ Every endpoint declares the required role; checks are enforced server-side.
 ## FFmpeg & system safety (critical)
 - **No shell execution.** FFmpeg/ffprobe/mount/rclone invoked with **argument lists**
   via `subprocess`/asyncio (`shell=False`). No string interpolation into shells.
+- **FFmpeg decoder CVEs (e.g. CVE-2026-8461 / MagicYUV):** the installed FFmpeg/ffprobe
+  version is detected at runtime and **a build < 8.1.2 is flagged as vulnerable** (system
+  status, preflight, setup). A **safe-media mode** flags/blocks risky codecs (default
+  blocklist: `magicyuv`). See [FFmpeg requirements](en/admin-guide/ffmpeg-requirements.md).
+  *Note: a patched FFmpeg ≥ 8.1.2 is not yet the verified default binary — see that page.*
+- **Minimal process environment:** spawned FFmpeg processes get no CastCore secrets in their
+  environment (SECRET_KEY/ENCRYPTION_KEY/DB creds are stripped).
 - **Path traversal prevention:** all file/media/mount/recording paths validated and
   confined to configured roots (`MEDIA_DIR`, `MOUNT_DIR`, `RECORDINGS_DIR`, …).
 - **Safe uploads:** thumbnails/assets validated by type + size, stored with sanitized,
@@ -51,11 +61,17 @@ Every endpoint declares the required role; checks are enforced server-side.
   start/stop, backup/restore, update) with actor, target, IP, timestamp.
 - Restrictive file permissions on data/log/config directories; dedicated unprivileged
   system user `castcore` for native installs.
-- Principle of least privilege for container capabilities (only add `SYS_ADMIN`/
-  `/dev/fuse` when in-container mounting is explicitly enabled).
+- **Container hardening:** `no-new-privileges` on backend/process-manager/worker; the
+  **worker** (which processes untrusted media) additionally `cap_drop: ALL` and runs
+  **non-root**. The **backend and process-manager still run as root** (optional in-container
+  CIFS/NFS mounts need `SYS_ADMIN`; prefer host-side mounts) — full non-root is a known gap.
 
-## Checklist (implementation gate)
-- [ ] argon2id hashing · [ ] JWT rotation + revocation · [ ] RBAC on every route
-- [ ] Fernet encryption for all secret columns · [ ] secrets masked in UI & logs
-- [ ] shell=False everywhere · [ ] path confinement · [ ] upload validation
-- [ ] rate limiting · [ ] CSRF/XSS/CSP · [ ] audit log · [ ] restrictive file perms
+## Status (implemented vs. gaps)
+Implemented: argon2id · JWT rotation + revocation · RBAC on every route · 2FA · API tokens ·
+session management · **rate limiting** (auth endpoints) · Fernet encryption for secret
+columns · secrets masked in UI & logs · `shell=False` everywhere · path confinement · upload
+validation · audit log · restrictive file perms · FFmpeg version detection + safe-media mode.
+
+Known gaps: **CSP** header not set (CSRF N/A — Bearer API); broader (non-auth) rate limits;
+patched **FFmpeg ≥ 8.1.2** not yet the verified default; backend/process-manager not yet
+non-root; OAuth **metadata push** not implemented; no frontend/migration tests.

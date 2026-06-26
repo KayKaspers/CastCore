@@ -4,7 +4,7 @@ description: "Base URL, auth, error format, OpenAPI/Swagger."
 lang: en
 audience: "Developers / Integrators"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-26
 ---
 
 # API overview
@@ -17,7 +17,7 @@ lastReviewed: 2026-06-24
 
 - `POST /api/v1/auth/login` returns **access** and **refresh** tokens.
 - Send requests with `Authorization: Bearer <access_token>`.
-- Automation: API tokens via `X-API-Key` (see [Auth](/docs/en/api/auth.md)).
+- Automation: personal API tokens via `Authorization: Bearer cc_…` (see [Auth](/docs/en/api/auth.md)).
 
 ## Error format
 
@@ -57,4 +57,4 @@ The token is passed as the `?token=` query parameter.
   · [Backup/restore](/docs/en/api/backup-restore.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: stable_
+_Last reviewed: 2026-06-26 · Status: stable_

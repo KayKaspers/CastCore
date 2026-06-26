@@ -97,6 +97,15 @@ python scripts/check_docs.py        # structure, DE/EN parity, manifest, empty p
 ```
 Generates `docs-status.json` + `nav.json`; part of CI (job **docs** in `ci.yml`).
 
+## Not yet covered
+
+Honest gaps in the current test base:
+
+- **No frontend tests** (only ESLint + `tsc`/Vite build).
+- **No migration tests** – integration tests build the schema via `create_all`, so they do
+  not exercise the Alembic migration chain.
+- The **E2E stream test is manual** (`workflow_dispatch`), not part of the PR gate.
+
 ## Local stack
 
 See [Local dev](https://github.com/KayKaspers/CastCore/blob/main/docs/LOCAL_DEV.md).

@@ -5,6 +5,25 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Docs — README & security documentation audit (Phase 0, Step 5)
+- **README**: replaced the stale "Early scaffold / Phase 1" status with an honest
+  **"early beta / advanced alpha"** section listing what is implemented and the **known gaps**
+  (FFmpeg ≥ 8.1.2 not yet the verified default, OAuth metadata push missing, storage only
+  local+SMB, backend/PM still root, no CSP, no frontend/migration tests, native install
+  unverified, E2E is manual). Fixed the frontend stack line (zustand + custom data hook, not
+  TanStack Query for fetching); added the manual E2E workflow and a native-install caveat.
+- **docs/SECURITY.md**: corrected API-token transport (`Authorization: Bearer cc_…`, not
+  `X-API-Key`); 2FA is now described as implemented (not "Phase 4"); added FFmpeg version
+  detection / safe-media / minimal-env / container-hardening; replaced the unchecked
+  "implementation gate" with an honest **implemented-vs-gaps** status.
+- **Admin security guides (DE/EN)** already reflected rate limiting + FFmpeg hardening (Steps
+  1/security); verified no stale "prepared/planned" claims remain.
+- **API docs** (`docs/API.md`, `docs/de|en/api/overview.md`): fixed the `X-API-Key` claim to
+  the real `Authorization: Bearer cc_…`.
+- **Developer testing docs (DE/EN)**: added a "not yet covered" section (no frontend tests, no
+  migration tests, E2E is manual).
+- check_docs green; no code changes in this step.
+
 ### Added — End-to-end stream lifecycle test (Phase 0, Step 4)
 - `backend/e2e_stream.py`: a full-stack E2E driving the real lifecycle via the live API +
   Redis (backend + Process Manager + status consumer): create job → command preview → start →
