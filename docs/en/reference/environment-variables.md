@@ -4,7 +4,7 @@ description: "Reference of all `.env` variables."
 lang: en
 audience: "Administrators"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-26
 ---
 
 # Environment variables
@@ -55,6 +55,10 @@ lastReviewed: 2026-06-24
 | Variable | Description |
 | --- | --- |
 | `FFMPEG_PATH` / `FFPROBE_PATH` | paths to FFmpeg/ffprobe |
+| `SAFE_MEDIA_PROCESSING_ENABLED` | safe-media mode for untrusted sources (default `true`) |
+| `MEDIA_AUTOTHUMBNAILS_ENABLED` | automatic thumbnail generation (default `true`) |
+| `BLOCK_RISKY_CODECS` | block risky codecs in preflight (default `true`) |
+| `RISKY_CODECS_BLOCKLIST` | extra risky codecs, comma-separated (default `magicyuv`) |
 | `ACME_EMAIL` | email for automatic HTTPS certificates (Caddy) |
 | `RATE_LIMIT_ENABLED` | auth rate limiting on/off (default `true`) |
 | `RATE_LIMIT_AUTH_ATTEMPTS` | allowed attempts per window per client IP (default `10`) |
@@ -75,4 +79,4 @@ lastReviewed: 2026-06-24
 - [Configuration](/docs/en/reference/configuration.md)
 
 ---
-_Last reviewed: 2026-06-24 · Status: stable_
+_Last reviewed: 2026-06-26 · Status: stable_

@@ -104,7 +104,10 @@ export default function MediaLibraryPage() {
             {(media.data ?? []).map((m) => (
               <tr key={m.id} className="border-b border-slate/10">
                 <td className="px-4 py-3">
-                  <div className="text-mist">{m.filename} {m.streamable && <Badge status="green">stream</Badge>}</div>
+                  <div className="text-mist">
+                    {m.filename} {m.streamable && <Badge status="green">stream</Badge>}
+                    {m.risky_codec && <Badge status="failed">{t("media.riskyCodec")}</Badge>}
+                  </div>
                   <div className="text-xs text-slate">{m.rel_path} · {m.kind}</div>
                 </td>
                 <td className="px-4 py-3 text-slate">{m.probe?.video_codec ?? "—"}{m.probe?.audio_codec ? ` / ${m.probe.audio_codec}` : ""}</td>

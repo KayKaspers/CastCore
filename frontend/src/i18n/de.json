@@ -152,6 +152,22 @@
   "ffmpeg": {
     "commandPreview": "Command-Vorschau"
   },
+  "ffmpegSec": {
+    "title": "FFmpeg-Sicherheit",
+    "ok": "Aktuell",
+    "vulnerable": "Verwundbar",
+    "unknown": "Unbekannt",
+    "min": "Minimum:",
+    "vulnerableHint": "Die installierte FFmpeg-Version liegt unter {{min}} und ist möglicherweise von CVE-2026-8461 (MagicYUV) betroffen. Bitte auf eine gepatchte Version aktualisieren.",
+    "unknownHint": "Die FFmpeg-Version konnte nicht ermittelt werden – bitte manuell prüfen.",
+    "safeMode": "Safe-Media",
+    "blockRisky": "Riskante Codecs blockieren",
+    "autoThumbs": "Auto-Thumbnails",
+    "riskyCodecs": "Riskante Codecs"
+  },
+  "media": {
+    "riskyCodec": "Riskanter Codec"
+  },
   "dryRun": {
     "button": "Dry-Run",
     "title": "Dry-Run / Teststream"
@@ -205,7 +221,9 @@
     "destination": "Ziel zugewiesen",
     "output_url": "Output-URL gesetzt",
     "stream_key": "Stream-Key vorhanden",
-    "disk_space": "Speicherplatz ausreichend"
+    "disk_space": "Speicherplatz ausreichend",
+    "risky_codec": "Riskanter Codec (z. B. MagicYUV)",
+    "ffmpeg_version": "FFmpeg-Version"
   },
   "loghint": {
     "generic": "Es wurde ein mögliches Problem erkannt – siehe Log.",

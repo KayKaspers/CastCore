@@ -37,6 +37,10 @@ x-common-env: &common-env
   THUMBNAIL_DIR: ${THUMBNAIL_DIR:-/data/thumbnails}
   FFMPEG_PATH: ${FFMPEG_PATH:-/usr/bin/ffmpeg}
   FFPROBE_PATH: ${FFPROBE_PATH:-/usr/bin/ffprobe}
+  SAFE_MEDIA_PROCESSING_ENABLED: ${SAFE_MEDIA_PROCESSING_ENABLED:-true}
+  MEDIA_AUTOTHUMBNAILS_ENABLED: ${MEDIA_AUTOTHUMBNAILS_ENABLED:-true}
+  BLOCK_RISKY_CODECS: ${BLOCK_RISKY_CODECS:-true}
+  RISKY_CODECS_BLOCKLIST: ${RISKY_CODECS_BLOCKLIST:-magicyuv}
   MEDIAMTX_ENABLED: ${MEDIAMTX_ENABLED:-false}
   MEDIAMTX_API_URL: ${MEDIAMTX_API_URL:-http://mediamtx:9997}
   MEDIAMTX_RTSP_URL: ${MEDIAMTX_RTSP_URL:-rtsp://mediamtx:8554}
@@ -84,6 +88,10 @@ services:
     restart: unless-stopped
     environment: *common-env
     volumes: *data-volume
+    # Hardening: block privilege escalation. (cap_drop is omitted here because optional
+    # in-container CIFS/NFS mounts need CAP_SYS_ADMIN; prefer host-side mounts.)
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -102,6 +110,9 @@ services:
     volumes: *data-volume
     # SYS_ADMIN + /dev/fuse only needed if you mount rclone/cifs inside the container.
     # Prefer host-side mounts; see docs/DEPLOYMENT.md.
+    # Hardening: block privilege escalation for the service that spawns FFmpeg.
+    security_opt:
+      - no-new-privileges:true
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }
@@ -113,6 +124,12 @@ services:
     restart: unless-stopped
     environment: *common-env
     volumes: *data-volume
+    # Hardening: the worker needs no Linux capabilities — drop them all and block
+    # privilege escalation. This is where untrusted media is analysed/thumbnailed.
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
     depends_on:
       postgres: { condition: service_healthy }
       redis: { condition: service_healthy }

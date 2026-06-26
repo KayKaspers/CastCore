@@ -31,7 +31,7 @@ async def create_admin(payload: AdminCreate, db: DbDep) -> UserOut:
 
 @router.post("/syscheck", response_model=SystemCheckResult)
 async def syscheck() -> SystemCheckResult:
-    return setup_service.run_syscheck()
+    return await setup_service.run_syscheck()
 
 
 @router.post("/step/{step}", response_model=SetupStatus, dependencies=[Depends(require_roles("admin"))])

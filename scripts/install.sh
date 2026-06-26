@@ -38,6 +38,20 @@ apt-get install -y --no-install-recommends \
 command -v ffmpeg  >/dev/null || die "FFmpeg installation failed."
 command -v ffprobe >/dev/null || die "ffprobe installation failed."
 
+# FFmpeg security check (CVE-2026-8461 / "PixelSmash", MagicYUV decoder, fixed in 8.1.2).
+# A vulnerable distro package is a warning, not a hard failure: CastCore still runs and warns
+# at runtime, but operators should install a patched build (static build / backport).
+FFMPEG_MIN="8.1.2"
+ffver="$(ffmpeg -version 2>/dev/null | sed -nE 's/^ffmpeg version n?([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/p' | head -1)"
+if [ -n "$ffver" ] && [ "$(printf '%s\n%s\n' "$FFMPEG_MIN" "$ffver" | sort -V | head -1)" != "$FFMPEG_MIN" ]; then
+  log "WARNING: FFmpeg ${ffver} is below ${FFMPEG_MIN} and may be affected by CVE-2026-8461 (MagicYUV)."
+  log "         Consider a patched static build or backport. See docs/admin-guide/ffmpeg-requirements."
+elif [ -z "$ffver" ]; then
+  log "WARNING: could not determine the FFmpeg version; verify it is >= ${FFMPEG_MIN} (CVE-2026-8461)."
+else
+  log "FFmpeg ${ffver} OK (>= ${FFMPEG_MIN})."
+fi
+
 # 3) System user (no login shell)
 if ! id "$APP_USER" >/dev/null 2>&1; then
   log "Creating system user '$APP_USER'…"

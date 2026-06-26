@@ -4,7 +4,7 @@ description: "Häufige FFmpeg-Fehler erkennen und beheben."
 lang: de
 audience: "Operatoren / Administratoren"
 status: stable
-lastReviewed: 2026-06-24
+lastReviewed: 2026-06-26
 ---
 
 # FFmpeg-Fehler
@@ -47,6 +47,18 @@ Echtzeit wird nicht gehalten → [Performance](/docs/de/troubleshooting/performa
 Plattform weist die Verbindung ab → meist falscher Stream-Key oder URL.
 Siehe [Plattform-Fehler](/docs/de/troubleshooting/platform-errors.md).
 
+## „FFmpeg verwundbar" / „Riskanter Codec" (CVE-2026-8461)
+
+- **Systemstatus/Preflight zeigt „FFmpeg verwundbar":** Die installierte FFmpeg-Version ist
+  < 8.1.2 und möglicherweise von CVE-2026-8461 (MagicYUV) betroffen. Aktualisiere auf ein
+  gepatchtes Build – Wege: [FFmpeg-Anforderungen & Sicherheit](/docs/de/admin-guide/ffmpeg-requirements.md).
+- **Preflight ist „rot: Riskanter Codec":** Der Eingang nutzt einen Codec aus der Blocklist
+  (z. B. MagicYUV). Bei `BLOCK_RISKY_CODECS=true` (Standard) blockiert CastCore den Start.
+  Verwende eine andere Quelle, transkodiere die Datei vorab, oder – nur wenn du der Quelle
+  vertraust und FFmpeg gepatcht ist – setze `BLOCK_RISKY_CODECS=false`.
+- **Version unbekannt:** CastCore konnte `ffmpeg -version` nicht auswerten. Prüfe `FFMPEG_PATH`
+  und dass das Binary erreichbar ist.
+
 ## Relevante Logs
 
 ```bash
@@ -56,9 +68,10 @@ Im UI: **Stream-Jobs → Live-Logs** (Fehlerzeilen sind rot, mit Hinweis-Banner)
 
 ## Verwandte Seiten
 
+- [FFmpeg-Anforderungen & Sicherheit](/docs/de/admin-guide/ffmpeg-requirements.md)
 - [FFmpeg Command Builder](/docs/de/developer-guide/ffmpeg-command-builder.md)
 - [FFmpeg-Profile](/docs/de/reference/ffmpeg-profiles.md)
 - [Glossar](/docs/de/reference/glossary.md)
 
 ---
-_Stand: 2026-06-24 · Status: Stabil_
+_Stand: 2026-06-26 · Status: Stabil_

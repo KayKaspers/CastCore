@@ -24,7 +24,9 @@ from cryptography.fernet import Fernet
 os.environ.setdefault("CASTCORE_ENV", "development")
 os.environ.setdefault("SECRET_KEY", "test-secret-key-not-for-production")
 os.environ.setdefault("ENCRYPTION_KEY", Fernet.generate_key().decode())
-os.environ.setdefault("RATE_LIMIT_ENABLED", "false")
+# Force-disable rate limiting in tests (must override any ambient RATE_LIMIT_ENABLED=true so
+# Redis counters can't accumulate across tests and produce spurious 429s).
+os.environ["RATE_LIMIT_ENABLED"] = "false"
 
 import pytest  # noqa: E402
 import pytest_asyncio  # noqa: E402

@@ -62,6 +62,14 @@ def _classify(line: str) -> tuple[str, str | None]:
     return ("error" if _ERROR_RE.search(line) else "info"), None
 
 
+def _ffmpeg_env() -> dict[str, str]:
+    """Minimal environment for spawned FFmpeg processes — no CastCore secrets leak through."""
+    keep = ("PATH", "HOME", "LANG", "LC_ALL", "TMPDIR", "TZ")
+    env = {k: os.environ[k] for k in keep if k in os.environ}
+    env.setdefault("PATH", "/usr/local/bin:/usr/bin:/bin")
+    return env
+
+
 @dataclass
 class ManagedProcess:
     output_id: str
@@ -72,10 +80,13 @@ class ManagedProcess:
 
     async def start(self) -> None:
         # shell=False: argv is a list; nothing is interpreted by a shell.
+        # A minimal env keeps CastCore secrets (SECRET_KEY, ENCRYPTION_KEY, DB/Redis creds)
+        # out of the FFmpeg child's environment. Stream keys live in the argv, not the env.
         self.proc = await asyncio.create_subprocess_exec(
             *self.argv,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
+            env=_ffmpeg_env(),
         )
 
     async def stop(self) -> None:

@@ -123,6 +123,16 @@
       "lastReviewed": "2026-06-24"
     },
     {
+      "id": "ffmpeg-security",
+      "module": "core",
+      "status": "implemented",
+      "docs": { "de": ["docs/de/admin-guide/ffmpeg-requirements.md"], "en": ["docs/en/admin-guide/ffmpeg-requirements.md"] },
+      "uiRoutes": ["/monitoring", "/media"],
+      "apiRoutes": ["/api/v1/monitoring/ffmpeg"],
+      "models": ["MediaItem", "MediaProbe"],
+      "lastReviewed": "2026-06-26"
+    },
+    {
       "id": "platform-oauth",
       "module": "platforms",
       "status": "implemented",

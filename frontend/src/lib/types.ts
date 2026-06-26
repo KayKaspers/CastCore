@@ -143,6 +143,7 @@ export interface MediaItem {
   size_bytes: number;
   streamable: boolean;
   problem_flags: Record<string, unknown>;
+  risky_codec: boolean;
   probe: MediaProbe | null;
 }
 
@@ -301,6 +302,19 @@ export interface MediamtxSource {
   name: string;
   source_type: string | null;
   pull_url: string;
+}
+
+export interface FfmpegStatus {
+  ffmpeg_version: string | null;
+  ffprobe_version: string | null;
+  ffmpeg_available: boolean;
+  min_version: string;
+  ffmpeg_vulnerable: boolean | null;
+  ffprobe_vulnerable: boolean | null;
+  risky_codecs: string[];
+  safe_media_processing_enabled: boolean;
+  media_autothumbnails_enabled: boolean;
+  block_risky_codecs: boolean;
 }
 
 export interface PlatformProvider {

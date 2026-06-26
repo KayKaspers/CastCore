@@ -10,6 +10,7 @@ import asyncio
 import json
 import shutil
 
+from app.core import ffmpeg_inspect
 from app.core.config import get_settings
 from app.models.streaming import Input, StreamJob
 from app.schemas.streaming import PreflightCheck, PreflightReport
@@ -78,6 +79,20 @@ async def run_preflight(job: StreamJob) -> PreflightReport:
                 PreflightCheck(key="has_audio", level="ok" if has_audio else "warn",
                                detail=None if has_audio else "input has no audio stream")
             )
+            # Risky-codec check (e.g. MagicYUV / CVE-2026-8461). Block when configured to.
+            risky = sorted(
+                {s.get("codec_name") for s in streams if ffmpeg_inspect.is_risky_codec(s.get("codec_name"))}
+            )
+            if risky:
+                _s = get_settings()
+                block = _s.block_risky_codecs and _s.safe_media_processing_enabled
+                checks.append(
+                    PreflightCheck(
+                        key="risky_codec",
+                        level="error" if block else "warn",
+                        detail=f"risky codec(s): {', '.join(risky)}",
+                    )
+                )
 
     # --- outputs & destinations ---
     enabled = [o for o in job.outputs if o.enabled]
@@ -108,5 +123,17 @@ async def run_preflight(job: StreamJob) -> PreflightReport:
             )
         except OSError:
             checks.append(PreflightCheck(key="disk_space", level="warn", detail="unavailable"))
+
+    # --- FFmpeg version (CVE advisory) ---
+    info = await ffmpeg_inspect.get_info()
+    if info["ffmpeg_vulnerable"] is True:
+        checks.append(
+            PreflightCheck(key="ffmpeg_version", level="warn",
+                           detail=f"FFmpeg {info['ffmpeg_version']} < {info['min_version']} (vulnerable)")
+        )
+    elif info["ffmpeg_vulnerable"] is None:
+        checks.append(
+            PreflightCheck(key="ffmpeg_version", level="warn", detail="FFmpeg version unknown")
+        )
 
     return PreflightReport(level=_level(checks), checks=checks)

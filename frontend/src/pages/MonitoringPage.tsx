@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { Badge, Panel } from "../components/ui";
 import { api } from "../lib/api";
-import type { MediamtxStatus, OutputMetrics, SystemMetrics } from "../lib/types";
+import type { FfmpegStatus, MediamtxStatus, OutputMetrics, SystemMetrics } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
 export default function MonitoringPage() {
@@ -11,6 +11,7 @@ export default function MonitoringPage() {
   const sys = useAsync<SystemMetrics>(() => api.get("/monitoring/system"), []);
   const outputs = useAsync<OutputMetrics[]>(() => api.get("/monitoring/outputs"), []);
   const mtx = useAsync<MediamtxStatus>(() => api.get("/mediamtx/status"), []);
+  const ff = useAsync<FfmpegStatus>(() => api.get("/monitoring/ffmpeg"), []);
 
   // Auto-refresh every 2s.
   useEffect(() => {
@@ -63,9 +64,49 @@ export default function MonitoringPage() {
         </table>
       </Panel>
 
+      {ff.data && <FfmpegPanel status={ff.data} />}
+
       {mtx.data?.enabled && <IngestPanel status={mtx.data} />}
     </div>
   );
+}
+
+function FfmpegPanel({ status }: { status: FfmpegStatus }) {
+  const { t } = useTranslation();
+  const vuln = status.ffmpeg_vulnerable;
+  const badge = vuln === true ? "failed" : vuln === null ? "yellow" : "running";
+  const label =
+    vuln === true ? t("ffmpegSec.vulnerable") : vuln === null ? t("ffmpegSec.unknown") : t("ffmpegSec.ok");
+
+  return (
+    <Panel className="space-y-3">
+      <div className="flex items-center gap-2">
+        <h2 className="text-mist">{t("ffmpegSec.title")}</h2>
+        <Badge status={badge}>{label}</Badge>
+      </div>
+      <div className="text-sm text-slate">
+        FFmpeg <span className="text-mist">{status.ffmpeg_version ?? "—"}</span> · ffprobe{" "}
+        <span className="text-mist">{status.ffprobe_version ?? "—"}</span> · {t("ffmpegSec.min")}{" "}
+        <span className="text-mist">{status.min_version}</span>
+      </div>
+
+      {vuln === true && (
+        <p className="text-danger text-sm">{t("ffmpegSec.vulnerableHint", { min: status.min_version })}</p>
+      )}
+      {vuln === null && <p className="text-warning text-sm">{t("ffmpegSec.unknownHint")}</p>}
+
+      <div className="text-xs text-slate flex flex-wrap gap-x-4 gap-y-1">
+        <span>{t("ffmpegSec.safeMode")}: <Flag on={status.safe_media_processing_enabled} /></span>
+        <span>{t("ffmpegSec.blockRisky")}: <Flag on={status.block_risky_codecs} /></span>
+        <span>{t("ffmpegSec.autoThumbs")}: <Flag on={status.media_autothumbnails_enabled} /></span>
+        <span>{t("ffmpegSec.riskyCodecs")}: <span className="text-mist">{status.risky_codecs.join(", ") || "—"}</span></span>
+      </div>
+    </Panel>
+  );
+}
+
+function Flag({ on }: { on: boolean }) {
+  return <span className={on ? "text-core-green" : "text-slate"}>{on ? "✓" : "✗"}</span>;
 }
 
 function IngestPanel({ status }: { status: MediamtxStatus }) {

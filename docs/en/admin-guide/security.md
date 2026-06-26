@@ -86,6 +86,17 @@ responds `429` with the translatable code `auth.rate_limited` (plus a `Retry-Aft
 - **Path-traversal protection**: all paths confined to configured roots.
 - **Safe uploads**: type/size validation, generated filenames.
 - Mount credentials in restrictive `0600` files.
+- **Minimal process environment**: spawned FFmpeg processes receive **no** CastCore secrets
+  (SECRET_KEY/ENCRYPTION_KEY/DB credentials) in their environment.
+- **Container hardening**: `no-new-privileges` for all app services; the worker (which
+  processes potentially untrusted media) additionally `cap_drop: ALL` and runs **non-root**.
+
+## FFmpeg decoder security (CVE-2026-8461 / MagicYUV)
+
+FFmpeg decodes foreign media, so its version is security-relevant. CastCore detects the
+installed FFmpeg/ffprobe version, **warns on versions < 8.1.2**, and treats risky codecs (e.g.
+MagicYUV) specially (safe-media mode, preflight block, media badge). Details and patch paths:
+[FFmpeg requirements & security](/docs/en/admin-guide/ffmpeg-requirements.md).
 
 ## Audit log
 

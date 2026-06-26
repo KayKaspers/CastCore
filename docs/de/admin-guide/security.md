@@ -89,6 +89,17 @@ antwortet die API mit `429` und dem übersetzbaren Code `auth.rate_limited` (ink
 - **Path-Traversal-Schutz**: alle Pfade auf konfigurierte Wurzeln beschränkt.
 - **Sichere Uploads**: Typ-/Größenprüfung, generierte Dateinamen.
 - Mount-Credentials in restriktiven `0600`-Dateien.
+- **Minimales Prozess-Environment**: gespawnte FFmpeg-Prozesse erhalten **keine** CastCore-
+  Secrets (SECRET_KEY/ENCRYPTION_KEY/DB-Zugang) in ihrer Umgebung.
+- **Container-Härtung**: `no-new-privileges` für alle App-Dienste; der Worker (verarbeitet
+  potenziell untrusted Medien) zusätzlich `cap_drop: ALL` und als **Nicht-Root**.
+
+## FFmpeg-Decoder-Sicherheit (CVE-2026-8461 / MagicYUV)
+
+FFmpeg dekodiert fremde Mediendaten – die Version ist daher sicherheitsrelevant. CastCore
+erkennt die installierte FFmpeg/ffprobe-Version, **warnt bei Versionen < 8.1.2** und behandelt
+riskante Codecs (z. B. MagicYUV) gesondert (Safe-Media-Modus, Preflight-Block, Medien-Badge).
+Details und Patch-Wege: [FFmpeg-Anforderungen & Sicherheit](/docs/de/admin-guide/ffmpeg-requirements.md).
 
 ## Audit-Log
 

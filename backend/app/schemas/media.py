@@ -26,6 +26,7 @@ class MediaItemOut(BaseModel):
     size_bytes: int
     streamable: bool
     problem_flags: dict
+    risky_codec: bool = False
     probe: MediaProbeOut | None = None
 
 
@@ -46,5 +47,6 @@ def media_to_out(item) -> MediaItemOut:
     return MediaItemOut(
         id=item.id, storage_source_id=item.storage_source_id, rel_path=item.rel_path,
         filename=item.filename, kind=item.kind, size_bytes=item.size_bytes,
-        streamable=item.streamable, problem_flags=item.problem_flags, probe=probe,
+        streamable=item.streamable, problem_flags=item.problem_flags,
+        risky_codec="risky_codec" in (item.problem_flags or {}), probe=probe,
     )

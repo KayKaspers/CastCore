@@ -53,6 +53,15 @@ class Settings(BaseSettings):
     ffmpeg_path: str = "/usr/bin/ffmpeg"
     ffprobe_path: str = "/usr/bin/ffprobe"
 
+    # Safe media processing (mitigation for FFmpeg decoder CVEs, e.g. CVE-2026-8461/MagicYUV).
+    # When enabled, media from untrusted sources is treated cautiously and risky codecs are
+    # flagged/blocked instead of being decoded automatically.
+    safe_media_processing_enabled: bool = Field(default=True)
+    media_autothumbnails_enabled: bool = Field(default=True)
+    block_risky_codecs: bool = Field(default=True)
+    # Comma-separated extra codecs to treat as risky (merged with the built-in defaults).
+    risky_codecs_blocklist: str = Field(default="magicyuv")
+
     # MediaMTX (optional media router; compose profile "mediamtx")
     mediamtx_enabled: bool = Field(default=False)
     mediamtx_api_url: str = Field(default="http://mediamtx:9997")

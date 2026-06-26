@@ -123,6 +123,10 @@
           "title": "Docker-Compose-Betrieb"
         },
         {
+          "path": "admin-guide/ffmpeg-requirements.md",
+          "title": "FFmpeg-Anforderungen & Sicherheit"
+        },
+        {
           "path": "admin-guide/https.md",
           "title": "HTTPS / TLS"
         },
@@ -475,6 +479,10 @@
         {
           "path": "admin-guide/docker-compose.md",
           "title": "Operating with Docker Compose"
+        },
+        {
+          "path": "admin-guide/ffmpeg-requirements.md",
+          "title": "FFmpeg requirements & security"
         },
         {
           "path": "admin-guide/https.md",

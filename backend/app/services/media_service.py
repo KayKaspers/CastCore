@@ -15,6 +15,7 @@ import shutil
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core import ffmpeg_inspect
 from app.core.config import get_settings
 from app.models.media import MediaItem, MediaProbe
 from app.models.storage import StorageSource
@@ -142,7 +143,12 @@ async def scan_source(db: AsyncSession, source: StorageSource) -> dict:
                 if data is not None:
                     p = _build_probe(data)
                     item.streamable = bool(p["has_video"] or p["has_audio"])
-                    item.problem_flags = {} if item.streamable else {"unreadable": False, "no_av": True}
+                    flags: dict = {} if item.streamable else {"unreadable": False, "no_av": True}
+                    # Flag risky codecs (e.g. MagicYUV / CVE-2026-8461). Any later automatic
+                    # full-decode step (thumbnails) must honour this flag + safe-media settings.
+                    if ffmpeg_inspect.is_risky_codec(p["video_codec"]):
+                        flags["risky_codec"] = p["video_codec"]
+                    item.problem_flags = flags
                     if item.probe is None:
                         item.probe = MediaProbe(media_item_id=item.id)
                     item.probe.container = p["container"]

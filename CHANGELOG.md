@@ -5,6 +5,41 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Security — FFmpeg PixelSmash / CVE-2026-8461 hardening
+- **Audit**: all images (backend/process-manager/worker) ran FFmpeg/ffprobe **7.1.5 (< 8.1.2,
+  vulnerable)**; real untrusted-decode paths are the media scan (ffprobe, incl. SMB), dry-run
+  and preflight (all time-bounded); worker thumbnail/probe are still stubs; processes ran as
+  root with no privilege restrictions and inherited secrets via env. Risk: **moderate**.
+- **Version detection** (`app/core/ffmpeg_inspect.py`): parses FFmpeg/ffprobe versions, flags
+  builds `< 8.1.2` as vulnerable (min configurable in code), and exposes a risky-codec
+  blocklist (default `magicyuv`). Surfaced via:
+  - `GET /api/v1/monitoring/ffmpeg` (authed) + a **FFmpeg security** panel on the Monitoring
+    page (version, vulnerable/unknown/ok badge, safe-media flags).
+  - **Preflight**: warns on a vulnerable FFmpeg and, for risky input codecs, blocks (red) when
+    `BLOCK_RISKY_CODECS` + safe mode are on (else warns).
+  - **Setup wizard** syscheck: an `ffmpeg_version` item (warns if vulnerable).
+- **Safe media processing** (config/env): `SAFE_MEDIA_PROCESSING_ENABLED`,
+  `MEDIA_AUTOTHUMBNAILS_ENABLED`, `BLOCK_RISKY_CODECS`, `RISKY_CODECS_BLOCKLIST`. Media scan
+  flags risky-codec files (`problem_flags.risky_codec`); the media library shows a **Risky
+  codec** badge. DE/EN i18n for all new strings.
+- **Process hardening**: spawned FFmpeg processes get a **minimal, secret-free environment**
+  (no SECRET_KEY/ENCRYPTION_KEY/DB creds). Compose: `no-new-privileges` on backend/PM/worker;
+  worker additionally `cap_drop: ALL` and runs **non-root** (uid 10001). Verified the worker
+  starts hardened with ffmpeg available.
+- **Patched FFmpeg path**: Dockerfiles accept `--build-arg FFMPEG_VARIANT=static
+  --build-arg FFMPEG_STATIC_URL=<8.1.2+ tarball>` to install a patched static build to
+  `/usr/bin` (apt remains the default). `scripts/install.sh` now checks the FFmpeg version and
+  warns if `< 8.1.2`.
+- **Tests**: `test_ffmpeg_inspect.py` (version parse/compare, risky-codec, get_info) +
+  `test_preflight.py` (risky-codec block, clean codec, vulnerable-version warn). Full backend
+  suite **64 passed**. Real detection confirmed: 7.1.5 → vulnerable.
+- **Docs**: new `admin-guide/ffmpeg-requirements.md` (DE+EN); security guide + env-vars +
+  `troubleshooting/ffmpeg-errors.md` updated (DE+EN); manifest gains an `ffmpeg-security`
+  feature; check_docs green (77 pages).
+- **Caveat**: advisory details (8.1.2, MagicYUV) are operator-provided; the *active* mitigation
+  is detection/warnings/safe-media — operators must supply a patched FFmpeg build. A real
+  ≥8.1.2 binary was not installed in this environment (may not be published in this timeline).
+
 ### Added — API integration test suite (Phase 0, Step 3)
 - New pytest integration suite exercising the FastAPI app in-process via httpx
   `ASGITransport` (no network; app lifespan / Redis loops not started). 22 new tests across

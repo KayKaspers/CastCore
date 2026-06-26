@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from sqlalchemy import select
 
 from app.api.deps import CurrentUser, DbDep, get_current_user
+from app.core import ffmpeg_inspect
 from app.core.config import get_settings
 from app.models.streaming import Destination, Output, ProcessStatus, StreamJob
 
@@ -69,6 +70,12 @@ async def system_metrics(_user: CurrentUser) -> SystemMetrics:
         disk_free_gb=round(disk.free / (1024**3), 1),
         ffmpeg_processes=ffmpeg,
     )
+
+
+@router.get("/ffmpeg")
+async def ffmpeg_status(_user: CurrentUser) -> dict:
+    """FFmpeg/ffprobe version, vulnerability flag and safe-media settings."""
+    return await ffmpeg_inspect.get_info()
 
 
 @router.get("/outputs", response_model=list[OutputMetrics])

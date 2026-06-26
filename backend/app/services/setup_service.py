@@ -9,6 +9,7 @@ import shutil
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core import ffmpeg_inspect
 from app.core.config import get_settings
 from app.core.errors import CastCoreError, ErrorCode
 from app.models.settings import SetupState
@@ -80,7 +81,7 @@ async def create_admin(db: AsyncSession, data: AdminCreate) -> User:
     return user
 
 
-def run_syscheck() -> SystemCheckResult:
+async def run_syscheck() -> SystemCheckResult:
     settings = get_settings()
     items: list[SystemCheckItem] = []
 
@@ -88,6 +89,17 @@ def run_syscheck() -> SystemCheckResult:
     items.append(SystemCheckItem(key="ffmpeg", ok=ffmpeg is not None, detail=ffmpeg))
     ffprobe = shutil.which(settings.ffprobe_path) or shutil.which("ffprobe")
     items.append(SystemCheckItem(key="ffprobe", ok=ffprobe is not None, detail=ffprobe))
+
+    # FFmpeg version vs. the CVE-2026-8461 minimum. A vulnerable build is a warning, not a
+    # blocker (CastCore still runs, but the operator should upgrade).
+    info = await ffmpeg_inspect.get_info()
+    if info["ffmpeg_vulnerable"] is True:
+        detail = f"{info['ffmpeg_version']} < {info['min_version']} (vulnerable — upgrade FFmpeg)"
+    elif info["ffmpeg_vulnerable"] is None:
+        detail = "version unknown — could not verify"
+    else:
+        detail = f"{info['ffmpeg_version']} (ok)"
+    items.append(SystemCheckItem(key="ffmpeg_version", ok=info["ffmpeg_vulnerable"] is False, detail=detail))
 
     for key, path in (
         ("data_dir", settings.data_dir),
