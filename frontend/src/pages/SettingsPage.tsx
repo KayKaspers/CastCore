@@ -7,6 +7,7 @@ import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { setLanguage } from "../i18n";
 import { api, ApiException } from "../lib/api";
 import { useAuthStore } from "../lib/auth";
+import type { ApiToken, ApiTokenCreated } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
 interface GlobalSettings {
@@ -55,6 +56,8 @@ export default function SettingsPage() {
       </Panel>
 
       <TwoFactorSettings onError={onErr} onSaved={(m) => setMsg(m)} />
+
+      <ApiTokensSettings onError={onErr} />
 
       {isAdmin && <InstanceSettings onError={onErr} onSaved={() => setMsg(t("settings.saved"))} />}
 
@@ -162,6 +165,80 @@ function TwoFactorSettings({
           </Button>
         </div>
       )}
+    </Panel>
+  );
+}
+
+function ApiTokensSettings({ onError }: { onError: (e: unknown) => void }) {
+  const { t, i18n } = useTranslation();
+  const tokens = useAsync<ApiToken[]>(() => api.get("/tokens"), []);
+  const [name, setName] = useState("");
+  const [days, setDays] = useState("");
+  const [created, setCreated] = useState<ApiTokenCreated | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const fmt = (s: string | null) =>
+    s ? new Date(s).toLocaleString(i18n.language) : "—";
+
+  const create = async () => {
+    if (!name.trim()) return;
+    setBusy(true);
+    try {
+      const body: Record<string, unknown> = { name: name.trim() };
+      if (days) body.expires_in_days = Number(days);
+      setCreated(await api.post<ApiTokenCreated>("/tokens", body));
+      setName(""); setDays("");
+      tokens.reload();
+    } catch (e) { onError(e); } finally { setBusy(false); }
+  };
+
+  const revoke = async (id: string) => {
+    if (!window.confirm(t("settings.tokens.revokeConfirm"))) return;
+    try { await api.del(`/tokens/${id}`); tokens.reload(); } catch (e) { onError(e); }
+  };
+
+  return (
+    <Panel className="space-y-4 max-w-xl">
+      <h2 className="text-mist">{t("settings.tokens.title")}</h2>
+      <p className="text-xs text-slate">{t("settings.tokens.intro")}</p>
+
+      {created && (
+        <div className="rounded-md border border-core-green/40 bg-core-green/10 p-3 space-y-2">
+          <p className="text-xs text-core-green">{t("settings.tokens.created")}</p>
+          <code className="block text-sm text-mist break-all">{created.token}</code>
+          <div className="flex gap-2">
+            <Button variant="ghost" onClick={() => navigator.clipboard?.writeText(created.token)}>
+              {t("settings.tokens.copy")}
+            </Button>
+            <Button variant="ghost" onClick={() => setCreated(null)}>{t("common.cancel")}</Button>
+          </div>
+        </div>
+      )}
+
+      <div className="grid grid-cols-3 gap-3 items-end">
+        <Field label={t("settings.tokens.name")}>
+          <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="ci-bot" />
+        </Field>
+        <Field label={t("settings.tokens.expiresDays")}>
+          <Input value={days} onChange={(e) => setDays(e.target.value)} inputMode="numeric" placeholder="∞" />
+        </Field>
+        <Button onClick={create} disabled={busy || !name.trim()}>{t("common.create")}</Button>
+      </div>
+
+      <div className="space-y-2">
+        {(tokens.data ?? []).map((tk) => (
+          <div key={tk.id} className="flex items-center justify-between border-b border-slate/10 pb-2">
+            <div>
+              <div className="text-sm text-mist">{tk.name}</div>
+              <div className="text-xs text-slate">
+                {t("settings.tokens.lastUsed")}: {fmt(tk.last_used_at)} · {t("settings.tokens.expires")}: {fmt(tk.expires_at)}
+              </div>
+            </div>
+            <Button variant="danger" onClick={() => revoke(tk.id)}>{t("settings.tokens.revoke")}</Button>
+          </div>
+        ))}
+        {tokens.data?.length === 0 && <p className="text-xs text-slate">{t("settings.tokens.none")}</p>}
+      </div>
     </Panel>
   );
 }

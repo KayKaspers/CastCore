@@ -73,6 +73,19 @@
       "disableHint": "Enter a current code from your app to disable 2FA.",
       "enabledMsg": "2FA is now active. You'll need a code on every sign-in from now on.",
       "disabledMsg": "2FA has been disabled."
+    },
+    "tokens": {
+      "title": "API tokens",
+      "intro": "Personal access tokens for the API. Send them in the Authorization: Bearer <token> header. They act with your permissions – treat them like a password.",
+      "name": "Name",
+      "expiresDays": "Valid (days)",
+      "created": "Token created – copy it now. It is shown only this once.",
+      "copy": "Copy",
+      "lastUsed": "Last used",
+      "expires": "Expires",
+      "revoke": "Revoke",
+      "revokeConfirm": "Revoke this token? Applications using it lose access immediately.",
+      "none": "No tokens yet."
     }
   },
   "docs": {

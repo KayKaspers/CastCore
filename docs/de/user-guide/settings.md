@@ -34,6 +34,14 @@ Im Bereich **Mein Profil** kannst du 2FA per **Authenticator-App** (TOTP) aktivi
 Zum **Deaktivieren** gibst du erneut einen gültigen Code ein. Details und Hinweise zur
 Wiederherstellung: [Security Best Practices](/docs/de/admin-guide/security.md#zwei-faktor-authentifizierung-2fa).
 
+## API-Tokens
+
+Unter **Einstellungen → API-Tokens** erstellst du persönliche Zugriffstokens für die API
+(z. B. für Skripte oder CI). Vergib einen **Namen** und optional eine **Gültigkeit in Tagen**.
+Der Klartext-Token wird **nur einmal** angezeigt – sofort kopieren und sicher aufbewahren.
+Tokens handeln mit **deinen** Rechten und lassen sich jederzeit **widerrufen**. Nutzung und
+Beispiele: [API: Auth](/docs/de/api/auth.md).
+
 ## Instanz-Einstellungen (Admin)
 
 Administratoren setzen **Instanzname** und **Standardsprache** für neue Benutzer.

@@ -11,9 +11,10 @@ from fastapi import Depends, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.errors import CastCoreError, ErrorCode
-from app.core.security import decode_token
+from app.core.security import API_TOKEN_PREFIX, decode_token
 from app.db.session import get_db
 from app.models.user import User
+from app.services import auth_service
 
 DbDep = Annotated[AsyncSession, Depends(get_db)]
 
@@ -25,6 +26,14 @@ async def get_current_user(
     if not authorization or not authorization.lower().startswith("bearer "):
         raise CastCoreError(ErrorCode.AUTH_FORBIDDEN, http_status=401)
     token = authorization.split(" ", 1)[1]
+
+    # Personal access tokens (prefixed) authenticate as their owner.
+    if token.startswith(API_TOKEN_PREFIX):
+        user = await auth_service.authenticate_api_token(db, token)
+        if user is None:
+            raise CastCoreError(ErrorCode.AUTH_FORBIDDEN, http_status=401)
+        return user
+
     try:
         payload = decode_token(token)
     except jwt.ExpiredSignatureError as exc:

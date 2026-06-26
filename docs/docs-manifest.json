@@ -176,9 +176,9 @@
       "id": "security",
       "module": "core",
       "status": "implemented",
-      "docs": { "de": ["docs/de/admin-guide/security.md", "docs/de/admin-guide/secrets.md", "docs/de/reference/roles.md", "docs/de/user-guide/users-roles.md"], "en": ["docs/en/admin-guide/security.md", "docs/en/admin-guide/secrets.md", "docs/en/reference/roles.md", "docs/en/user-guide/users-roles.md"] },
-      "uiRoutes": ["/users", "/audit"],
-      "apiRoutes": ["/api/v1/auth", "/api/v1/auth/2fa/setup", "/api/v1/auth/2fa/verify", "/api/v1/auth/2fa/disable", "/api/v1/users", "/api/v1/users/{id}/2fa/reset", "/api/v1/audit"],
+      "docs": { "de": ["docs/de/admin-guide/security.md", "docs/de/admin-guide/secrets.md", "docs/de/reference/roles.md", "docs/de/user-guide/users-roles.md", "docs/de/api/auth.md"], "en": ["docs/en/admin-guide/security.md", "docs/en/admin-guide/secrets.md", "docs/en/reference/roles.md", "docs/en/user-guide/users-roles.md", "docs/en/api/auth.md"] },
+      "uiRoutes": ["/users", "/audit", "/settings"],
+      "apiRoutes": ["/api/v1/auth", "/api/v1/auth/2fa/setup", "/api/v1/auth/2fa/verify", "/api/v1/auth/2fa/disable", "/api/v1/users", "/api/v1/users/{id}/2fa/reset", "/api/v1/tokens", "/api/v1/audit"],
       "models": ["User", "Role", "Session", "ApiToken", "AuditEvent"],
       "lastReviewed": "2026-06-25"
     }

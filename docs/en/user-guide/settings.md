@@ -32,6 +32,14 @@ In **My profile** you can enable 2FA via an **authenticator app** (TOTP):
 To **disable**, enter a valid code again. Details and recovery notes:
 [Security best practices](/docs/en/admin-guide/security.md#two-factor-authentication-2fa).
 
+## API tokens
+
+Under **Settings → API tokens** you create personal access tokens for the API (e.g. for
+scripts or CI). Give a **name** and optionally a **validity in days**. The plaintext token
+is shown **only once** – copy it immediately and store it safely. Tokens act with **your**
+permissions and can be **revoked** any time. Usage and examples:
+[API: auth](/docs/en/api/auth.md).
+
 ## Instance settings (admin)
 
 Administrators set the **instance name** and the **default language** for new users.

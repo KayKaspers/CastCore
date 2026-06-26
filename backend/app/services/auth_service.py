@@ -19,7 +19,7 @@ from app.core.security import (
     hash_token,
     verify_password,
 )
-from app.models.user import Role, Session, User
+from app.models.user import ApiToken, Role, Session, User
 
 
 async def get_user_by_username(db: AsyncSession, username: str) -> User | None:
@@ -66,6 +66,26 @@ async def authenticate(
         if not totp.verify(decrypt_secret(user.totp_secret), totp_code):
             raise CastCoreError(ErrorCode.AUTH_TOTP_INVALID, http_status=401)
     user.last_login_at = dt.datetime.now(dt.timezone.utc)
+    return user
+
+
+async def authenticate_api_token(db: AsyncSession, raw_token: str) -> User | None:
+    """Resolve a personal access token to its (active) user, or None.
+
+    Updates ``last_used_at`` and honours expiry. The token is matched by hash; the
+    plaintext is never stored.
+    """
+    res = await db.execute(select(ApiToken).where(ApiToken.token_hash == hash_token(raw_token)))
+    token = res.scalar_one_or_none()
+    if token is None:
+        return None
+    now = dt.datetime.now(dt.timezone.utc)
+    if token.expires_at is not None and token.expires_at < now:
+        return None
+    user = await db.get(User, token.user_id)
+    if user is None or not user.is_active:
+        return None
+    token.last_used_at = now
     return user
 
 

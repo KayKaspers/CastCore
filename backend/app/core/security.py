@@ -86,6 +86,15 @@ def generate_refresh_token() -> str:
     return secrets.token_urlsafe(48)
 
 
+# Personal access tokens carry this prefix so the auth layer can tell them apart from JWTs.
+API_TOKEN_PREFIX = "cc_"
+
+
+def generate_api_token() -> str:
+    """Generate a prefixed, high-entropy personal access token (shown once)."""
+    return API_TOKEN_PREFIX + secrets.token_urlsafe(32)
+
+
 def hash_token(token: str) -> str:
     """One-way hash for storing refresh/API tokens at rest (lookup by hash)."""
     return hashlib.sha256(token.encode()).hexdigest()

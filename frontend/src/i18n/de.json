@@ -73,6 +73,19 @@
       "disableHint": "Gib einen aktuellen Code aus deiner App ein, um 2FA zu deaktivieren.",
       "enabledMsg": "2FA ist jetzt aktiv. Du brauchst künftig bei jeder Anmeldung einen Code.",
       "disabledMsg": "2FA wurde deaktiviert."
+    },
+    "tokens": {
+      "title": "API-Tokens",
+      "intro": "Persönliche Zugriffstokens für die API. Sende sie im Header Authorization: Bearer <Token>. Sie handeln mit deinen Rechten – behandle sie wie ein Passwort.",
+      "name": "Name",
+      "expiresDays": "Gültig (Tage)",
+      "created": "Token erstellt – jetzt kopieren. Er wird nur dieses eine Mal angezeigt.",
+      "copy": "Kopieren",
+      "lastUsed": "Zuletzt genutzt",
+      "expires": "Läuft ab",
+      "revoke": "Widerrufen",
+      "revokeConfirm": "Diesen Token widerrufen? Anwendungen, die ihn nutzen, verlieren sofort den Zugriff.",
+      "none": "Noch keine Tokens."
     }
   },
   "docs": {

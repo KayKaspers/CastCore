@@ -30,6 +30,7 @@ from app.api.v1.endpoints import (
     setup,
     storage_sources,
     stream_jobs,
+    tokens,
     update,
     users,
     ws,
@@ -41,6 +42,7 @@ api_router.include_router(auth.router)
 api_router.include_router(setup.router)
 api_router.include_router(app_settings.router)
 api_router.include_router(users.router)
+api_router.include_router(tokens.router)
 api_router.include_router(ffmpeg_profiles.router)
 api_router.include_router(destinations.router)
 api_router.include_router(storage_sources.router)

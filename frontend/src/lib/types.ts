@@ -259,6 +259,18 @@ export interface ManagedUser {
   created_at: string;
 }
 
+export interface ApiToken {
+  id: string;
+  name: string;
+  last_used_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+}
+
+export interface ApiTokenCreated extends ApiToken {
+  token: string;
+}
+
 export interface AuditEvent {
   id: string;
   actor: string | null;

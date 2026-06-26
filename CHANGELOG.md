@@ -5,6 +5,20 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Personal access tokens (API tokens)
+- Programmatic API auth via long-lived **personal access tokens** (`cc_`-prefixed),
+  stored hashed only. Bearer auth now accepts either a JWT or an API token — the prefix
+  disambiguates; the token authenticates as its owner with the owner's roles.
+- Endpoints (per-user): `GET /api/v1/tokens`, `POST /api/v1/tokens`
+  (`{name, expires_in_days?}` → plaintext `token` returned **once**),
+  `DELETE /api/v1/tokens/{id}`. Optional expiry honoured; `last_used_at` tracked; audited
+  as `token.create` / `token.revoke`.
+- Settings → API tokens UI: create (one-time reveal + copy), list (name/last-used/expiry),
+  revoke. DE/EN i18n.
+- Docs: full section in `api/auth.md` (incl. 2FA endpoints now listed) + `settings.md`
+  (DE+EN); manifest updated; check_docs green. Verified end-to-end in Docker (7 assertions:
+  create, prefix, list omits plaintext, token→/me, last_used, bogus→401, revoke, expiry).
+
 ### Added — Admin 2FA reset (recovery)
 - `POST /api/v1/users/{id}/2fa/reset` (admin only) clears a user's 2FA when the second
   factor is lost; the secret is wiped and `totp_enabled` set false. Audited as
