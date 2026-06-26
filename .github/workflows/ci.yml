@@ -12,6 +12,27 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: castcore
+          POSTGRES_PASSWORD: castcore
+          POSTGRES_DB: castcore
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Integration tests use a separate test database on the service above.
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: "5432"
+      POSTGRES_USER: castcore
+      POSTGRES_PASSWORD: castcore
+      TEST_DB_NAME: castcore_test
     steps:
       - uses: actions/checkout@v4
 
@@ -30,7 +51,7 @@ jobs:
       - name: Mypy (type check)
         run: mypy
 
-      - name: Pytest
+      - name: Pytest (unit + API integration)
         run: pytest -q
 
   frontend:

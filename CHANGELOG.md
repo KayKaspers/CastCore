@@ -5,6 +5,28 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — API integration test suite (Phase 0, Step 3)
+- New pytest integration suite exercising the FastAPI app in-process via httpx
+  `ASGITransport` (no network; app lifespan / Redis loops not started). 22 new tests across
+  `tests/test_api_{auth,rbac,streams,platform,system}.py`:
+  - **auth**: setup status, admin bootstrap + conflict, login, refresh, logout, wrong
+    password, bogus refresh, full 2FA flow (setup → verify → login gate), API-token lifecycle.
+  - **rbac**: protected route needs a token, `/auth/me`, operator-gated `/stream-jobs`
+    (viewer 403 / operator+admin 200), admin-only `/users`, inactive-user token rejected.
+  - **streams**: stream-job CRUD, command preview (asserts stream-key masking), preflight.
+  - **platform**: OAuth providers list (disabled without creds), authorize gating,
+    platform-account status with a **mocked provider boundary** (encrypted tokens, no token
+    leakage over the API), disconnect.
+  - **system**: `/health`, `/system/health`, monitoring `/monitoring/system` (auth required).
+- **DB strategy**: a dedicated `castcore_test` Postgres database, isolated from app/dev data.
+  Schema via `Base.metadata.create_all`; each test truncates all tables and re-seeds the
+  default roles; `get_db` is overridden to the test engine (`tests/conftest.py`). Connection
+  from `POSTGRES_*`; DB name `TEST_DB_NAME` (default `castcore_test`); rate limiting disabled.
+- **CI**: the `backend` job now runs a `postgres:16` service and the integration tests as part
+  of `pytest`. Full suite **46 passed** locally (24 unit + 22 integration).
+- Docs: developer-guide `testing.md` (DE+EN) gains an "API integration tests" section;
+  CONTRIBUTING + README note the test DB; check_docs green (76 pages).
+
 ### Added — Full CI for backend, frontend and docs (Phase 0, Step 2)
 - New consolidated GitHub Actions workflow `.github/workflows/ci.yml` with four jobs, all
   blocking on push/PR:

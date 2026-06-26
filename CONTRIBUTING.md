@@ -56,7 +56,10 @@ before merge. It runs four jobs — reproduce them locally with the same command
 **Backend** (`cd backend`, install dev extras once with `pip install -e ".[dev]"`):
 - `ruff check app` — lint
 - `mypy` — type check (config in `pyproject.toml`)
-- `pytest -q` — unit tests
+- `pytest -q` — unit **and** API integration tests. The integration tests need a reachable
+  PostgreSQL and use a dedicated `castcore_test` database (connection from the `POSTGRES_*`
+  env vars; CI provides a Postgres service). External services (e.g. OAuth providers) are
+  mocked.
 
 **Frontend** (`cd frontend`):
 - `npm ci` — install from the committed `package-lock.json`

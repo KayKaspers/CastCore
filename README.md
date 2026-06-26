@@ -85,7 +85,8 @@ Setup Wizard and per user; no UI strings are hard-coded. Translations live in
 
 GitHub Actions (`.github/workflows/ci.yml`) runs on every push and pull request:
 
-- **Backend** — `ruff` (lint), `mypy` (type check), `pytest` (unit tests).
+- **Backend** — `ruff` (lint), `mypy` (type check), `pytest` (unit + API integration tests
+  against a Postgres service).
 - **Frontend** — `npm ci`, ESLint, and the `tsc` + Vite build.
 - **Docs** — `scripts/check_docs.py` (structure, DE/EN parity, manifest, internal links).
 - **Compose** — `docker compose config` validation.

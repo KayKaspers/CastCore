@@ -35,6 +35,35 @@ docker compose run --rm --no-deps backend sh -c "pip install -q '.[dev]' && ruff
 ```
 Oder mit lokalem Python 3.12: `cd backend && python -m pip install -e ".[dev]" && pytest`.
 
+## API-Integrationstests
+
+`tests/test_api_*.py` testen die HTTP-Schicht in-process über httpx **`ASGITransport`** (kein
+Netzwerk; die App-Lifespan – also die Redis-Loops – wird bewusst **nicht** gestartet).
+
+**DB-Strategie:** eine eigene PostgreSQL-Test-Datenbank **`castcore_test`**, isoliert von der
+App-/Dev-DB:
+
+- Schema wird einmalig pro Session via `Base.metadata.create_all` erzeugt.
+- Vor jedem Test werden alle Tabellen geleert und die Standardrollen
+  (`admin`/`operator`/`viewer`) neu eingespielt.
+- Die App-Dependency `get_db` wird auf die Test-DB umgebogen.
+- Verbindung über die `POSTGRES_*`-Variablen; DB-Name = `TEST_DB_NAME` (Standard
+  `castcore_test`). Rate-Limiting ist in Tests deaktiviert.
+
+**Externe Dienste** werden gemockt (z. B. die OAuth-Provider-Grenze
+`oauth_service._post_token` / `fetch_account_name`). Es sind **keine** echten
+Plattformzugänge nötig.
+
+Abgedeckt sind u. a.: Setup-Status, Login/Refresh/Logout, 2FA-Flow, API-Tokens, RBAC
+(Admin/Operator/Viewer), Protected Routes, Stream-Job-CRUD, Command-Preview (inkl.
+Stream-Key-Maskierung), Preflight, OAuth-Account-Status und der Monitoring-Health-Endpoint.
+
+Lokal in CI-Parität (Container erreicht den Compose-Postgres):
+
+```bash
+docker compose exec backend sh -c "pip install -q '.[dev]' && cd /app && pytest -q"
+```
+
 ## Linting & Typen
 
 - Backend: **ruff** (Lint) und **mypy** (Typen, Konfiguration in `pyproject.toml`).
