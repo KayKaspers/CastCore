@@ -1,0 +1,31 @@
+# CastCore Cursor Rules
+
+## Rolle von Cursor
+
+Cursor ist Entwicklungsumgebung und lokaler Code-Prüfer.
+
+Cursor darf:
+- Code analysieren
+- kleine Änderungen vorschlagen
+- Refactoring prüfen
+- Tests ausführen
+- Fehler suchen
+
+Cursor soll nicht:
+- eigenständig Architektur ändern
+- neue Frameworks einführen
+- Secrets in Code schreiben
+- Support-Hinweise aggressiv platzieren
+
+## Projektregeln
+
+- Docker-first
+- Documentation-first
+- Security-first
+- DE/EN
+- Anfängerfreundlich
+- Modular
+- README aktuell halten
+- .env.example aktuell halten
+- Keine Paywall
+- Ko-fi/Support nur dezent
