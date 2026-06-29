@@ -119,8 +119,12 @@ def main() -> int:
         status_pages[rel] = entry
 
     # 4) write docs-status.json
+    # NOTE: no generation timestamp is persisted on purpose. docs-status.json is a
+    # committed, CI-diffed artifact (see ci.yml "Fail if generated docs metadata is out
+    # of date"). A daily-changing "generated" date would make the file differ on every
+    # run even when no documentation changed, breaking CI. Keep this file a pure function
+    # of the docs content/structure so it only changes on real documentation changes.
     status = {
-        "generated": TODAY.isoformat(),
         "summary": {
             "pages": len(de | en), "de": len(de), "en": len(en),
             "placeholders": placeholders, "stale": stale,
