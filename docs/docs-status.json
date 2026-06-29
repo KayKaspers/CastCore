@@ -1,5 +1,4 @@
 {
-  "generated": "2026-06-29",
   "summary": {
     "pages": 77,
     "de": 77,
@@ -44,10 +43,10 @@
       "de": true,
       "en": true,
       "de_status": "stable",
-      "de_lastReviewed": "2026-06-26",
+      "de_lastReviewed": "2026-06-29",
       "de_placeholder": false,
       "en_status": "stable",
-      "en_lastReviewed": "2026-06-26",
+      "en_lastReviewed": "2026-06-29",
       "en_placeholder": false
     },
     "admin-guide/https.md": {

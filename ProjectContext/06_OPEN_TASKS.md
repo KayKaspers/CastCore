@@ -4,8 +4,8 @@
 
 ## Hoch
 
-- [ ] `main` (inkl. Preflight-2.0-Commit `d7e306a`) nach GitHub pushen — auf Freigabe
-- [ ] FFmpeg ≥ 8.1.2 als **verifizierte** Standard-Binary in den Images (aktuell Debian-Build + Static-Build-Pfad + Runtime-Warnung)
+- [ ] **GPU-Encoding (NVENC/QSV/VAAPI)**: Capability-Detection, NVIDIA Container Toolkit,
+      VAAPI `/dev/dri`, Encoder-Auswahl Simple/Expert, end-to-end verifizieren
 - [ ] Security-Hardening: CSP-Header; Backend/Process-Manager non-root (Worker ist bereits non-root + cap_drop)
 
 ## Mittel
@@ -14,6 +14,7 @@
 - [ ] Simple/Expert-Mode-Umschaltung im Frontend
 - [ ] Frontend-Tests + Migrationstests; E2E von manuell (`workflow_dispatch`) auf automatisiert
 - [ ] `install.sh` / `update.sh` / `uninstall.sh` vollständig verifizieren
+- [ ] Optionaler CI-Smoke-Job: `docker build` der copy-Variante (prüft Build-Gate), getrennt vom ffmpeg-freien Unit-Job
 
 ## Niedrig
 
@@ -22,3 +23,9 @@
 - [ ] Jellyfin/Plex-Vorbereitung
 - [ ] Frontend-Bundle splitten (Vite-Warnung: Chunk > 500 kB)
 - [ ] Vorbestehende ESLint-Warnungen in `MetadataPanel.tsx` und `DocsPage.tsx` bereinigen
+
+## Erledigt (jüngst)
+
+- [x] FFmpeg ≥ 8.1.2 verifizierte Standard-Binary (copy-Variante, Build-Gate, Digest/SHA-Pin) — 2026-06-29
+- [x] Preflight 2.0 + ProjectContext + CI-Regeln gepusht, CI grün — 2026-06-29
+- [x] Tech-Debt `generated`-Feld aus `docs-status.json` entfernt — 2026-06-29

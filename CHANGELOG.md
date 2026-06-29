@@ -5,6 +5,26 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Changed — Verified FFmpeg ≥ 8.1.2 build path (CVE-2026-8461)
+- The Docker images (backend, process-manager, worker) now ship a **pinned, static
+  FFmpeg/ffprobe ≥ 8.1.2 by default** via a new `FFMPEG_VARIANT=copy` build argument: a
+  multi-stage `COPY` from `mwader/static-ffmpeg:8.1.2` pinned by **tag + digest**
+  (`@sha256:33f770…`, amd64 + arm64). `static` (custom tarball, now **SHA256-verified**) and
+  `apt` (Debian package, ungated) remain documented fallbacks.
+- **Build gate:** for `copy`/`static`, the image build **fails** if the resulting
+  `ffmpeg`/`ffprobe` is below 8.1.2 (`ffmpeg -version`/`ffprobe -version` checked at build).
+  Binaries install to `/usr/bin`, so `FFMPEG_PATH`/`FFPROBE_PATH` are unchanged. Runtime
+  detection/warnings (`ffmpeg_inspect`) are unchanged.
+- `docker-compose.yml` wires the build args from `.env`; `.env.example` documents
+  `FFMPEG_VARIANT` / `FFMPEG_IMAGE` / `FFMPEG_STATIC_URL` / `FFMPEG_STATIC_SHA256`.
+- `scripts/install.sh` (native) gains a strict mode (`--require-safe-ffmpeg` /
+  `CASTCORE_REQUIRE_SAFE_FFMPEG=true`) that **aborts** on FFmpeg < 8.1.2 (default stays a warning).
+- Docs updated (DE+EN `admin-guide/ffmpeg-requirements`, README): variants, recommended `copy`,
+  checksum/digest pinning, GPL note, and an explicit note that GPU encoding still needs host
+  drivers + a GPU-enabled container runtime.
+- Tech-debt: removed the volatile `generated` date from `docs/docs-status.json` (it broke the
+  docs CI check across calendar days).
+
 ### Added — Stream Health Assistant / diagnostics engine (Phase 2, Step 9)
 - New `app/services/diagnostics_service.py` turns raw signals into **structured, actionable
   diagnoses** per job (and per output). Each diagnosis is a translatable `code` + metadata:

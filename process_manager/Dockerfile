@@ -1,22 +1,60 @@
-FROM python:3.12-slim-trixie
+# syntax=docker/dockerfile:1
 
-# FFmpeg/ffprobe are required: this service spawns the actual stream processes.
-# See backend/Dockerfile for the FFMPEG_VARIANT=static option (CVE-2026-8461 / 8.1.2+).
-ARG FFMPEG_VARIANT=apt
+# ── FFmpeg / ffprobe provisioning (see backend/Dockerfile for the full rationale) ────────────
+# FFmpeg/ffprobe are required: this service spawns the actual stream processes. Variant via
+# FFMPEG_VARIANT: copy (default, pinned static image) | static (tarball+SHA256) | apt (fallback).
+# For copy/static the build FAILS if ffmpeg/ffprobe < FFMPEG_MIN_VERSION (CVE-2026-8461).
+ARG FFMPEG_IMAGE=mwader/static-ffmpeg:8.1.2@sha256:33f770f812cbfc3de96c547157fc9faf8bd95a36481753439ffa761045167585
+ARG FFMPEG_VARIANT=copy
+ARG FFMPEG_MIN_VERSION=8.1.2
+
+FROM ${FFMPEG_IMAGE} AS ff_copy_bin
+FROM python:3.12-slim-trixie AS ff_copy
+COPY --from=ff_copy_bin /ffmpeg /ffprobe /out/
+
+FROM python:3.12-slim-trixie AS ff_static
 ARG FFMPEG_STATIC_URL=""
+ARG FFMPEG_STATIC_SHA256=""
 RUN set -eux; \
-    apt-get update; \
-    if [ "$FFMPEG_VARIANT" = "static" ] && [ -n "$FFMPEG_STATIC_URL" ]; then \
-        apt-get install -y --no-install-recommends curl xz-utils ca-certificates; \
-        curl -fsSL "$FFMPEG_STATIC_URL" -o /tmp/ff.tar.xz; \
-        mkdir -p /tmp/ff && tar -xf /tmp/ff.tar.xz -C /tmp/ff --strip-components=1; \
-        (install -m755 /tmp/ff/bin/ffmpeg /tmp/ff/bin/ffprobe /usr/bin/ \
-         || install -m755 /tmp/ff/ffmpeg /tmp/ff/ffprobe /usr/bin/); \
-        rm -rf /tmp/ff /tmp/ff.tar.xz; \
+    [ -n "$FFMPEG_STATIC_URL" ] && [ -n "$FFMPEG_STATIC_SHA256" ] \
+        || { echo "FFMPEG_VARIANT=static requires FFMPEG_STATIC_URL and FFMPEG_STATIC_SHA256"; exit 1; }; \
+    apt-get update; apt-get install -y --no-install-recommends curl xz-utils ca-certificates; \
+    curl -fsSL "$FFMPEG_STATIC_URL" -o /tmp/ff.tar.xz; \
+    echo "${FFMPEG_STATIC_SHA256}  /tmp/ff.tar.xz" | sha256sum -c -; \
+    mkdir -p /tmp/ff /out; tar -xf /tmp/ff.tar.xz -C /tmp/ff --strip-components=1; \
+    (cp /tmp/ff/bin/ffmpeg /tmp/ff/bin/ffprobe /out/ || cp /tmp/ff/ffmpeg /tmp/ff/ffprobe /out/); \
+    rm -rf /tmp/ff /tmp/ff.tar.xz /var/lib/apt/lists/*
+
+FROM python:3.12-slim-trixie AS ff_apt
+RUN install -d /out
+
+FROM ff_${FFMPEG_VARIANT} AS ffsrc
+
+# ── Final image ──────────────────────────────────────────────────────────────
+FROM python:3.12-slim-trixie
+ARG FFMPEG_VARIANT=copy
+ARG FFMPEG_MIN_VERSION=8.1.2
+
+COPY --from=ffsrc /out/ /tmp/ffsrc/
+RUN set -eux; \
+    if [ "$FFMPEG_VARIANT" = "apt" ]; then \
+        apt-get update; apt-get install -y --no-install-recommends ffmpeg; rm -rf /var/lib/apt/lists/*; \
     else \
-        apt-get install -y --no-install-recommends ffmpeg; \
+        install -m755 /tmp/ffsrc/ffmpeg /tmp/ffsrc/ffprobe /usr/bin/; \
     fi; \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /tmp/ffsrc; \
+    ffmpeg -version; ffprobe -version; \
+    if [ "$FFMPEG_VARIANT" != "apt" ]; then \
+        fv="$(ffmpeg  -version | sed -nE 's/^ffmpeg version n?([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/p'  | head -1)"; \
+        pv="$(ffprobe -version | sed -nE 's/^ffprobe version n?([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/p' | head -1)"; \
+        [ "$(printf '%s\n%s\n' "$FFMPEG_MIN_VERSION" "$fv" | sort -V | head -1)" = "$FFMPEG_MIN_VERSION" ] \
+            || { echo "FFmpeg $fv < $FFMPEG_MIN_VERSION (CVE-2026-8461)"; exit 1; }; \
+        [ "$(printf '%s\n%s\n' "$FFMPEG_MIN_VERSION" "$pv" | sort -V | head -1)" = "$FFMPEG_MIN_VERSION" ] \
+            || { echo "ffprobe $pv < $FFMPEG_MIN_VERSION (CVE-2026-8461)"; exit 1; }; \
+        echo "FFmpeg/ffprobe $fv OK (>= $FFMPEG_MIN_VERSION, variant=$FFMPEG_VARIANT)"; \
+    else \
+        echo "WARNING: FFMPEG_VARIANT=apt may ship FFmpeg < $FFMPEG_MIN_VERSION (CVE-2026-8461); runtime will warn."; \
+    fi
 
 WORKDIR /app
 COPY requirements.txt ./

@@ -26,7 +26,7 @@
 - [x] Lineare Kanäle (HLS/EPG/M3U), Fallback, interner hls.js-Player
 - [x] Plattform-OAuth (YouTube/Twitch), Metadaten-Push, Readiness-Check
 - [x] CI (Backend/Frontend/Docs/Compose), Audit-Log
-- [ ] FFmpeg ≥ 8.1.2 als verifizierte Standard-Binary
+- [x] FFmpeg ≥ 8.1.2 als verifizierte Standard-Binary (copy-Variante, Build-Gate, Digest-Pin)
 - [ ] OAuth-Push gegen echte Plattform-APIs verifizieren
 - [ ] Security-Review / Hardening (CSP, Backend/PM non-root)
 - [ ] Frontend-Tests, Migrationstests, automatisierte E2E

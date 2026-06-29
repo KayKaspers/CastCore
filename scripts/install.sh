@@ -16,6 +16,15 @@ die()  { printf '\033[1;31m[castcore]\033[0m %s\n' "$*" >&2; exit 1; }
 
 [ "$(id -u)" -eq 0 ] || die "Please run as root (sudo)."
 
+# Strict FFmpeg mode: abort if FFmpeg < 8.1.2 (CVE-2026-8461). Enable via the
+# CASTCORE_REQUIRE_SAFE_FFMPEG=true env var or the --require-safe-ffmpeg flag.
+REQUIRE_SAFE_FFMPEG="${CASTCORE_REQUIRE_SAFE_FFMPEG:-false}"
+for arg in "$@"; do
+  case "$arg" in
+    --require-safe-ffmpeg) REQUIRE_SAFE_FFMPEG="true" ;;
+  esac
+done
+
 # 1) OS check
 . /etc/os-release 2>/dev/null || die "Cannot read /etc/os-release."
 case "${ID}:${VERSION_ID:-}" in
@@ -44,10 +53,16 @@ command -v ffprobe >/dev/null || die "ffprobe installation failed."
 FFMPEG_MIN="8.1.2"
 ffver="$(ffmpeg -version 2>/dev/null | sed -nE 's/^ffmpeg version n?([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/p' | head -1)"
 if [ -n "$ffver" ] && [ "$(printf '%s\n%s\n' "$FFMPEG_MIN" "$ffver" | sort -V | head -1)" != "$FFMPEG_MIN" ]; then
-  log "WARNING: FFmpeg ${ffver} is below ${FFMPEG_MIN} and may be affected by CVE-2026-8461 (MagicYUV)."
-  log "         Consider a patched static build or backport. See docs/admin-guide/ffmpeg-requirements."
+  if [ "$REQUIRE_SAFE_FFMPEG" = "true" ]; then
+    die "FFmpeg ${ffver} is below ${FFMPEG_MIN} (CVE-2026-8461) and --require-safe-ffmpeg is set. Install a patched build (static/backport). See docs/admin-guide/ffmpeg-requirements."
+  fi
+  warn "FFmpeg ${ffver} is below ${FFMPEG_MIN} and may be affected by CVE-2026-8461 (MagicYUV)."
+  warn "         Consider a patched static build or backport. See docs/admin-guide/ffmpeg-requirements."
 elif [ -z "$ffver" ]; then
-  log "WARNING: could not determine the FFmpeg version; verify it is >= ${FFMPEG_MIN} (CVE-2026-8461)."
+  if [ "$REQUIRE_SAFE_FFMPEG" = "true" ]; then
+    die "Could not determine the FFmpeg version and --require-safe-ffmpeg is set; verify it is >= ${FFMPEG_MIN} (CVE-2026-8461)."
+  fi
+  warn "Could not determine the FFmpeg version; verify it is >= ${FFMPEG_MIN} (CVE-2026-8461)."
 else
   log "FFmpeg ${ffver} OK (>= ${FFMPEG_MIN})."
 fi
