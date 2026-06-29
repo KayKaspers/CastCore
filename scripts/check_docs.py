@@ -120,7 +120,10 @@ def main() -> int:
 
     # 4) write docs-status.json
     status = {
-        "generated": TODAY.isoformat(),
+        # NOTE: intentionally no volatile "generated" date here — it would make the committed
+        # docs-status.json differ from a CI regeneration run on another calendar day and break
+        # the "generated docs metadata is out of date" check. summary.stale is still date-derived
+        # but only changes when a page actually crosses the staleness threshold.
         "summary": {
             "pages": len(de | en), "de": len(de), "en": len(en),
             "placeholders": placeholders, "stale": stale,
