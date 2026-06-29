@@ -5,8 +5,15 @@ from __future__ import annotations
 from functools import lru_cache
 from pathlib import Path
 
-from pydantic import Field
+from cryptography.fernet import Fernet
+from pydantic import Field, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Marker shared by the config default and the .env.example placeholders. Any security-critical
+# value still containing it is treated as "not configured" in production.
+_INSECURE_MARKER = "changeme"
+# Weak built-in defaults that must never be used in production.
+_INSECURE_DB_PASSWORDS = {"", "castcore"}
 
 
 class Settings(BaseSettings):
@@ -98,6 +105,53 @@ class Settings(BaseSettings):
     @property
     def is_production(self) -> bool:
         return self.castcore_env == "production"
+
+    @model_validator(mode="after")
+    def _enforce_production_secrets(self) -> Settings:
+        """Fail closed: refuse to start in production with insecure secret defaults.
+
+        Development/test (``CASTCORE_ENV != production``) keep the convenient defaults so
+        local work and the test suite stay usable. Error messages name the offending
+        environment variable and the fix, but never echo any secret value.
+        """
+        if not self.is_production:
+            return self
+
+        problems: list[str] = []
+
+        secret = self.secret_key.strip()
+        if not secret or _INSECURE_MARKER in secret.lower():
+            problems.append("SECRET_KEY is unset or still the insecure default")
+        elif len(secret) < 32:
+            problems.append(
+                "SECRET_KEY is too short (use >= 32 chars, e.g. `openssl rand -hex 32`)"
+            )
+
+        enc = self.encryption_key.strip()
+        if not enc or _INSECURE_MARKER in enc.lower():
+            problems.append("ENCRYPTION_KEY is unset or still the insecure default")
+        else:
+            try:
+                Fernet(enc.encode())
+            except Exception:  # noqa: BLE001 - any failure means the key is unusable
+                problems.append(
+                    "ENCRYPTION_KEY is not a valid Fernet key "
+                    '(generate: python -c "from cryptography.fernet import Fernet; '
+                    'print(Fernet.generate_key().decode())")'
+                )
+
+        if self.postgres_password in _INSECURE_DB_PASSWORDS or (
+            _INSECURE_MARKER in self.postgres_password.lower()
+        ):
+            problems.append("POSTGRES_PASSWORD is unset or still the insecure default")
+
+        if problems:
+            raise ValueError(
+                "Refusing to start in production (CASTCORE_ENV=production) with insecure "
+                "configuration. Fix these environment variables (see .env.example) and "
+                "restart:\n  - " + "\n  - ".join(problems)
+            )
+        return self
 
 
 @lru_cache
