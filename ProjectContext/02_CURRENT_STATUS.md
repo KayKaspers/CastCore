@@ -17,11 +17,10 @@ vollständige bilinguale Doku, CI (Backend ruff/mypy/pytest, Frontend, Docs, Com
 
 ## Letzter abgeschlossener Schritt
 
-**FFmpeg ≥ 8.1.2 als verifizierte Standard-Binary / sicherer Build-Pfad** (CVE-2026-8461).
-Docker-Default `FFMPEG_VARIANT=copy`: Multi-Stage-COPY aus gepinntem statischem Image
-`mwader/static-ffmpeg:8.1.2@sha256:33f770…` (Tag+Digest), Build-Gate (≥ 8.1.2, sonst Abbruch),
-`static` mit SHA256, `apt` als Fallback. Backend/PM/Worker nutzen dieselbe Version.
-(Davor: Preflight 2.0, Commit `d7e306a`, gepusht; CI grün.)
+**CI-Smoke-Job `docker-ffmpeg-smoke`**: baut Backend/PM/Worker mit `FFMPEG_VARIANT=copy` und
+prüft ffmpeg/ffprobe ≥ 8.1.2 je Image (+ Negativtest am Build-Gate). Reguläre CI-Tests bleiben
+ffmpeg-frei. (Davor: FFmpeg ≥ 8.1.2 Build-Pfad mit Default `copy` + Build-Gate + Digest-Pin;
+Preflight 2.0 — alle gepusht, CI grün.)
 
 ## Aktuelle Priorität
 

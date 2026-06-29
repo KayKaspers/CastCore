@@ -36,7 +36,9 @@ playlists, channels (HLS/EPG), recording, scheduler, notifications, backup/resto
 ingest (status + as a source); platform OAuth (YouTube/Twitch) with **metadata push** and a
 **readiness check**; a full
 bilingual docs/help system; and CI for backend (ruff/mypy/pytest incl. API integration
-tests), frontend (eslint/build), docs and compose, plus a manual full-stack E2E workflow.
+tests), frontend (eslint/build), docs and compose, a **Docker FFmpeg build smoke test** (builds
+all images with `FFMPEG_VARIANT=copy` and asserts ffmpeg/ffprobe ≥ 8.1.2), plus a manual
+full-stack E2E workflow.
 
 **Known gaps / not yet:**
 - **GPU encoding** (NVENC/QSV/VAAPI) is not verified end-to-end — the bundled FFmpeg supports it,

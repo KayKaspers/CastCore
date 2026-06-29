@@ -5,6 +5,13 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — CI: FFmpeg Docker build smoke test
+- New workflow `.github/workflows/docker-ffmpeg-smoke.yml` (push to `main`, pull requests,
+  `workflow_dispatch`): builds the backend, process-manager and worker images with
+  `FFMPEG_VARIANT=copy` and asserts `ffmpeg`/`ffprobe` are >= 8.1.2 in each image (using the
+  GitHub Actions layer cache). A negative test builds with an old ffmpeg source and asserts the
+  build-time gate fails. Keeps the regular `ci` jobs ffmpeg-free (backend tests mock ffmpeg).
+
 ### Changed — Verified FFmpeg ≥ 8.1.2 build path (CVE-2026-8461)
 - The Docker images (backend, process-manager, worker) now ship a **pinned, static
   FFmpeg/ffprobe ≥ 8.1.2 by default** via a new `FFMPEG_VARIANT=copy` build argument: a

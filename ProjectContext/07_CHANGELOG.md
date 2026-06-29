@@ -4,6 +4,9 @@
 
 ## Unreleased
 
+- **2026-06-29 — CI-Smoke-Job `docker-ffmpeg-smoke`**: baut Backend/PM/Worker mit
+  `FFMPEG_VARIANT=copy`, prüft ffmpeg/ffprobe ≥ 8.1.2 je Image + Negativtest (alte Quelle muss
+  am Gate scheitern). Reguläre CI-Tests bleiben ffmpeg-frei.
 - **2026-06-29 — FFmpeg ≥ 8.1.2 verifizierter Build-Pfad** (CVE-2026-8461): Docker-Default
   `FFMPEG_VARIANT=copy` (Multi-Stage-COPY aus `mwader/static-ffmpeg:8.1.2`, Tag+Digest gepinnt),
   Build-Gate (≥ 8.1.2 sonst Abbruch), `static` mit SHA256, `apt` als Fallback; install.sh

@@ -14,7 +14,6 @@
 - [ ] Simple/Expert-Mode-Umschaltung im Frontend
 - [ ] Frontend-Tests + Migrationstests; E2E von manuell (`workflow_dispatch`) auf automatisiert
 - [ ] `install.sh` / `update.sh` / `uninstall.sh` vollständig verifizieren
-- [ ] Optionaler CI-Smoke-Job: `docker build` der copy-Variante (prüft Build-Gate), getrennt vom ffmpeg-freien Unit-Job
 
 ## Niedrig
 
@@ -26,6 +25,7 @@
 
 ## Erledigt (jüngst)
 
+- [x] CI-Smoke-Job `docker-ffmpeg-smoke` (baut copy-Variante, prüft ffmpeg/ffprobe ≥ 8.1.2 + Negativtest) — 2026-06-29
 - [x] FFmpeg ≥ 8.1.2 verifizierte Standard-Binary (copy-Variante, Build-Gate, Digest/SHA-Pin) — 2026-06-29
 - [x] Preflight 2.0 + ProjectContext + CI-Regeln gepusht, CI grün — 2026-06-29
 - [x] Tech-Debt `generated`-Feld aus `docs-status.json` entfernt — 2026-06-29

@@ -88,6 +88,10 @@ docker compose build --build-arg FFMPEG_VARIANT=apt
 > 🔒 Bei `copy`/`static` **schlägt der Build fehl**, wenn das resultierende `ffmpeg`/`ffprobe`
 > unter 8.1.2 liegt (geprüft per `ffmpeg -version` / `ffprobe -version` während des Builds).
 
+> ✅ Durch CI abgesichert: Der Workflow `docker-ffmpeg-smoke` baut alle drei Images mit
+> `FFMPEG_VARIANT=copy` und prüft ffmpeg/ffprobe ≥ 8.1.2 (plus Negativtest, dass eine alte
+> Quelle am Gate scheitert).
+
 **Lizenzhinweis:** Statische FFmpeg-Builds sind in der Regel **GPL** (sie enthalten GPL-
 Komponenten wie x264/x265). Die Nutzung mit CastCore ist erlaubt; bei Weiterverbreitung der
 Images sind die GPL-Bedingungen des enthaltenen FFmpeg-Builds einzuhalten.

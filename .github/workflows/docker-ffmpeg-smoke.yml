@@ -1,0 +1,71 @@
+name: docker-ffmpeg-smoke
+
+# Smoke test for the secure FFmpeg build path: build all three service images with the default
+# FFMPEG_VARIANT=copy and assert ffmpeg/ffprobe are >= 8.1.2 (CVE-2026-8461). The Dockerfile's
+# build-time gate already fails the build below the minimum; this job additionally re-checks the
+# resulting binaries and runs a negative test (an old ffmpeg source must fail the build).
+#
+# This is intentionally separate from the per-PR `ci` workflow because it pulls/builds images.
+# Normal backend unit/integration tests must NOT depend on a real ffmpeg/ffprobe (they are
+# mocked) — real ffmpeg checks live here, in the e2e workflow, and in manual docker checks.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  ffmpeg-build-smoke:
+    name: FFmpeg Docker build + version gate (copy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build images (FFMPEG_VARIANT=copy) and verify ffmpeg/ffprobe >= 8.1.2
+        run: |
+          set -euo pipefail
+          MIN=8.1.2
+          verify() {
+            svc="$1"; ctx="$2"; img="castcore-${svc}-smoke"
+            echo "::group::build ${svc} (FFMPEG_VARIANT=copy)"
+            # FFMPEG_IMAGE is pinned (tag + digest) in the Dockerfile default; only the variant
+            # is forced here so the smoke test exercises the recommended path.
+            docker buildx build "$ctx" \
+              --build-arg FFMPEG_VARIANT=copy \
+              --load -t "$img" \
+              --cache-from "type=gha,scope=${svc}" \
+              --cache-to "type=gha,mode=max,scope=${svc}"
+            echo "::endgroup::"
+            for bin in ffmpeg ffprobe; do
+              v="$(docker run --rm --entrypoint "$bin" "$img" -version \
+                    | sed -nE "s/^${bin} version n?([0-9]+\.[0-9]+(\.[0-9]+)?).*/\1/p" | head -1)"
+              [ -n "$v" ] || { echo "::error::${svc}: could not read ${bin} version"; exit 1; }
+              if [ "$(printf '%s\n%s\n' "$MIN" "$v" | sort -V | head -1)" != "$MIN" ]; then
+                echo "::error::${svc}: ${bin} ${v} < ${MIN}"; exit 1
+              fi
+              echo "${svc}: ${bin} ${v} OK (>= ${MIN})"
+            done
+          }
+          verify backend ./backend
+          verify process-manager ./process_manager
+          verify worker ./worker
+
+      - name: Negative gate test (an old ffmpeg source must fail the build)
+        run: |
+          set +e
+          out="$(docker build ./backend \
+                  --build-arg FFMPEG_VARIANT=copy \
+                  --build-arg FFMPEG_IMAGE=mwader/static-ffmpeg:7.1.1 \
+                  -t castcore-ffmpeg-gate-negative 2>&1)"
+          code=$?
+          set -e
+          echo "$out" | tail -15
+          if [ "$code" -eq 0 ]; then
+            echo "::error::build with FFmpeg 7.1.1 unexpectedly succeeded — the gate is broken"; exit 1
+          fi
+          echo "$out" | grep -q "< 8.1.2" \
+            || { echo "::error::build failed, but not via the version gate (unexpected error)"; exit 1; }
+          echo "negative gate test OK (build correctly failed at the version gate)"
