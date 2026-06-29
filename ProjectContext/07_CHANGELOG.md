@@ -1,10 +1,16 @@
-\# Changelog
+# Changelog
 
+> Maßgeblich und chronologisch: `CHANGELOG.md` im Repo-Root. Hier nur Nova-relevante Schritte.
 
+## Unreleased
 
-\## Unreleased
-
-
-
-\- Projektkontext nach Nova Development Kit vorbereitet.
-
+- **2026-06-29 — Preflight 2.0** (Commit `d7e306a`, lokal, noch nicht gepusht):
+  persistierte Startklar-Reports (Migration 0016), strukturierte code-basierte Checks,
+  optionales Start-Gate (`PREFLIGHT_REQUIRED_BEFORE_START` / `PREFLIGHT_BLOCK_ON_RED` /
+  `PREFLIGHT_REPORT_TTL_SECONDS`), neue Endpoints `/preflight/latest|reports|reports/{id}`,
+  `start?override=true` (Admin, auditiert), Fehler-Codes `preflight.required|blocked`,
+  diagnostics/monitoring lesen persistierte Reports. Frontend + DE/EN-i18n + Doku aktualisiert.
+  Verifiziert: pytest (122), ruff, mypy, Frontend tsc+build, check_docs, compose config.
+- **2026-06-29** — Repo nach `D:\Projects\CastCore` umgezogen; uncommittete Preflight-Arbeit
+  verlustfrei übernommen; `.env` neu generiert; ProjectContext aus realem Stand befüllt.
+- Projektkontext nach Nova Development Kit vorbereitet.
