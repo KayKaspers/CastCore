@@ -6,11 +6,26 @@ import LogsPanel from "../components/LogsPanel";
 import MetadataPanel from "../components/MetadataPanel";
 import { Badge, Button, Field, Input, Panel, Select } from "../components/ui";
 import { api, ApiException } from "../lib/api";
+import { useAuthStore } from "../lib/auth";
 import type { CommandPreview, Destination, DryRunReport, FFmpegProfile, MediamtxSource, PreflightReport, StreamJob } from "../lib/types";
 import { useAsync } from "../lib/useAsync";
 
+// Derive a short, human-readable detail from a check's params. The backend guarantees params
+// never contain secrets/stream keys, so any present value is safe to display.
+function checkDetail(c: { params: Record<string, unknown> }): string {
+  const p = c.params ?? {};
+  if (typeof p.detail === "string") return p.detail;
+  if (typeof p.codecs === "string") return p.codecs;
+  if (typeof p.free_gb === "number") return `${p.free_gb} GB`;
+  if (p.version != null) return `${p.version}${p.min != null ? ` (min ${p.min})` : ""}`;
+  if (typeof p.provider === "string") return p.provider;
+  if (typeof p.destination === "string") return p.destination;
+  return "";
+}
+
 export default function StreamJobsPage() {
   const { t } = useTranslation();
+  const isAdmin = useAuthStore((s) => s.hasRole("admin"));
   const jobs = useAsync<StreamJob[]>(() => api.get("/stream-jobs"), []);
   const profiles = useAsync<FFmpegProfile[]>(() => api.get("/ffmpeg-profiles"), []);
   const destinations = useAsync<Destination[]>(() => api.get("/destinations"), []);
@@ -21,6 +36,7 @@ export default function StreamJobsPage() {
   const [logsJob, setLogsJob] = useState<StreamJob | null>(null);
   const [metaJob, setMetaJob] = useState<StreamJob | null>(null);
   const [preflight, setPreflight] = useState<PreflightReport | null>(null);
+  const [gate, setGate] = useState<{ id: string; code: string } | null>(null);
   const [dryRun, setDryRun] = useState<DryRunReport | null>(null);
   const [dryBusy, setDryBusy] = useState(false);
 
@@ -35,14 +51,24 @@ export default function StreamJobsPage() {
     }
   };
 
-  const act = async (id: string, action: "start" | "stop" | "restart") => {
+  const act = async (id: string, action: "start" | "stop" | "restart", override = false) => {
     setError(null);
+    if (action === "start") setGate(null);
+    const path = action === "start" && override
+      ? `/stream-jobs/${id}/start?override=true`
+      : `/stream-jobs/${id}/${action}`;
     try {
-      const res = await api.post<CommandPreview>(`/stream-jobs/${id}/${action}`);
+      const res = await api.post<CommandPreview>(path);
       if (res?.previews) setPreview(res.previews);
       jobs.reload();
     } catch (e) {
-      if (e instanceof ApiException) setError(e.localized);
+      if (e instanceof ApiException) {
+        if (action === "start" && (e.code === "preflight.required" || e.code === "preflight.blocked")) {
+          setGate({ id, code: e.code });
+        } else {
+          setError(e.localized);
+        }
+      }
     }
   };
 
@@ -98,20 +124,50 @@ export default function StreamJobsPage() {
         <MetadataPanel jobId={metaJob.id} jobName={metaJob.name} onClose={() => setMetaJob(null)} />
       )}
 
+      {gate && (
+        <Panel>
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-sm text-warning">
+              {t(`preflight.gate.${gate.code === "preflight.required" ? "required" : "blocked"}`)}
+            </p>
+            <div className="flex items-center gap-2">
+              {isAdmin && (
+                <Button variant="danger" onClick={() => act(gate.id, "start", true)}>
+                  {t("preflight.gate.override")}
+                </Button>
+              )}
+              <button className="text-xs text-slate hover:text-mist" onClick={() => setGate(null)}>✕</button>
+            </div>
+          </div>
+        </Panel>
+      )}
+
       {preflight && (
         <Panel>
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-mist text-sm flex items-center gap-2">
               {t("nav.preflight")} <Badge status={preflight.level} />
+              {preflight.stale && <span className="text-xs text-warning">{t("preflight.stale")}</span>}
+              <span className={`text-xs ${preflight.can_start ? "text-success" : "text-danger"}`}>
+                {preflight.can_start ? t("preflight.canStart") : t("preflight.cannotStart")}
+              </span>
             </h2>
             <button className="text-xs text-slate hover:text-mist" onClick={() => setPreflight(null)}>✕</button>
+          </div>
+          <div className="flex gap-4 text-xs mb-3 text-slate">
+            <span className="text-danger">{t("preflight.summary.critical")}: {preflight.summary.critical ?? 0}</span>
+            <span className="text-warning">{t("preflight.summary.warning")}: {preflight.summary.warning ?? 0}</span>
+            <span className="text-success">{t("preflight.summary.ok")}: {preflight.summary.ok ?? 0}</span>
           </div>
           <ul className="space-y-2 text-sm">
             {preflight.checks.map((c, i) => (
               <li key={i} className="flex items-center justify-between border-b border-slate/10 pb-2">
-                <span className="text-mist">{t(`preflight.${c.key}`, { defaultValue: c.key })}</span>
+                <span className="text-mist flex items-center gap-2">
+                  {t(`preflight.${c.code}`, { defaultValue: c.code })}
+                  {c.blocking && <span className="text-[10px] uppercase text-danger">{t("preflight.blocking")}</span>}
+                </span>
                 <span className="flex items-center gap-2">
-                  {c.detail && <span className="text-slate text-xs">{c.detail}</span>}
+                  {checkDetail(c) && <span className="text-slate text-xs">{checkDetail(c)}</span>}
                   <Badge status={c.level === "ok" ? "green" : c.level === "warn" ? "yellow" : "red"} />
                 </span>
               </li>

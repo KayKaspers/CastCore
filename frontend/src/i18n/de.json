@@ -394,17 +394,35 @@
     "restoreDone": "Wiederherstellung abgeschlossen. Bitte neu anmelden, falls Benutzer geändert wurden."
   },
   "preflight": {
-    "inputs": "Eingabequelle definiert",
+    "input_defined": "Eingabequelle definiert",
     "source_readable": "Quelle lesbar (ffprobe)",
     "has_video": "Videostream vorhanden",
     "has_audio": "Audiostream vorhanden",
-    "outputs": "Ausgabeziel aktiv",
-    "destination": "Ziel zugewiesen",
-    "output_url": "Output-URL gesetzt",
-    "stream_key": "Stream-Key vorhanden",
-    "disk_space": "Speicherplatz ausreichend",
     "risky_codec": "Riskanter Codec (z. B. MagicYUV)",
-    "ffmpeg_version": "FFmpeg-Version"
+    "ffmpeg_version": "FFmpeg-Version",
+    "output_enabled": "Ausgabeziel aktiv",
+    "destination_set": "Ziel zugewiesen",
+    "stream_key": "Stream-Key vorhanden",
+    "output_writable": "Ausgabepfad beschreibbar",
+    "recording_path": "Aufnahmeverzeichnis beschreibbar",
+    "disk_space": "Speicherplatz ausreichend",
+    "platform_connected": "Plattform verbunden",
+    "platform_ready": "Plattform sendebereit",
+    "metadata_complete": "Metadaten vollständig",
+    "stale": "veraltet",
+    "canStart": "Start möglich",
+    "cannotStart": "Start blockiert",
+    "blocking": "blockierend",
+    "summary": {
+      "critical": "Kritisch",
+      "warning": "Warnungen",
+      "ok": "OK"
+    },
+    "gate": {
+      "required": "Vor dem Start ist ein aktueller Preflight-Report erforderlich.",
+      "blocked": "Preflight meldet blockierende Fehler – Start nicht möglich.",
+      "override": "Trotzdem starten (Override)"
+    }
   },
   "loghint": {
     "generic": "Es wurde ein mögliches Problem erkannt – siehe Log.",
@@ -436,7 +454,9 @@
     "preflight": {
       "source_unreachable": "Die Quelle „{{source}}“ ist nicht erreichbar.",
       "no_video": "Die Eingabe enthält keinen Videostream.",
-      "missing_stream_key": "Für das Ziel fehlt der Stream-Key."
+      "missing_stream_key": "Für das Ziel fehlt der Stream-Key.",
+      "required": "Vor dem Start ist ein aktueller Preflight-Report erforderlich.",
+      "blocked": "Preflight meldet blockierende Fehler – Start nicht möglich."
     },
     "storage": {
       "test_failed": "Die Verbindung zur Quelle ist fehlgeschlagen.",

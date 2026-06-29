@@ -37,6 +37,9 @@ x-common-env: &common-env
   THUMBNAIL_DIR: ${THUMBNAIL_DIR:-/data/thumbnails}
   FFMPEG_PATH: ${FFMPEG_PATH:-/usr/bin/ffmpeg}
   FFPROBE_PATH: ${FFPROBE_PATH:-/usr/bin/ffprobe}
+  PREFLIGHT_REQUIRED_BEFORE_START: ${PREFLIGHT_REQUIRED_BEFORE_START:-false}
+  PREFLIGHT_BLOCK_ON_RED: ${PREFLIGHT_BLOCK_ON_RED:-false}
+  PREFLIGHT_REPORT_TTL_SECONDS: ${PREFLIGHT_REPORT_TTL_SECONDS:-600}
   SAFE_MEDIA_PROCESSING_ENABLED: ${SAFE_MEDIA_PROCESSING_ENABLED:-true}
   MEDIA_AUTOTHUMBNAILS_ENABLED: ${MEDIA_AUTOTHUMBNAILS_ENABLED:-true}
   BLOCK_RISKY_CODECS: ${BLOCK_RISKY_CODECS:-true}
@@ -84,7 +87,13 @@ services:
     networks: [castcore]
 
   backend:
-    build: { context: ./backend }
+    build:
+      context: ./backend
+      args:
+        FFMPEG_VARIANT: ${FFMPEG_VARIANT:-copy}
+        FFMPEG_IMAGE: ${FFMPEG_IMAGE:-mwader/static-ffmpeg:8.1.2@sha256:33f770f812cbfc3de96c547157fc9faf8bd95a36481753439ffa761045167585}
+        FFMPEG_STATIC_URL: ${FFMPEG_STATIC_URL:-}
+        FFMPEG_STATIC_SHA256: ${FFMPEG_STATIC_SHA256:-}
     restart: unless-stopped
     environment: *common-env
     volumes: *data-volume
@@ -104,7 +113,13 @@ services:
 
   # Long-running supervisor for FFmpeg stream processes (NOT a task queue).
   process-manager:
-    build: { context: ./process_manager }
+    build:
+      context: ./process_manager
+      args:
+        FFMPEG_VARIANT: ${FFMPEG_VARIANT:-copy}
+        FFMPEG_IMAGE: ${FFMPEG_IMAGE:-mwader/static-ffmpeg:8.1.2@sha256:33f770f812cbfc3de96c547157fc9faf8bd95a36481753439ffa761045167585}
+        FFMPEG_STATIC_URL: ${FFMPEG_STATIC_URL:-}
+        FFMPEG_STATIC_SHA256: ${FFMPEG_STATIC_SHA256:-}
     restart: unless-stopped
     environment: *common-env
     volumes: *data-volume
@@ -120,7 +135,13 @@ services:
 
   # Short async jobs: media scan, ffprobe, thumbnails, backups.
   worker:
-    build: { context: ./worker }
+    build:
+      context: ./worker
+      args:
+        FFMPEG_VARIANT: ${FFMPEG_VARIANT:-copy}
+        FFMPEG_IMAGE: ${FFMPEG_IMAGE:-mwader/static-ffmpeg:8.1.2@sha256:33f770f812cbfc3de96c547157fc9faf8bd95a36481753439ffa761045167585}
+        FFMPEG_STATIC_URL: ${FFMPEG_STATIC_URL:-}
+        FFMPEG_STATIC_SHA256: ${FFMPEG_STATIC_SHA256:-}
     restart: unless-stopped
     environment: *common-env
     volumes: *data-volume

@@ -53,6 +53,11 @@ class Settings(BaseSettings):
     ffmpeg_path: str = "/usr/bin/ffmpeg"
     ffprobe_path: str = "/usr/bin/ffprobe"
 
+    # Preflight (gate before stream start)
+    preflight_required_before_start: bool = Field(default=False)
+    preflight_block_on_red: bool = Field(default=False)
+    preflight_report_ttl_seconds: int = Field(default=600)
+
     # Safe media processing (mitigation for FFmpeg decoder CVEs, e.g. CVE-2026-8461/MagicYUV).
     # When enabled, media from untrusted sources is treated cautiously and risky codecs are
     # flagged/blocked instead of being decoded automatically.

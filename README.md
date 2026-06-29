@@ -36,11 +36,13 @@ playlists, channels (HLS/EPG), recording, scheduler, notifications, backup/resto
 ingest (status + as a source); platform OAuth (YouTube/Twitch) with **metadata push** and a
 **readiness check**; a full
 bilingual docs/help system; and CI for backend (ruff/mypy/pytest incl. API integration
-tests), frontend (eslint/build), docs and compose, plus a manual full-stack E2E workflow.
+tests), frontend (eslint/build), docs and compose, a **Docker FFmpeg build smoke test** (builds
+all images with `FFMPEG_VARIANT=copy` and asserts ffmpeg/ffprobe ≥ 8.1.2), plus a manual
+full-stack E2E workflow.
 
 **Known gaps / not yet:**
-- A patched **FFmpeg ≥ 8.1.2** is not yet the verified default binary (images ship Debian's
-  build; a static-build path + runtime warnings are in place — see
+- **GPU encoding** (NVENC/QSV/VAAPI) is not verified end-to-end — the bundled FFmpeg supports it,
+  but it additionally needs host drivers + a GPU-enabled container runtime (see
   [FFmpeg requirements](docs/en/admin-guide/ffmpeg-requirements.md)).
 - **OAuth metadata push** is implemented for YouTube/Twitch but **not yet verified against the
   live platform APIs** (CastCore-side logic is tested with mocked APIs; real push needs client
@@ -80,9 +82,10 @@ See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for the full rationale.
   **Docker Compose v2** plugin.
 - ~2 GB RAM and a few GB of disk for the database, media and recordings.
 - Outbound internet for the initial image build (pulls base images + packages).
-- The bundled images run **Debian 13 (trixie)** with **FFmpeg 7.1.x from apt**. See
-  [FFmpeg requirements](docs/en/admin-guide/ffmpeg-requirements.md) — for a patched
-  **FFmpeg ≥ 8.1.2** build with `--build-arg FFMPEG_VARIANT=static`.
+- The bundled images run **Debian 13 (trixie)**; by default they ship a **pinned, static
+  FFmpeg/ffprobe ≥ 8.1.2** (`FFMPEG_VARIANT=copy`, verified by a build-time version gate). The
+  `apt` (Debian package) and `static` (custom tarball + SHA256) variants are documented fallbacks.
+  See [FFmpeg requirements](docs/en/admin-guide/ffmpeg-requirements.md).
 
 ### 1. Configure (`.env`)
 
@@ -155,7 +158,8 @@ Use **Backup / Restore** in the UI (DB + config as gz-JSON; secrets stay encrypt
   `POSTGRES_PASSWORD`; check `docker compose logs backend`.
 - **Can't log in on a fresh install** — the first-run admin form appears only while no user
   exists; if you created one already, sign in with it.
-- **FFmpeg "vulnerable" warning** — expected with the apt build (7.1.x < 8.1.2); see
+- **FFmpeg "vulnerable" warning** — should not appear with the default `copy` build (≥ 8.1.2);
+  it is expected only if you switched to `FFMPEG_VARIANT=apt` (7.1.x < 8.1.2). See
   [FFmpeg requirements](docs/en/admin-guide/ffmpeg-requirements.md).
 
 ### Native install (experimental)

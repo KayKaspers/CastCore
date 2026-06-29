@@ -74,6 +74,16 @@ before merge. It runs four jobs — reproduce them locally with the same command
 - `docker compose config --quiet` — validates `docker-compose.yml` (needs `SECRET_KEY`,
   `ENCRYPTION_KEY`, `POSTGRES_PASSWORD` set; any value works for validation).
 
+**FFmpeg Docker build smoke** (separate workflow `.github/workflows/docker-ffmpeg-smoke.yml`,
+on push to `main`, pull requests and `workflow_dispatch`):
+- Builds the backend, process-manager and worker images with `FFMPEG_VARIANT=copy` and asserts
+  `ffmpeg -version` and `ffprobe -version` are `>= 8.1.2` in each image. A negative test builds
+  with an old ffmpeg source and asserts the build-time gate fails.
+- This is where **real** ffmpeg/ffprobe is exercised. **Backend unit/integration tests must NOT
+  require a real ffmpeg/ffprobe** — mock them (e.g. `monkeypatch.setattr(preflight_service,
+  "_ffprobe", …)`, `ffmpeg_inspect.get_info`). Real ffmpeg runs belong in this smoke job, the
+  e2e workflow, or manual docker checks.
+
 **End-to-end** (separate, manual — `.github/workflows/e2e.yml`, run from the Actions tab):
 - `docker compose up -d --build && docker compose exec backend python /app/e2e_stream.py`
   drives the full stream lifecycle (create → preview → start → status → logs → output → stop)

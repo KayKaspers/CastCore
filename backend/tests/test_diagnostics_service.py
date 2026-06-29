@@ -15,13 +15,19 @@ V1 = "/api/v1"
 
 @pytest.fixture(autouse=True)
 def _reset(monkeypatch):
-    ds._preflight_cache.clear()
     ds._readiness_cache.clear()
 
     async def safe_info():
         return {"ffmpeg_vulnerable": False, "ffmpeg_version": "8.1.2", "min_version": "8.1.2"}
 
     monkeypatch.setattr(ffmpeg_inspect, "get_info", safe_info)
+
+
+async def _persist_preflight(db, job_id, checks, *, level="red", can_start=False):
+    """Persist a preflight report so the diagnostics engine reads it from the DB."""
+    from app.models.preflight import PreflightReport
+    db.add(PreflightReport(stream_job_id=job_id, level=level, can_start=can_start, checks=checks))
+    await db.commit()
 
 
 async def _job(db, *, state="running", speed=1.0, reconnects=0, dropped=0, key="SECRET_KEY_321"):
@@ -78,18 +84,18 @@ async def test_vulnerable_ffmpeg_security_diagnosis(db, monkeypatch):
     assert d["category"] == "security"
 
 
-async def test_risky_codec_from_cached_preflight(db):
+async def test_risky_codec_from_persisted_preflight(db):
     job = await _job(db)
-    ds.cache_preflight(str(job.id), {"level": "red", "checks": [
-        {"key": "risky_codec", "level": "error", "detail": "magicyuv"}]})
+    await _persist_preflight(db, job.id, [
+        {"code": "risky_codec", "level": "error", "params": {"codecs": "magicyuv"}}])
     d = next(d for d in (await ds.diagnose_job(db, job))["diagnoses"] if d["code"] == "risky_codec")
     assert d["category"] == "security" and d["confidence"] == "medium"
 
 
-async def test_missing_input_from_cached_preflight(db):
+async def test_missing_input_from_persisted_preflight(db):
     job = await _job(db)
-    ds.cache_preflight(str(job.id), {"level": "red", "checks": [
-        {"key": "source_readable", "level": "error", "detail": "ffprobe failed"}]})
+    await _persist_preflight(db, job.id, [
+        {"code": "source_readable", "level": "error", "params": {"detail": "ffprobe failed"}}])
     assert "input_unreachable" in _codes(await ds.diagnose_job(db, job))
 
 

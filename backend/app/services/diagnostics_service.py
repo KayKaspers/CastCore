@@ -22,15 +22,11 @@ from app.core import ffmpeg_inspect
 from app.models.streaming import Output, ProcessStatus, StreamJob
 from app.services import health_service
 
-# ---- preflight / readiness cache (avoids re-calling slow/rate-limited probes per poll) ----
+# ---- readiness cache (avoids re-calling slow/rate-limited platform APIs per poll) ----
+# Preflight results are PERSISTED (see preflight_service / PreflightReport) and read from the DB.
 
 _STALE_AFTER = dt.timedelta(minutes=10)
-_preflight_cache: dict[str, dict] = {}
 _readiness_cache: dict[str, dict] = {}
-
-
-def cache_preflight(job_id: str, report: dict) -> None:
-    _preflight_cache[job_id] = {"report": report, "at": dt.datetime.now(dt.timezone.utc)}
 
 
 def cache_readiness(job_id: str, provider: str, result: dict) -> None:
@@ -115,26 +111,29 @@ async def _job_metrics(db: AsyncSession, job_id) -> list[dict]:
     return metrics
 
 
-def _from_preflight(report: dict, stale: bool, at: dt.datetime) -> list[dict]:
+_PF_TO_DIAG = {
+    "input_defined": "input_unreachable",
+    "source_readable": "input_unreachable",
+    "has_video": "no_video",
+    "has_audio": "no_audio",
+    "risky_codec": "risky_codec",
+    "stream_key": "stream_key_missing",
+    "disk_space": "disk_space_low",
+}
+
+
+def _from_preflight(checks: list[dict], stale: bool, at: dt.datetime) -> list[dict]:
     out: list[dict] = []
     conf = "low" if stale else "medium"
-    for c in report.get("checks", []):
-        key, level, detail = c.get("key"), c.get("level"), c.get("detail")
-        if level == "ok":
+    for c in checks:
+        code, level = c.get("code"), c.get("level")
+        diag = _PF_TO_DIAG.get(code) if isinstance(code, str) else None
+        if level == "ok" or diag is None:
             continue
-        params = {"detail": detail} if detail else {}
-        if key == "source_readable":
-            out.append(_diag("input_unreachable", params=params, confidence=conf, detected_at=at, stale=stale))
-        elif key == "has_video":
-            out.append(_diag("no_video", confidence=conf, detected_at=at, stale=stale))
-        elif key == "has_audio":
-            out.append(_diag("no_audio", confidence=conf, detected_at=at, stale=stale))
-        elif key == "risky_codec":
-            out.append(_diag("risky_codec", params=params, confidence=conf, detected_at=at, stale=stale))
-        elif key == "stream_key":
-            out.append(_diag("stream_key_missing", confidence=conf, detected_at=at, stale=stale))
-        elif key == "disk_space":
-            out.append(_diag("disk_space_low", params=params, confidence=conf, detected_at=at, stale=stale))
+        p = c.get("params") or {}
+        params = {"detail": p.get("detail") or p.get("codecs") or p.get("free_gb")}
+        out.append(_diag(diag, params=params, output_id=c.get("affected_output_id"),
+                         confidence=conf, detected_at=at, stale=stale))
     return out
 
 
@@ -193,10 +192,11 @@ async def diagnose_job(db: AsyncSession, job: StreamJob, *, providers: list[str]
     elif info["ffmpeg_vulnerable"] is None:
         diagnoses.append(_diag("ffmpeg_version_unknown"))
 
-    # cached preflight
-    pf = _preflight_cache.get(str(job.id))
-    if pf:
-        diagnoses += _from_preflight(pf["report"], _is_stale(pf["at"]), pf["at"])
+    # persisted preflight (latest report from the DB)
+    from app.services import preflight_service  # lazy import to avoid cycles
+    report = await preflight_service.get_latest(db, job.id)
+    if report is not None:
+        diagnoses += _from_preflight(report.checks or [], preflight_service.is_stale(report), report.created_at)
 
     # cached readiness (any provider)
     for key, entry in _readiness_cache.items():
