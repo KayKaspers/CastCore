@@ -1,0 +1,48 @@
+name: "CastCore"
+slug: "castcore"
+owner: "Kay"
+architecture_lead: "Nova"
+implementation_assistant: "Claude"
+repository: "CastCore"
+status: "active"
+ndf_level: 3
+
+project_type: "self-hosted media processing and streaming suite"
+
+primary_language: "TypeScript / JavaScript"
+secondary_languages:
+  - "Dockerfile"
+  - "Shell"
+  - "Markdown"
+  - "YAML"
+
+deployment:
+  docker: true
+  docker_compose: true
+  self_hosted: true
+  cloud: optional
+
+quality_targets:
+  documentation: "required"
+  tests: "required"
+  security: "required"
+  ci: "required"
+  release_process: "recommended"
+
+known_capabilities:
+  preflight: "implemented"
+  preflight_version: "2.0"
+  docker_build_gate: "implemented"
+  ffmpeg_validation: "implemented"
+  ffmpeg_min_version: "8.1.2"
+  ci: "green_at_last_known_state"
+  tests: "ffmpeg-free/mocked"
+  docs_status: "known_risk"
+
+ndf:
+  project_brain: true
+  prompt_workflow: true
+  quality_gates: true
+  health_score: true
+  compliance_check: true
+  lessons_learned_feedback: true
