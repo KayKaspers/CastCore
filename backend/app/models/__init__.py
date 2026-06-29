@@ -13,6 +13,7 @@ from app.models.media import MediaItem, MediaProbe
 from app.models.notification import Notification
 from app.models.platform import PlatformMetadata
 from app.models.platform_account import PlatformAccount
+from app.models.preflight import PreflightReport
 from app.models.playlist import Playlist, PlaylistItem
 from app.models.recording import Recording
 from app.models.scheduler import SchedulerEntry
@@ -57,5 +58,6 @@ __all__ = [
     "Channel",
     "PlatformMetadata",
     "PlatformAccount",
+    "PreflightReport",
     "Asset",
 ]

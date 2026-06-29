@@ -21,10 +21,18 @@ lastReviewed: 2026-06-24
 | `GET/POST` | `/api/v1/stream-jobs` | List / create (with inputs/outputs) |
 | `GET/DELETE` | `/api/v1/stream-jobs/{id}` | Detail / delete |
 | `POST` | `/api/v1/stream-jobs/{id}/preview` | Masked command preview |
-| `POST` | `/api/v1/stream-jobs/{id}/preflight` | Readiness check (🟢/🟡/🔴) |
+| `POST` | `/api/v1/stream-jobs/{id}/preflight` | Run readiness check (🟢/🟡/🔴/⚪), persists a report |
+| `GET` | `/api/v1/stream-jobs/{id}/preflight/latest` | Latest persisted report (or `null`) |
+| `GET` | `/api/v1/stream-jobs/{id}/preflight/reports` | Report history (newest first) |
+| `GET` | `/api/v1/stream-jobs/{id}/preflight/reports/{report_id}` | Single report |
 | `POST` | `/api/v1/stream-jobs/{id}/dry-run` | Short test encode (speed/fps) |
-| `POST` | `/api/v1/stream-jobs/{id}/start` · `/stop` · `/restart` | Process control |
+| `POST` | `/api/v1/stream-jobs/{id}/start` · `/stop` · `/restart` | Process control (`start?override=true`: admin bypass of the preflight gate) |
 | `POST` | `/api/v1/stream-jobs/{id}/recording` | Recording on/off |
+
+> When the preflight gate is enabled (`PREFLIGHT_REQUIRED_BEFORE_START` /
+> `PREFLIGHT_BLOCK_ON_RED`), `start` returns `409` with code `preflight.required` or
+> `preflight.blocked`. Admins may pass `?override=true` (audited). See
+> [Preflight checks](/docs/en/user-guide/preflight-checks.md).
 
 ## Profiles & destinations
 

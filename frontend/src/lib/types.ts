@@ -66,14 +66,29 @@ export interface CommandPreview {
 }
 
 export interface PreflightCheck {
-  key: string;
+  code: string;
+  category: string;
   level: "ok" | "warn" | "error";
-  detail: string | null;
+  blocking: boolean;
+  affected_component: string;
+  affected_output_id: string | null;
+  docs_url: string;
+  params: Record<string, unknown>;
 }
 
 export interface PreflightReport {
-  level: "green" | "yellow" | "red";
+  id: string | null;
+  stream_job_id: string;
+  level: "green" | "yellow" | "red" | "gray";
+  can_start: boolean;
+  created_at: string | null;
+  ttl_seconds: number;
+  stale: boolean;
+  started_by_user_id: string | null;
   checks: PreflightCheck[];
+  blocking_errors: PreflightCheck[];
+  warnings: PreflightCheck[];
+  summary: { critical?: number; warning?: number; ok?: number };
 }
 
 export interface DryRunReport {

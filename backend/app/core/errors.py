@@ -54,6 +54,10 @@ class ErrorCode:
     PLATFORM_METADATA_INCOMPLETE = "platform.metadata_incomplete"
     PLATFORM_OUTPUT_MISSING = "platform.output_missing"
 
+    # Preflight gate before stream start
+    PREFLIGHT_REQUIRED = "preflight.required"
+    PREFLIGHT_BLOCKED = "preflight.blocked"
+
     SETUP_ALREADY_COMPLETED = "setup.already_completed"
     SETUP_FFMPEG_NOT_FOUND = "setup.ffmpeg_not_found"
 

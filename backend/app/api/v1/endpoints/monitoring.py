@@ -139,10 +139,15 @@ async def _collect(db: DbDep, job_id: uuid.UUID | None):
             m = _metrics(status)
             m["output_id"] = str(output.id)
             entry["outputs"].append(m)
-    return [
-        health_service.compute_job_health(str(jid), data["name"], data["outputs"])
-        for jid, data in jobs.items()
-    ]
+    from app.services import preflight_service  # lazy import to avoid cycles
+    result = []
+    for jid, data in jobs.items():
+        report = await preflight_service.get_latest(db, jid)
+        # only fold in a non-stale preflight result
+        pf_level = report.level if (report and not preflight_service.is_stale(report)) else None
+        result.append(health_service.compute_job_health(
+            str(jid), data["name"], data["outputs"], preflight_level=pf_level))
+    return result
 
 
 @router.get("/jobs/{job_id}/health", response_model=JobHealth)

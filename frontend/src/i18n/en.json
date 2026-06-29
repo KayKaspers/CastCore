@@ -394,17 +394,35 @@
     "restoreDone": "Restore complete. Please sign in again if users changed."
   },
   "preflight": {
-    "inputs": "Input source defined",
+    "input_defined": "Input source defined",
     "source_readable": "Source readable (ffprobe)",
     "has_video": "Video stream present",
     "has_audio": "Audio stream present",
-    "outputs": "Output enabled",
-    "destination": "Destination assigned",
-    "output_url": "Output URL set",
-    "stream_key": "Stream key present",
-    "disk_space": "Sufficient disk space",
     "risky_codec": "Risky codec (e.g. MagicYUV)",
-    "ffmpeg_version": "FFmpeg version"
+    "ffmpeg_version": "FFmpeg version",
+    "output_enabled": "Output enabled",
+    "destination_set": "Destination assigned",
+    "stream_key": "Stream key present",
+    "output_writable": "Output path writable",
+    "recording_path": "Recording directory writable",
+    "disk_space": "Sufficient disk space",
+    "platform_connected": "Platform connected",
+    "platform_ready": "Platform ready to stream",
+    "metadata_complete": "Metadata complete",
+    "stale": "stale",
+    "canStart": "Start allowed",
+    "cannotStart": "Start blocked",
+    "blocking": "blocking",
+    "summary": {
+      "critical": "Critical",
+      "warning": "Warnings",
+      "ok": "OK"
+    },
+    "gate": {
+      "required": "A fresh preflight report is required before starting.",
+      "blocked": "Preflight reports blocking errors – cannot start.",
+      "override": "Start anyway (override)"
+    }
   },
   "loghint": {
     "generic": "A possible problem was detected – see the log.",
@@ -436,7 +454,9 @@
     "preflight": {
       "source_unreachable": "The source \"{{source}}\" is unreachable.",
       "no_video": "The input contains no video stream.",
-      "missing_stream_key": "The destination is missing its stream key."
+      "missing_stream_key": "The destination is missing its stream key.",
+      "required": "A fresh preflight report is required before starting.",
+      "blocked": "Preflight reports blocking errors – cannot start."
     },
     "storage": {
       "test_failed": "The connection to the source failed.",
