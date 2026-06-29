@@ -171,6 +171,9 @@ services:
     environment:
       DOMAIN: ${DOMAIN:-localhost}
       ACME_EMAIL: ${ACME_EMAIL:-}
+      # Content-Security-Policy toggles (see deploy/caddy/Caddyfile).
+      CSP_ENABLED: ${CSP_ENABLED:-true}
+      CSP_REPORT_ONLY: ${CSP_REPORT_ONLY:-true}
     ports:
       - "80:80"
       - "443:443"

@@ -4,7 +4,7 @@ description: "Härtung, Rollen, Secrets, sichere Uploads, Audit."
 lang: de
 audience: "Administratoren"
 status: stable
-lastReviewed: 2026-06-26
+lastReviewed: 2026-06-29
 ---
 
 # Security Best Practices
@@ -62,10 +62,57 @@ Siehe auch: [Einstellungen](/docs/de/user-guide/settings.md).
 ## Transport & Web
 
 - HTTPS über den Reverse Proxy ([HTTPS](/docs/de/admin-guide/https.md)).
-- Security-Header am Reverse Proxy: **HSTS**, `X-Content-Type-Options: nosniff`,
-  `Referrer-Policy` (Caddy/nginx). Ein **CSP**-Header ist derzeit **nicht** gesetzt.
+- Security-Header am Reverse Proxy (Caddy): **HSTS**, `X-Content-Type-Options: nosniff`,
+  `Referrer-Policy`, `X-Frame-Options: DENY` und eine `Permissions-Policy`. Eine
+  **Content-Security-Policy** wird im **Report-Only-Modus** ausgeliefert (siehe unten).
 - Die API ist **Bearer-Token-basiert** (kein Cookie-Login) – klassische Cookie-CSRF-Angriffe
   greifen daher nicht; einen dedizierten CSRF-Token gibt es bewusst nicht.
+
+## Content-Security-Policy (CSP)
+
+CastCore liefert eine Content-Security-Policy über Caddy aus. **Standardmäßig läuft sie im
+Report-Only-Modus** (`Content-Security-Policy-Report-Only`): Browser *melden* Verstöße in der
+Entwicklerkonsole, **es wird aber noch nichts blockiert**. Das ist ein bewusster erster
+Schritt – er erhöht die Sicherheit, ohne vor der Verifikation in echten Deployments ein
+kaputtes UI zu riskieren.
+
+**Erlaubte Quellen (domain-agnostisch – nur `'self'`, funktioniert daher für jeden
+self-hosted Hostnamen/jede IP ohne Konfiguration):**
+
+```
+default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none';
+form-action 'self'; img-src 'self' data: blob:; media-src 'self' blob:;
+connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self';
+manifest-src 'self'; worker-src 'self' blob:
+```
+
+- **Warum `blob:` / `data:`** – der HLS-Player (hls.js) spielt Video über eine `blob:`-
+  MediaSource ab und betreibt seinen Demuxer in einem `blob:`-**Web-Worker**; authentifizierte
+  Thumbnails werden als `blob:`-Bilder geladen; `data:` deckt kleine Inline-Bild-URIs ab. Ohne
+  diese würden Live-Vorschau, Channel-Wiedergabe und manche Bilder brechen.
+- **Warum Media/HLS/WebSocket nicht blockiert werden dürfen** – Live-Logs nutzen einen
+  same-origin WebSocket (`connect-src 'self'`), Channel-/Vorschau-Wiedergabe nutzt same-origin
+  HLS plus das `blob:`-Media/Worker oben. Das sind Kernfunktionen, daher erlaubt die Policy sie
+  ausdrücklich.
+- **Keine externen Quellen** sind erlaubt: CastCore lädt keine CDN-Skripte, -Fonts oder
+  -Bilder. OAuth (YouTube/Twitch) funktioniert, weil es ein Top-Level-Browser-Redirect ist,
+  kein Sub-Resource-Load.
+
+**Konfiguration** (Umgebungsvariablen, von Caddy angewendet):
+
+| Einstellung | Wirkung |
+| --- | --- |
+| `CSP_ENABLED=true` + `CSP_REPORT_ONLY=true` | Report-Only (**Standard**) – Verstöße gemeldet, nichts blockiert |
+| `CSP_ENABLED=true` + `CSP_REPORT_ONLY=false` | **erzwungen** – verstoßende Ressourcen werden blockiert |
+| `CSP_ENABLED=false` | kein CSP-Header wird gesendet |
+
+- **Auf Enforce umstellen:** `CSP_REPORT_ONLY=false` setzen und Caddy neu starten
+  (`docker compose up -d caddy`). Erst tun, wenn keine Verstöße mehr auftreten.
+- **Komplett deaktivieren:** `CSP_ENABLED=false` setzen (z. B. für ein Sonder-Setup mit
+  externen Ressourcen) und Caddy neu starten.
+
+> ℹ️ Es gibt noch **keinen CSP-Report-Endpoint**: Verstöße sind nur in der **Browser-Konsole**
+> sichtbar und werden **nicht** zentral gesammelt. Ein Reporting-Endpoint kann später folgen.
 
 ## Rate-Limiting
 
@@ -126,4 +173,4 @@ Akteur, Aktion, Ziel, IP und Zeitstempel.
 - [Backup & Restore](/docs/de/user-guide/backup-restore.md)
 
 ---
-_Stand: 2026-06-26 · Status: Stabil_
+_Stand: 2026-06-29 · Status: Stabil_

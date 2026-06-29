@@ -120,3 +120,33 @@ Variablennamen, niemals Werte.
 Der Guard greift bei Defaults/Platzhaltern, prüft aber keine Passwort-Stärke jenseits der
 Länge (z. B. `password123` als `SECRET_KEY` würde akzeptiert). `REDIS_PASSWORD` bleibt im
 internen Netz bewusst optional. Vollständige Härtung folgt mit CC-WP-008/009/011.
+
+## R-007 – fehlende Content-Security-Policy (SEC-02)
+
+### Beschreibung
+
+Es gab keinen CSP-Header. Ohne CSP fehlt eine Defense-in-Depth-Schicht gegen XSS/Daten-
+Injektion (relevant u. a. wegen `marked` + `dangerouslySetInnerHTML` im In-App-Docs-Viewer).
+Quelle: `CC-WP-006 – Security Baseline Review`.
+
+### Wahrscheinlichkeit
+
+Niedrig
+
+### Auswirkung
+
+Mittel
+
+### Gegenmaßnahme
+
+**Vorbereitet (CC-WP-008a):** Caddy sendet eine domain-agnostische CSP, zunächst als
+`Content-Security-Policy-Report-Only` (Standard). Zusätzlich `X-Frame-Options: DENY` und
+`Permissions-Policy`. Steuerung über `CSP_ENABLED` / `CSP_REPORT_ONLY`. Der Vite-
+modulepreload-Polyfill wurde deaktiviert, um Inline-Script-Verstöße zu vermeiden.
+
+### Reststand
+
+**Noch nicht vollständig mitigiert:** Report-Only **blockiert nichts** — der Schutz wirkt erst
+im Enforce-Modus. Es gibt **keinen Report-Endpoint**; Verstöße sind nur in der Browser-Konsole
+sichtbar. Offen: Browser-Verifikation aller Seiten, dann Enforce-Entscheidung und Health-Score-
+Update in **CC-WP-008B**.

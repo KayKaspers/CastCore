@@ -37,7 +37,11 @@ Every endpoint declares the required role; checks are enforced server-side.
   (`login`, `refresh`, `2fa/verify`, token creation, `setup/admin`) → `429 auth.rate_limited`.
   See the admin security guide for configuration. Broader per-endpoint limits are still TODO.
 - Security headers (implemented at the reverse proxy): **HSTS**, `X-Content-Type-Options`,
-  `Referrer-Policy`. **CSP is not yet set** (TODO).
+  `Referrer-Policy`, **`X-Frame-Options: DENY`** and a **`Permissions-Policy`**. A
+  **Content-Security-Policy** is shipped in **report-only** mode by default (domain-agnostic,
+  `'self'`-only with `blob:`/`data:` for hls.js/thumbnails); toggle via `CSP_ENABLED` /
+  `CSP_REPORT_ONLY`. Enforce mode and a report endpoint are not yet enabled — see the
+  [admin security guide](en/admin-guide/security.md#content-security-policy-csp).
 
 ## FFmpeg & system safety (critical)
 - **No shell execution.** FFmpeg/ffprobe/mount/rclone invoked with **argument lists**
@@ -70,9 +74,11 @@ Every endpoint declares the required role; checks are enforced server-side.
 Implemented: argon2id · JWT rotation + revocation · RBAC on every route · 2FA · API tokens ·
 session management · **rate limiting** (auth endpoints) · Fernet encryption for secret
 columns · secrets masked in UI & logs · `shell=False` everywhere · path confinement · upload
-validation · audit log · restrictive file perms · FFmpeg version detection + safe-media mode.
+validation · audit log · restrictive file perms · FFmpeg version detection + safe-media mode ·
+security headers incl. **CSP (report-only by default)**, `X-Frame-Options`, `Permissions-Policy`.
 
-Known gaps: **CSP** header not set (CSRF N/A — Bearer API); broader (non-auth) rate limits;
+Known gaps: **CSP** is report-only, not yet enforced, and has no report endpoint (CSRF N/A —
+Bearer API); broader (non-auth) rate limits;
 patched **FFmpeg ≥ 8.1.2** not yet the verified default; backend/process-manager not yet
 non-root; OAuth **metadata push** implemented but not yet verified against the live platform
 APIs; no frontend/migration tests.

@@ -60,6 +60,8 @@ lastReviewed: 2026-06-26
 | `BLOCK_RISKY_CODECS` | riskante Codecs im Preflight blockieren (Standard `true`) |
 | `RISKY_CODECS_BLOCKLIST` | zusätzliche riskante Codecs, kommagetrennt (Standard `magicyuv`) |
 | `ACME_EMAIL` | E-Mail für automatische HTTPS-Zertifikate (Caddy) |
+| `CSP_ENABLED` | Content-Security-Policy-Header von Caddy senden an/aus (Standard `true`) |
+| `CSP_REPORT_ONLY` | `true` = Report-Only (Standard, nichts wird blockiert), `false` = erzwungen |
 | `RATE_LIMIT_ENABLED` | Auth-Rate-Limiting an/aus (Standard `true`) |
 | `RATE_LIMIT_AUTH_ATTEMPTS` | erlaubte Versuche je Fenster und Client-IP (Standard `10`) |
 | `RATE_LIMIT_AUTH_WINDOW_SECONDS` | Länge des Zeitfensters in Sekunden (Standard `300`) |

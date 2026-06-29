@@ -49,7 +49,9 @@ full-stack E2E workflow.
   credentials + a connected account).
 - **Storage**: only local + SMB/CIFS; NFS/SFTP/WebDAV/rclone/cloud are not implemented.
 - **Hardening**: worker runs non-root + `cap_drop`; backend/process-manager still run as root
-  (only `no-new-privileges`). No **CSP** header yet.
+  (only `no-new-privileges`). A **CSP** header ships in **report-only** mode by default
+  (toggle via `CSP_ENABLED`/`CSP_REPORT_ONLY`); enforce mode and a report endpoint are not yet
+  enabled.
 - **Tests**: no frontend tests and no migration tests yet. The E2E workflow is **manual**
   (`workflow_dispatch`).
 - Native `install.sh`/`update.sh`/`uninstall.sh` exist but are **not fully verified**.

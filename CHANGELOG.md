@@ -5,6 +5,26 @@ All notable changes to CastCore are documented here. Format loosely follows
 
 ## [Unreleased]
 
+### Added — Content-Security-Policy + extra security headers (report-only) (CC-WP-008a, SEC-02)
+- Caddy now sends a **Content-Security-Policy**. By default it is **report-only**
+  (`Content-Security-Policy-Report-Only`) — browsers report violations to the console but
+  **nothing is blocked yet**. The policy is domain-agnostic (`'self'` only) with `blob:`/`data:`
+  for hls.js (MSE media + web worker), authenticated image blobs and inline data URIs; no
+  external sources are permitted.
+- Two new env toggles (passed to the `caddy` service): `CSP_ENABLED` (default `true`) and
+  `CSP_REPORT_ONLY` (default `true`). `CSP_REPORT_ONLY=false` enforces; `CSP_ENABLED=false`
+  sends no CSP header. Implemented with Caddy expression matchers (env substituted at load).
+- Also added `X-Frame-Options: DENY` and a `Permissions-Policy`
+  (`camera=(), microphone=(), geolocation=(), payment=(), usb=(), fullscreen=(self)`).
+- `frontend/vite.config.ts`: disabled the module-preload polyfill
+  (`build.modulePreload.polyfill = false`) so the build emits no inline `<script>` that would
+  violate `script-src 'self'`.
+- **Not** included: enforce mode as default and a CSP **report endpoint** — violations are
+  visible in the browser console only, not collected centrally. SEC-02 is therefore *prepared*,
+  to be marked fully mitigated after enforce / clean verification (CC-WP-008B).
+- Docs updated (DE+EN `admin-guide/security`, `reference/environment-variables`),
+  plus `docs/SECURITY.md`, README and `.env.example`.
+
 ### Added — CI: FFmpeg Docker build smoke test
 - New workflow `.github/workflows/docker-ffmpeg-smoke.yml` (push to `main`, pull requests,
   `workflow_dispatch`): builds the backend, process-manager and worker images with

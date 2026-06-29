@@ -16,9 +16,29 @@
 		reverse_proxy frontend:80
 	}
 
+	# Always-on security headers.
 	header {
 		Strict-Transport-Security "max-age=31536000; includeSubDomains"
 		X-Content-Type-Options "nosniff"
 		Referrer-Policy "strict-origin-when-cross-origin"
+		X-Frame-Options "DENY"
+		Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), fullscreen=(self)"
 	}
+
+	# --- Content-Security-Policy (CC-WP-008a) ---
+	# Toggle via environment (substituted at config load, so the expressions below become
+	# fixed boolean constants):
+	#   CSP_ENABLED=true  + CSP_REPORT_ONLY=true   -> Content-Security-Policy-Report-Only
+	#   CSP_ENABLED=true  + CSP_REPORT_ONLY=false  -> Content-Security-Policy (enforced)
+	#   CSP_ENABLED=false                          -> no CSP header at all
+	# The policy is intentionally domain-agnostic ('self' only) so it works for any
+	# self-hosted hostname/IP without configuration. blob:/data: are required for hls.js
+	# (MSE media + web worker), authenticated image blobs and inline data URIs.
+	# The placeholders are quoted so they substitute into CEL *string* literals (an unquoted
+	# `true` would be parsed as a CEL bool and fail to compare against "true").
+	@csp_report_only expression `"{$CSP_ENABLED:true}" == "true" && "{$CSP_REPORT_ONLY:true}" == "true"`
+	header @csp_report_only Content-Security-Policy-Report-Only "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; manifest-src 'self'; worker-src 'self' blob:"
+
+	@csp_enforce expression `"{$CSP_ENABLED:true}" == "true" && "{$CSP_REPORT_ONLY:true}" == "false"`
+	header @csp_enforce Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data: blob:; media-src 'self' blob:; connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; manifest-src 'self'; worker-src 'self' blob:"
 }

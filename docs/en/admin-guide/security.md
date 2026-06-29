@@ -4,7 +4,7 @@ description: "Hardening, roles, secrets, safe uploads, audit."
 lang: en
 audience: "Administrators"
 status: stable
-lastReviewed: 2026-06-26
+lastReviewed: 2026-06-29
 ---
 
 # Security best practices
@@ -60,10 +60,54 @@ See also: [Settings](/docs/en/user-guide/settings.md).
 ## Transport & web
 
 - HTTPS via the reverse proxy ([HTTPS](/docs/en/admin-guide/https.md)).
-- Security headers at the reverse proxy: **HSTS**, `X-Content-Type-Options: nosniff`,
-  `Referrer-Policy` (Caddy/nginx). A **CSP** header is currently **not** set.
+- Security headers at the reverse proxy (Caddy): **HSTS**, `X-Content-Type-Options: nosniff`,
+  `Referrer-Policy`, `X-Frame-Options: DENY` and a `Permissions-Policy`. A
+  **Content-Security-Policy** is shipped in **report-only** mode (see below).
 - The API is **Bearer-token based** (no cookie login), so classic cookie-CSRF attacks do not
   apply; there is deliberately no dedicated CSRF token.
+
+## Content-Security-Policy (CSP)
+
+CastCore ships a Content-Security-Policy via Caddy. **By default it runs in report-only mode**
+(`Content-Security-Policy-Report-Only`): browsers *report* violations to the developer console
+but **nothing is blocked yet**. This is a deliberate first step — it raises security without
+risking a broken UI before the policy is verified in real deployments.
+
+**Allowed sources (domain-agnostic — `'self'` only, so it works for any self-hosted
+hostname/IP without configuration):**
+
+```
+default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none';
+form-action 'self'; img-src 'self' data: blob:; media-src 'self' blob:;
+connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self';
+manifest-src 'self'; worker-src 'self' blob:
+```
+
+- **Why `blob:` / `data:`** — the HLS player (hls.js) feeds video through a `blob:` MediaSource
+  and runs its demuxer in a `blob:` **web worker**; authenticated thumbnails are loaded as
+  `blob:` images; `data:` covers small inline image URIs. Without these, live preview, channel
+  playback and some images would break.
+- **Why media/HLS/WebSocket must not be blocked** — live logs use a same-origin WebSocket
+  (`connect-src 'self'`), and channel/preview playback uses same-origin HLS plus the `blob:`
+  media/worker above. These are core features, so the policy explicitly permits them.
+- **No external sources** are allowed: CastCore loads no CDN scripts, fonts or images. OAuth
+  (YouTube/Twitch) works because it is a top-level browser redirect, not a sub-resource load.
+
+**Configuration** (environment variables, applied by Caddy):
+
+| Setting | Effect |
+| --- | --- |
+| `CSP_ENABLED=true` + `CSP_REPORT_ONLY=true` | report-only (**default**) — violations reported, nothing blocked |
+| `CSP_ENABLED=true` + `CSP_REPORT_ONLY=false` | **enforced** — violating resources are blocked |
+| `CSP_ENABLED=false` | no CSP header sent at all |
+
+- **Switch to enforce:** set `CSP_REPORT_ONLY=false` and restart Caddy
+  (`docker compose up -d caddy`). Do this only after confirming there are no violations.
+- **Disable entirely:** set `CSP_ENABLED=false` (e.g. for a custom setup that needs external
+  resources) and restart Caddy.
+
+> ℹ️ There is **no CSP report endpoint** yet: violations are visible in the **browser console**
+> only and are **not** collected centrally. A reporting endpoint may be added later.
 
 ## Rate limiting
 
@@ -123,4 +167,4 @@ timestamp.
 - [Backup & restore](/docs/en/user-guide/backup-restore.md)
 
 ---
-_Last reviewed: 2026-06-26 · Status: stable_
+_Last reviewed: 2026-06-29 · Status: stable_
