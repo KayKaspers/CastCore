@@ -14,22 +14,49 @@
 | Prompt Workflow | 82 | Nova/Claude-Prozess etabliert |
 | Release Readiness | 66 | Prozess weiter schärfen |
 
-## Total
+## Total (initial)
 
 76 / 100
 
+---
+
+## Update nach CC-WP-002 (docs-status Stability)
+
+Review-Datum: 2026-06-29 · Auslöser: Abschluss `CC-WP-002`.
+
+| Dimension | Alt | Neu | Δ | Begründung |
+|---|---:|---:|---:|---|
+| Architecture | 78 | 78 | 0 | CC-WP-002 war reines Doku-Tooling, keine Architekturänderung. |
+| Documentation | 74 | 78 | +4 | `docs-status.json`-Generierung jetzt deterministisch und als reine Funktion des Doku-Inhalts; Generierungspipeline vertrauenswürdiger. |
+| Testing | 84 | 84 | 0 | Keine Teständerungen; Tests bleiben ffmpeg-frei/gemockt. Determinismus wurde via Skriptlauf (Hash-Vergleich) geprüft, nicht via Unit-Test. |
+| CI/CD | 85 | 90 | +5 | Tägliche Falsch-Fehlschläge im Docs-Gate (datumsbedingter `git diff`) beseitigt; CI-Signal stabiler und aussagekräftiger. |
+| Security | 60 | 60 | 0 | Vertiefter Security-Review weiterhin offen (CC-WP-006). |
+| Deployment | 84 | 84 | 0 | Unverändert; Docker-first nicht berührt. |
+| Project Brain | 75 | 77 | +2 | R-001 ist durch CC-WP-002 mitigiert, L-004 in der Praxis bestätigt; das Brain zeigt nachweislich Vorhersagewert. Pflege weiterhin nötig. |
+| Prompt Workflow | 82 | 85 | +3 | Nova→Claude→Cursor-WP-Prozess sauber durchlaufen (kleines Paket, klare Grenzen, strukturierte Rückmeldung). |
+| Release Readiness | 66 | 70 | +4 | Eine CI-Flakiness-Quelle als Release-Blocker entfernt; vollständiger Release-Readiness-Review (CC-WP-004) steht aber noch aus. |
+
+## Total
+
+**78 / 100** (vorher 76)
+
+Wichtigste Veränderungen: CI/CD (+5), Documentation (+4), Release Readiness (+4).
+
 ## Interpretation
 
-CastCore ist ein solides NDF-Level-3-Projekt mit realistischer Perspektive auf Level 4.
+CastCore bleibt ein solides NDF-Level-3-Projekt; durch die stabilere Doku-/CI-Pipeline rückt Level 4 etwas näher. Der größte verbleibende Hebel ist der noch offene Security-Review.
 
-## Wichtigste Hebel
+## Offene Risiken
 
-1. docs-status Stabilität lösen.
-2. Release Readiness prüfen.
-3. Security Review ergänzen.
-4. ADRs weiter pflegen.
-5. Lessons Learned regelmäßig ins NDF zurückführen.
+- **Restdatumsabhängigkeit (neu):** `summary.stale` und `summary.warnings` in `docs-status.json` reagieren weiterhin auf Datumsschwellen (`STALE_DAYS=180`). Aktuell `stale: 0`, daher kein akutes Problem, aber langfristig erneut eine mögliche CI-Diff-Quelle. Bezug: R-001 (Teilrest).
+- **Security-Review offen:** Dimension Security bleibt bei 60 (CC-WP-006 ausstehend).
+- **Release Readiness unvollständig geprüft:** CC-WP-004 noch nicht durchgeführt.
+- **README-NDF-Abschnitt offen:** CC-WP-005 noch im Draft.
+- **Hinweis:** Der Health Score ist eine Review-Hilfe, keine absolute Wahrheit.
 
-## Hinweis
+## Empfohlene nächste Work Packages
 
-Dieser Health Score ist initial. Er sollte nach dem nächsten echten Work Package aktualisiert werden.
+1. **CC-WP-006 – Security baseline review** (P2): größter Score-Hebel (Security 60).
+2. **CC-WP-004 – Release Readiness Review** (P2): Release-Readiness von 70 auf belastbares Niveau heben.
+3. **CC-WP-005 – README NDF section** (P3): NDF-Sichtbarkeit nach außen schließen.
+4. **Optionales Folge-WP:** Restdatumsabhängigkeit von `summary.stale`/`summary.warnings` adressieren (Stale nur als CI-Log-Warnung, nicht im committeten Artefakt).
